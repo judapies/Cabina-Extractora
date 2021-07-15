@@ -1,0 +1,9 @@
+>>> Warning 202 "CabinaExtractoraVariadorVelocidad.c" Line 40(26,34): Variable never used:   Decimal2
+>>> Warning 202 "CabinaExtractoraVariadorVelocidad.c" Line 47(20,24): Variable never used:   zero
+>>> Warning 202 "CabinaExtractoraVariadorVelocidad.c" Line 48(67,79): Variable never used:   iniciodamper
+>>> Warning 202 "CabinaExtractoraVariadorVelocidad.c" Line 49(41,55): Variable never used:   t_iniciodamper
+>>> Warning 202 "CabinaExtractoraVariadorVelocidad.c" Line 55(70,71): Variable never used:   K
+>>> Warning 202 "CabinaExtractoraVariadorVelocidad.c" Line 57(7,19): Variable never used:   Tcalibracion
+>>> Warning 202 "CabinaExtractoraVariadorVelocidad.c" Line 57(26,36): Variable never used:   correccion
+      Memory usage:   ROM=60%      RAM=13% - 15%
+      0 Errors,  7 Warnings.

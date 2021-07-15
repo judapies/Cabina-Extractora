@@ -1,0 +1,11 @@
+>>> Warning 202 "Maestro_v2.c" Line 41(7,15): Variable never used:   guardauv
+>>> Warning 202 "Maestro_v2.c" Line 43(61,63): Variable never used:   UV
+>>> Warning 202 "Maestro_v2.c" Line 47(42,47): Variable never used:   LuzUV
+>>> Warning 202 "Maestro_v2.c" Line 47(51,56): Variable never used:   Motor
+>>> Warning 202 "Maestro_v2.c" Line 62(90,96): Variable never used:   barra2
+>>> Warning 202 "Maestro_v2.c" Line 62(101,111): Variable never used:   barra_old2
+>>> Warning 202 "Maestro_v2.c" Line 63(31,41): Variable never used:   x_cuadrado
+>>> Warning 202 "Maestro_v2.c" Line 63(46,52): Variable never used:   x_cubo
+>>> Warning 202 "Maestro_v2.c" Line 71(32,38): Variable never used:   UVTime
+      Memory usage:   ROM=33%      RAM=49% - 50%
+      0 Errors,  9 Warnings.

@@ -1,0 +1,31 @@
+ÀÄEsclavo 1_v2
+   ÃÄMAIN  0/1186  Ram=2
+   ³  ÃÄ??0??
+   ³  ÃÄLeerDownflow  0/38  Ram=0
+   ³  ³  ÀÄsensores  0/60  Ram=3
+   ³  ³     ÀÄ@delay_ms1  0/44  Ram=1
+   ³  ÃÄLeerFiltroDownflow  0/38  Ram=0
+   ³  ³  ÀÄsensores  0/60  Ram=3
+   ³  ³     ÀÄ@delay_ms1  0/44  Ram=1
+   ³  ÃÄLeerFiltroInflow  0/38  Ram=0
+   ³  ³  ÀÄsensores  0/60  Ram=3
+   ³  ³     ÀÄ@delay_ms1  0/44  Ram=1
+   ³  ÃÄLeerInflow  0/36  Ram=0
+   ³  ³  ÀÄsensores  0/60  Ram=3
+   ³  ³     ÀÄ@delay_ms1  0/44  Ram=1
+   ³  ÃÄLeerVidrioAbajo  0/50  Ram=2
+   ³  ³  ÀÄsensores  0/60  Ram=3
+   ³  ³     ÀÄ@delay_ms1  0/44  Ram=1
+   ³  ÀÄLeerVidriook  0/50  Ram=2
+   ³     ÀÄsensores  0/60  Ram=3
+   ³        ÀÄ@delay_ms1  0/44  Ram=1
+   ÃÄssp_interupt  0/114  Ram=3
+   ³  ÀÄ@I2C_WRITE_1  0/24  Ram=1
+   ÀÄtemp1s  0/58  Ram=0
+      ÀÄcontrolar_flujo  0/242  Ram=4
+         ÃÄ@ITOF  0/54  Ram=2
+         ÃÄ@DIVFF  0/352  Ram=14
+         ÃÄ@ITOF  0/54  Ram=2
+         ÃÄ@ADDFF  0/634  Ram=16
+         ÃÄ@FLT  0/122  Ram=10
+         ÀÄ@FLT  0/122  Ram=10

@@ -1,0 +1,11 @@
+Aj. P inf: 0.5
+Aj. P dnf: 1.0
+Cero P Inf:204
+Cero p don:204
+Aj. Dn:1.0
+Aj. In:0.7
+Cero Dn:209
+Cero In:203
+Velocidad:3
+Relac:0.58
+Velocidad 2: 5

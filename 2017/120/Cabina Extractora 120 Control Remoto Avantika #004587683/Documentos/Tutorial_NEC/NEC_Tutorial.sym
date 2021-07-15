@@ -1,0 +1,160 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @INTERRUPT_AREA
+005     @INTERRUPT_AREA
+006     @INTERRUPT_AREA
+007     @INTERRUPT_AREA
+008     @INTERRUPT_AREA
+009     @INTERRUPT_AREA
+00A     @INTERRUPT_AREA
+00B     @INTERRUPT_AREA
+00C     @INTERRUPT_AREA
+00D     @INTERRUPT_AREA
+00E     @INTERRUPT_AREA
+00F     @INTERRUPT_AREA
+010     @INTERRUPT_AREA
+011     @INTERRUPT_AREA
+012     @INTERRUPT_AREA
+013     @INTERRUPT_AREA
+014     @INTERRUPT_AREA
+015     @INTERRUPT_AREA
+016     lcdline
+017-01A BITS
+01B-01C Ta
+01D-01E Tb
+01F-020 TICK
+021     n
+022.0   BIT_START
+022.1   NUEVO_DATO
+023-026 BYTE_IR
+027-028 @PRINTF_LU_95.P1
+027     @PSTRINGCN_95.P2
+027     @PRINTF_X_95.P3
+027     lcd_init.i
+027     MAIN.@SCRATCH1
+027     @PSTRINGC_95.@SCRATCH1
+028     @PRINTF_X_95.P1
+028     lcd_init.@SCRATCH1
+028     MAIN.@SCRATCH2
+028     @PSTRINGC_95.@SCRATCH2
+028     @PSTRINGCN_95.@SCRATCH1
+029     MAIN.@SCRATCH3
+029     @PSTRINGCN_95.@SCRATCH2
+029     @PRINTF_LU_95.@SCRATCH1
+02A     MAIN.@SCRATCH4
+02A     @PRINTF_LU_95.@SCRATCH2
+02B     MAIN.@SCRATCH5
+02B     @PRINTF_LU_95.@SCRATCH3
+02C     MAIN.@SCRATCH6
+02C     @PRINTF_LU_95.@SCRATCH4
+02D     MAIN.@SCRATCH7
+02D     @PRINTF_LU_95.@SCRATCH5
+02E     MAIN.@SCRATCH8
+02E     @PRINTF_LU_95.@SCRATCH6
+02F     BIT_BYTE.D0
+02F     @PRINTF_LU_95.@SCRATCH7
+030     BIT_BYTE.D1
+030     lcd_putc.c
+031     BIT_BYTE.D2
+031     lcd_gotoxy.x
+032     BIT_BYTE.D3
+032     lcd_gotoxy.y
+033     BIT_BYTE.D4
+033     lcd_gotoxy.address
+034     BIT_BYTE.D5
+034     lcd_send_byte.address
+035     BIT_BYTE.D6
+035     lcd_send_byte.n
+036     @delay_ms1.P1
+036     BIT_BYTE.D7
+036     lcd_send_byte.@SCRATCH1
+037     lcd_send_nibble.n
+037     BIT_BYTE.dato
+038     BIT_BYTE.@SCRATCH1
+039     @WRITEBITA.P1
+039     RB0.@SCRATCH1
+03A     @WRITEBITA.P1
+03A     RB0.@SCRATCH2
+03B-03C @WRITEBITA.P1
+F81     lcd
+F83     PSP_DATA
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB     CCP_2
+FBB     CCP_2_LOW
+FBC     CCP_2_HIGH
+FBE     CCP_1
+FBE     CCP_1_LOW
+FBF     CCP_1_HIGH
+FE1-FE2 @READ_PACKED_MEMORY.P1
+FE1-FE2 @WRITE_PACKED_MEMORY.P2
+FE9-FEA @WRITE_PACKED_MEMORY.P1
+FE9-FEA @WRITE_PROGRAM_MEMORY.P2
+FE9-FEA @READ_PROGRAM_MEMORY.P3
+FE9-FEA @READ_PACKED_MEMORY.P4
+FF6-FF8 @READ_PROGRAM_MEMORY.P1
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+0226  @delay_ms1
+0096  LCD_INIT_STRING
+024E  lcd_send_nibble
+0276  lcd_send_byte
+02B8  lcd_init
+0310  lcd_gotoxy
+0346  @goto10101
+0372  lcd_putc
+00F2  RB0
+00B4  @WRITEBITA
+0540  MAIN
+01A0  @const125
+03D0  @PSTRINGC_95
+01B6  @const127
+01CC  @const128
+01E2  @const129
+01F8  @const131
+0430  @PRINTF_X_95
+046E  @PSTRINGCN_95
+0206  @const137
+0214  @const138
+048C  @PRINTF_LU_95
+03F0  BIT_BYTE
+0540  @cinit
+
+
+User Memory space: 
+
+User Memory space: 
+
+Project Directory:
+    C:\Users\maria consuelo\Desktop\Tutorial_NEC\
+
+Project Files:
+    NEC_Tutorial.c
+    ..\..\..\..\Program Files (x86)\PICC\Devices\18F4550.h
+    LCD420.c
+
+Units:
+    C:\Users\maria consuelo\Desktop\Tutorial_NEC\NEC_Tutorial (main)
+
+Compiler Settings:
+    Processor:      PIC18F4550
+    Pointer Size:   16
+    ADC Range:      0-1023
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      NEC_Tutorial.err
+    Ext Symbols: NEC_Tutorial.esym
+    INHX32:      NEC_Tutorial.hex
+    Symbols:     NEC_Tutorial.sym
+    List:        NEC_Tutorial.lst
+    Debug/COFF:  NEC_Tutorial.cof
+    Project:     NEC_Tutorial.PJT
+    Call Tree:   NEC_Tutorial.tre
+    Statistics:  NEC_Tutorial.sta

@@ -1,0 +1,241 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     lcdline
+005     Menu
+006     n_opcionH
+007     n_opcionL
+008     unidad
+009     Flecha
+00A     Flecha1
+00B     Flecha2
+00C     nMenuL
+00D     nMenuH
+00E     contraste
+00F     Entero
+010     Decimal1
+011     Decimal2
+012     Entero1
+013     Decimal12
+014     n
+015     l
+016     h
+017     tmp
+018     MediaMovil
+019     negativo
+01A     Automa
+01B     Manual
+01C     Semi
+01D     ValorSemi
+01E.0   estadofl
+01E.1   estadomv
+01E.2   estadoalarma
+01E.3   estadopantalla
+01E.4   Flanco
+01E.5   Flanco1
+01E.6   Flanco2
+01E.7   Flanco3
+01F.0   flag_latencia
+01F.1   Latencia
+01F.2   ModoSleep
+01F.3   inicio
+01F.4   Lectura
+01F.5   Lectura2
+01F.6   flag_iniciodamper
+01F.7   iniciodamper
+020     paso
+021-023 t
+024-027 clave
+028-02B contrasena
+02C-02F setpoint
+030-033 zero
+034-037 zero_fabrica
+038.0   ModoManual
+038.1   ModoAuto
+038.2   ModoSemi
+039-03A tiempos
+03B-03C t_latencia
+03D-03E tiempos2
+03F-040 t_iniciodamper
+041-044 Beta
+045-048 R25
+049-04C T0
+04D-050 TK
+051-054 TC
+055-058 Rdivisor
+059-05C Rntc
+05D-060 Voltaje0
+061-064 Voltaje1
+065-068 mV
+069-06C Presion
+06D-070 a
+071-074 b
+075-078 c
+079-07C d
+07D-080 Flujo
+081-084 Flujo2
+085-088 x
+089-08C x_uno
+08D-090 x_cuadrado
+091-094 x_cubo
+095-098 K
+099-09C Temporal
+09D-0A0 Temporal2
+0A1-0A4 Velocidad
+0A5-0A8 Temporal1
+0A9-0AC Temporal12
+0AD-0B0 Diferencia
+0B1-0B4 Ajuste1
+0B5-0B8 Tcalibracion
+0B9-0BC correccion
+0BD-0C0 error
+0C1-0EC promedio
+0ED     lcd_init.i
+0ED     @PSTRINGCN_95.P1
+0ED     Leer_Sensor_Flujo.media
+0ED-0F0 @PRINTF_L32D_95FPFPF.P1
+0ED     MAIN.@SCRATCH1
+0EE-0F1 @DIVFF.P1
+0EE     sensores.x
+0EE     lcd_init.@SCRATCH1
+0EE     Leer_Sensor_Flujo.@SCRATCH1
+0EE     @PSTRINGCN_95.@SCRATCH1
+0EF-0F2 sensores.y
+0EF     Leer_Sensor_Flujo.@SCRATCH2
+0EF     @PSTRINGCN_95.@SCRATCH2
+0F0-0F3 @ADDFF.P1
+0F1     @PRINTF_L32D_95FPFPF.P1
+0F2-0F5 @DIVFF.P1
+0F2     @PRINTF_L32D_95FPFPF.@SCRATCH1
+0F3-0F4 @ITOF.P1
+0F3     @PRINTF_L32D_95FPFPF.@SCRATCH2
+0F4-0F7 @ADDFF.P1
+0F4     @PRINTF_L32D_95FPFPF.@SCRATCH3
+0F5     @PRINTF_L32D_95FPFPF.@SCRATCH4
+0F6     @DIVFF.@SCRATCH1
+0F6     @PRINTF_L32D_95FPFPF.@SCRATCH5
+0F7     @DIVFF.@SCRATCH2
+0F7     @PRINTF_L32D_95FPFPF.@SCRATCH6
+0F8     @DIVFF.@SCRATCH3
+0F8     @ADDFF.@SCRATCH1
+0F8     @PRINTF_L32D_95FPFPF.@SCRATCH7
+0F9     @DIVFF.@SCRATCH4
+0F9     @ADDFF.@SCRATCH2
+0F9     @PRINTF_L32D_95FPFPF.@SCRATCH8
+0FA-0FD @FTOSD.P1
+0FA-0FD @MULFF.P2
+0FA     lcd_putc.c
+0FA-0FD @DIV3232.P1
+0FA     @DIVFF.@SCRATCH5
+0FA     @ADDFF.@SCRATCH3
+0FB     lcd_gotoxy.x
+0FB     @delay_ms1.P1
+0FB     @DIVFF.@SCRATCH6
+0FB     @ADDFF.@SCRATCH4
+0FC     lcd_gotoxy.y
+0FC     @ADDFF.@SCRATCH5
+0FD     lcd_gotoxy.address
+0FD     @ADDFF.@SCRATCH6
+0FE     lcd_send_byte.address
+0FE-101 @DIV3232.P1
+0FE-101 @MULFF.P2
+0FE     @ADDFF.@SCRATCH7
+0FE     @FTOSD.@SCRATCH1
+0FF     lcd_send_byte.n
+0FF     @ADDFF.@SCRATCH8
+100     lcd_read_byte.low
+100     lcd_send_byte.@SCRATCH1
+101     lcd_send_nibble.n
+101     lcd_read_byte.high
+102     lcd_read_byte.@SCRATCH1
+102     @MULFF.@SCRATCH1
+102     @DIV3232.@SCRATCH1
+103     @MULFF.@SCRATCH2
+103     @DIV3232.@SCRATCH2
+104     @MULFF.@SCRATCH3
+104     @DIV3232.@SCRATCH3
+105     @DIV3232.@SCRATCH4
+106     @DIV3232.@SCRATCH5
+F81     lcd
+F83     PSP_DATA
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB     CCP_2
+FBB     CCP_2_LOW
+FBC     CCP_2_HIGH
+FBE     CCP_1_LOW
+FBE     CCP_1
+FBF     CCP_1_HIGH
+FE1-FE2 @READ_PACKED_MEMORY.P1
+FE1-FE2 @WRITE_PACKED_MEMORY.P2
+FE9-FEA @WRITE_PROGRAM_MEMORY.P1
+FE9-FEA @WRITE_PACKED_MEMORY.P2
+FE9-FEA @READ_PACKED_MEMORY.P3
+FE9-FEA @READ_PROGRAM_MEMORY.P4
+FF6-FF8 @READ_PROGRAM_MEMORY.P1
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+0058  @delay_ms1
+0004  LCD_INIT_STRING
+00A0  lcd_read_byte
+0080  lcd_send_nibble
+00DE  lcd_send_byte
+0124  lcd_init
+0848  lcd_gotoxy
+087E  @goto10091
+08A0  lcd_putc
+0184  @ITOF
+0594  @DIVFF
+0328  @ADDFF
+020C  @MULFF
+01BA  sensores
+06F0  Leer_Sensor_Flujo
+0B80  MAIN
+0018  @const331
+08FA  @PSTRINGCN_95
+0918  @FTOSD
+0958  @DIV3232
+09F8  @PRINTF_L32D_95FPFPF
+0028  @const342
+0038  @const343
+0048  @const344
+0B80  @cinit
+
+
+User Memory space: 
+
+User Memory space: 
+
+Project Directory:
+    E:\JP\JP\Laboratorio\Cabina Extractora de Gases y  Humos\2015\Cabina Extractora con Sensor Aire\Prueba Sensor Presión\Firmware\
+
+Project Files:
+    Cabina_Extractora.c
+    C:\Program Files\PICC\Devices\18F4550.h
+    LCD420.c
+    math.h
+
+Units:
+    E:\JP\JP\Laboratorio\Cabina Extractora de Gases y  Humos\2015\Cabina Extractora con Sensor Aire\Prueba Sensor Presión\Firmware\Cabina_Extractora (main)
+
+Compiler Settings:
+    Processor:      PIC18F4550
+    Pointer Size:   16
+    ADC Range:      0-1023
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      Cabina_Extractora.err
+    Ext Symbols: Cabina_Extractora.esym
+    INHX32:      Cabina_Extractora.hex
+    Symbols:     Cabina_Extractora.sym
+    List:        Cabina_Extractora.lst
+    Debug/COFF:  Cabina_Extractora.cof
+    Project:     Cabina_Extractora.PJT
+    Call Tree:   Cabina_Extractora.tre
+    Statistics:  Cabina_Extractora.sta

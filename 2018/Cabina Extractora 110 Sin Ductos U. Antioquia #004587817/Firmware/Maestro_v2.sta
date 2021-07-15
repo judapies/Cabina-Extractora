@@ -1,0 +1,106 @@
+
+ROM used: 30182 (31%)
+          30182 (31%) including unused fragments
+
+          6 Average locations per line
+          19 Average locations per statement
+
+RAM used: 1617 (49%) at main() level
+          1679 (50%) worst case
+
+Stack used: 7 worst case (out of 31 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+ 1184  1062  66  Maestro_v2.c
+  461     0   0  C:\Program Files (x86)\PICC\Devices\18F4685.h
+ 2172   260  16  MATH.h
+  354    78   5  HDM64GS12.c
+  556   167  10  GRAPHICS.c
+  201     0   0  imagen.h
+   57    39   2  FuncionesDisplay.h
+----- -----
+ 4985  1606 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     40   0   1             @delay_ms1
+0    854   1  20  1124 10.7  CEIL_FLOOR
+0    122   0  10             @FLT
+0     60   0   4             @SFTOI
+0     54   0   2             @ITOF
+0    350   1  14             @DIVFF
+0    632   1  16             @ADDFF
+0    246   0  11             @MULFF
+0     28   0   4    43  2.1  floor
+0     30   0   4    44  1.9  ceil
+0    354   1  16   257  7.2  fmod
+0   1034   2  22  1071  8.0  exp
+0     80   0   2             @SITOF
+0   1242   2  25  1228  9.9  log
+0    780   1  12   556  7.5  pow
+0    190   0   1   580  3.2  glcd_init
+0    184   0   7   609  5.4  glcd_update
+0    188   0   9   466  7.8  glcd_pixel
+0     90   0  10   317  4.7  glcd_fillScreen
+0     54   0   2   257  2.8  glcd_writeByte
+0    286   0   0             @const230
+0    250   0   0             @const233
+0    318   1  17  1475  8.8  glcd_line
+0    194   0   6  1036  5.8  glcd_rect
+0    440   1  20  1550 11.2  glcd_text57
+0   1052   2   0             @const309
+0   1052   2   0             @const312
+0   1052   2   0             @const315
+0    184   0  15   603  4.5  displayContrasena
+0     34   0   1             @SPRINTF
+0     44   0   3             @DIV88
+0    222   0   6             @PRINTF_D_330
+0    208   0  16   734  4.6  displayTiempo
+0    204   0   8   672  5.1  displayMenu
+0    232   0  19   737  4.5  displayfloat
+0     68   0   5             @FTOSD
+0    128   0  13             @DIV3232
+0    438   1  13             @PRINTF_L32D_330FPFPF
+0     60   0   3   134  0.8  sensores
+0    508   1   6  1538  7.9  glcd_imagen
+0     34   0   5             @MUL1616
+0    972   2  11   808  9.0  LeerFlujoInFlow
+0    510   1   9   543  7.5  Leer_Sensor_Presion
+0    190   0   1  1144  5.8  temp1s
+0  14216  24   8 63467 15.0  MAIN
+0     36   0   0             @const515
+0     40   0   0             @const516
+0     42   0   0             @const518
+0     36   0   0             @const520
+0     38   0   0             @const521
+0     44   0   0             @const525
+0     44   0   0             @const527
+0     48   0   0             @const529
+0     40   0   0             @const531
+0     42   0   0             @const534
+0     42   0   0             @const535
+0     68   0  10   344  4.6  BIT_BYTE
+
+Program metrics:
+    Functions               26
+    Statements              1606
+    Comments                791
+    Volume (V)              101990
+    Difficilty (D)          165.2
+    Effort to implement (E) 16846583
+    Time to implement (T)   259 hours, 59 minutes
+    Est Delivered Bugs (B)  22
+    Cyclomatic Complexity   241
+    Maintainability (MI)    98
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-00006     0  4  
+00008-0009C   150  0  
+0009E-0FFFE  30028  35350  
+10000-17FFE     0  32768  
+
+
+

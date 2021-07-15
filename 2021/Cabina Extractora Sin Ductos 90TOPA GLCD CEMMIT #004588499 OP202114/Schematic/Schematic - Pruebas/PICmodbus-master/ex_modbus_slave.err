@@ -1,0 +1,7 @@
+>>> Warning 216 "ex_modbus_slave.c" Line 286(0,1): Interrupts disabled during call to prevent re-entrancy:  (modbus_calc_crc)
+>>> Warning 202 "D:\Laboratorio\Cabina Extractora de Gases y  Humos\2021\Cabina Extractora Sin Ductos 90TOPA GLCD CEMMIT #0045884XX OP202114\Schematic - Pruebas\PICmodbus-master\modbus.c" Line 236(8,11): Variable never used:   rs232_errors
+>>> Warning 202 "ex_modbus_slave.c" Line 116(13,23): Variable never used:   ADC_value0
+>>> Warning 202 "ex_modbus_slave.c" Line 116(24,34): Variable never used:   ADC_value1
+>>> Warning 202 "ex_modbus_slave.c" Line 116(35,45): Variable never used:   ADC_value2
+      Memory usage:   ROM=5%      RAM=4% - 4%
+      0 Errors,  5 Warnings.

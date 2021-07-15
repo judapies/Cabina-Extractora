@@ -1,0 +1,3173 @@
+CCS PCH C Compiler, Version 4.104, 5967               04-feb.-21 13:26
+
+               Filename: D:\Laboratorio\Cabina Extractora de Gases y  Humos\2021\Cabina Extractora Sin Ductos 90TOPA GLCD CEMMIT #0045884XX OP202114\Schematic - Pruebas\PICmodbus-master\ex_modbus_slave.lst
+
+               ROM used: 2994 bytes (5%)
+                         Largest free fragment is 62538
+               RAM used: 144 (4%) at main() level
+                         162 (4%) worst case
+               Stack:    8 worst case (5 in main + 3 for interrupts)
+
+*
+00000:  GOTO   0730
+*
+00008:  MOVWF  04
+0000A:  MOVFF  FD8,05
+0000E:  MOVFF  FE0,06
+00012:  MOVLB  0
+00014:  MOVFF  FE9,0C
+00018:  MOVFF  FEA,07
+0001C:  MOVFF  FE1,08
+00020:  MOVFF  FE2,09
+00024:  MOVFF  FD9,0A
+00028:  MOVFF  FDA,0B
+0002C:  MOVFF  FF3,12
+00030:  MOVFF  FF4,13
+00034:  MOVFF  FFA,14
+00038:  MOVFF  00,0E
+0003C:  MOVFF  01,0F
+00040:  MOVFF  02,10
+00044:  MOVFF  03,11
+00048:  BTFSS  F9D.1
+0004A:  GOTO   0054
+0004E:  BTFSC  F9E.1
+00050:  GOTO   02F4
+00054:  BTFSS  F9D.5
+00056:  GOTO   0060
+0005A:  BTFSC  F9E.5
+0005C:  GOTO   036A
+00060:  MOVFF  0E,00
+00064:  MOVFF  0F,01
+00068:  MOVFF  10,02
+0006C:  MOVFF  11,03
+00070:  MOVFF  0C,FE9
+00074:  MOVFF  07,FEA
+00078:  BSF    07.7
+0007A:  MOVFF  08,FE1
+0007E:  MOVFF  09,FE2
+00082:  MOVFF  0A,FD9
+00086:  MOVFF  0B,FDA
+0008A:  MOVFF  12,FF3
+0008E:  MOVFF  13,FF4
+00092:  MOVFF  14,FFA
+00096:  MOVF   04,W
+00098:  MOVFF  06,FE0
+0009C:  MOVFF  05,FD8
+000A0:  RETFIE 0
+.................... ///////////////////////////////////////////////////////////////////////// 
+.................... ////                         ex_modbus_slave.c                       //// 
+.................... ////                                                                 //// 
+.................... ////    This is a simple test program for a modbus slave device.     //// 
+.................... ///////////////////////////////////////////////////////////////////////// 
+.................... ////                                                                 //// 
+.................... //// Notes:                                                          //// 
+.................... ////                                                                 //// 
+.................... //// Testing Example:                                                //// 
+.................... //// To test the slave code you will need a master device loaded     //// 
+.................... //// with the ex_modbus_master.c program (Note that you can test it  //// 
+.................... //// with PC software as well.  See Communicating with PC Software.) //// 
+.................... //// After making the proper connections (refer to wiring diagram)   //// 
+.................... //// you should power on the slave device and then power on the      //// 
+.................... //// master device.  The master device should begin sending commands //// 
+.................... //// out and showing the replies from the slave through the PC       //// 
+.................... //// connection.                                                     //// 
+.................... ////                                                                 //// 
+.................... //// Hardware UART:                                                  //// 
+.................... //// If you use a hardware UART, make sure MODBUS_SERIAL_INT_SOURCE  //// 
+.................... //// is set to MODBUS_INT_RDA, MODBUS_INT_RDA2, MODBUS_INT_RDA3, or  //// 
+.................... //// MODBUS_INT_RDA4 depending on which UART you are using.  Also,   //// 
+.................... //// when using a hardware UART you do not need to specify the TX    //// 
+.................... //// and RX pins.  The driver figures them out for you.              //// 
+.................... ////                                                                 //// 
+.................... //// Communicating with PC software:                                 //// 
+.................... //// To communicate with a PC, connect the board to your computer    //// 
+.................... //// using the serial cable provided with your board.  Then          //// 
+.................... //// uncomment the #define USE_WITH_PC 1 line.  In this              //// 
+.................... //// configuration the PC is the master and the PIC is the slave.    //// 
+.................... ////                                                                 //// 
+.................... //// Troubleshooting:                                                //// 
+.................... //// If the device seems unresponsive, power cycle the board and     //// 
+.................... //// wait 5 seconds.                                                 //// 
+.................... ////                                                                 //// 
+.................... //// Wiring Diagram:                                                 //// 
+.................... //// This is the diagram for the default configuration.  Note that   ////  
+.................... //// the external interrupt (INT), PIN B0, is the only pin that can  //// 
+.................... //// be used for receiving with software RS232 for PCM and PCH, and  //// 
+.................... //// for PCD the exteranl interrupt (INT0), usually PIN F6, is the   //// 
+.................... //// only pin that can be used for receiving with software RS232.    //// 
+.................... ////                                                                 //// 
+.................... ////            PCH and PCM                        PCD               //// 
+.................... ////    ----------     ----------       ----------     ----------    //// 
+.................... ////    |        |     |        |       |        |     |        |    //// 
+.................... ////    | Master |     | Slave  |       | Master |     | Slave  |    //// 
+.................... ////    |        |     |        |       |        |     |        |    //// 
+.................... ////    |      B1|---->|B0      |       |      D8|---->|F6      |    //// 
+.................... ////    |      B0|<----|B1      |       |      F6|<----|D8      |    //// 
+.................... ////    ----------     ----------       ----------     ----------    //// 
+.................... ////                                                                 //// 
+.................... ///////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2006 Custom Computer Services        //// 
+.................... //// This source code may only be used by licensed users of the CCS  //// 
+.................... //// C compiler.  This source code may only be distributed to other  //// 
+.................... //// licensed users of the CCS C compiler.  No other use,            //// 
+.................... //// reproduction or distribution is permitted without written       //// 
+.................... //// permission.  Derivative programs created using this software    //// 
+.................... //// in object code form are not restricted in any way.              //// 
+.................... ///////////////////////////////////////////////////////////////////////// 
+....................  
+.................... //#define USE_WITH_PC 1 
+....................  
+.................... #include <18F4620.h> 
+.................... //////// Standard Header file for the PIC18F4620 device //////////////// 
+.................... #device PIC18F4620 
+.................... #list 
+....................  
+.................... #DEVICE  ADC=10 
+.................... #fuses HS,NOWDT,NOPROTECT,NOLVP,NODEBUG,NOSTVREN,NOPUT,NOCPD,NOWRT,NOIESO,NOFCMEN,NOPBADEN,NOWRTC,NOWRTB,NOEBTR,NOEBTRB,NOCPB,NOXINST,NOLPT1OSC,NOMCLR 
+.................... //#fuses XT,NOWDT 
+.................... #use delay(clock=4M) 
+*
+00412:  CLRF   FEA
+00414:  MOVLW  8F
+00416:  MOVWF  FE9
+00418:  MOVF   FEF,W
+0041A:  BZ    0438
+0041C:  MOVLW  01
+0041E:  MOVWF  01
+00420:  CLRF   00
+00422:  DECFSZ 00,F
+00424:  BRA    0422
+00426:  DECFSZ 01,F
+00428:  BRA    0420
+0042A:  MOVLW  4A
+0042C:  MOVWF  00
+0042E:  DECFSZ 00,F
+00430:  BRA    042E
+00432:  BRA    0434
+00434:  DECFSZ FEF,F
+00436:  BRA    041C
+00438:  GOTO   07DA (RETURN)
+....................  
+....................  
+.................... //#include "lcd.c" 
+....................  
+.................... #define MODBUS_TYPE MODBUS_TYPE_SLAVE 
+.................... #define MODBUS_SERIAL_TYPE MODBUS_RTU     //use MODBUS_ASCII for ASCII mode 
+.................... #define MODBUS_SERIAL_RX_BUFFER_SIZE 64 
+.................... #define MODBUS_SERIAL_BAUD 9600 
+....................  
+.................... #ifndef USE_WITH_PC 
+.................... #define MODBUS_SERIAL_INT_SOURCE MODBUS_INT_RDA   //MODBUS_INT_EXT 
+.................... #if defined(__PCD__) 
+.................... #define MODBUS_SERIAL_TX_PIN PIN_D8   // Data transmit pin 
+.................... #define MODBUS_SERIAL_RX_PIN PIN_F6   // Data receive pin 
+.................... //The following should be defined for RS485 communication 
+.................... //#define MODBUS_SERIAL_ENABLE_PIN   0   // Controls DE pin for RS485 
+.................... //#define MODBUS_SERIAL_RX_ENABLE    0   // Controls RE pin for RS485 
+.................... #else 
+.................... #define MODBUS_SERIAL_TX_PIN PIN_C6   // Data transmit pin 
+.................... #define MODBUS_SERIAL_RX_PIN PIN_C7   // Data receive pin 
+.................... //The following should be defined for RS485 communication 
+.................... #define MODBUS_SERIAL_ENABLE_PIN   PIN_B4   // Controls DE pin for RS485 
+.................... #define MODBUS_SERIAL_RX_ENABLE    0    // Controls RE pin for RS485 
+.................... #endif 
+.................... #else 
+.................... #define MODBUS_SERIAL_INT_SOURCE MODBUS_INT_RDA 
+.................... #endif 
+....................  
+.................... #include <modbus.c> 
+.................... ////////////////////////////////////////////////////////////////////////////////////////// 
+.................... ////                                      modbus.c                                    //// 
+.................... ////                                                                                  //// 
+.................... ////                 MODBUS protocol driver for serial communications.                //// 
+.................... ////                                                                                  //// 
+.................... ////  Refer to documentation at http://www.modbus.org for more information on MODBUS. //// 
+.................... ////                                                                                  //// 
+.................... ////////////////////////////////////////////////////////////////////////////////////////// 
+.................... ////                                                                                  //// 
+.................... //// DEFINES:                                                                         //// 
+.................... ////                                                                                  //// 
+.................... ////  MODBUS_TYPE                   MODBUS_TYPE_MASTER or MODBUS_TYPE_SLAVE           //// 
+.................... ////  MODBUS_SERIAL_INT_SOURCE      Source of interrupts                              //// 
+.................... ////                                (MODBUS_INT_EXT,MODBUS_INT_RDA,MODBUS_INT_RDA2,   //// 
+.................... ////                                   MODBUS_INT_RDA3,MODBUS_INT_RDA4)               //// 
+.................... ////  MODBUS_SERIAL_TYPE            MODBUS_RTU or MODBUS_ASCII                        //// 
+.................... ////  MODBUS_SERIAL_BAUD            Valid baud rate for serial                        //// 
+.................... ////  MODBUS_SERIAL_RX_PIN          Valid pin for serial receive                      //// 
+.................... ////  MODBUS_SERIAL_TX_PIN          Valid pin for serial transmit                     //// 
+.................... ////  MODBUS_SERIAL_ENABLE_PIN      Valid pin for serial enable, rs485 only           //// 
+.................... ////  MODBUS_SERIAL_RX_ENABLE       Valid pin for serial rcv enable, rs485 only       //// 
+.................... ////  MODBUS_SERAIL_RX_BUFFER_SIZE  Size of the receive buffer                        //// 
+.................... ////                                                                                  //// 
+.................... ////                                                                                  //// 
+.................... //// SHARED API:                                                                      //// 
+.................... ////                                                                                  //// 
+.................... ////  modbus_init()                                                                   //// 
+.................... ////    - Initialize modbus serial communication system                               //// 
+.................... ////                                                                                  //// 
+.................... ////  modbus_serial_send_start(address,func)                                          //// 
+.................... ////    - Setup serial line to begin sending.  Once this is called, you can send data //// 
+.................... ////      using modbus_serial_putc().  Should only be used for custom commands.       //// 
+.................... ////                                                                                  //// 
+.................... ////  modbus_serial_send_stop()                                                       //// 
+.................... ////    - Must be called to finalize the send when modbus_serial_send_start is used.  //// 
+.................... ////                                                                                  //// 
+.................... ////  modbus_kbhit()                                                                  //// 
+.................... ////    - Used to check if a packet has been received.                                //// 
+.................... ////                                                                                  //// 
+.................... //// MASTER API:                                                                      //// 
+.................... ////  All master API functions return 0 on success.                                   //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_read_coils(address,start_address,quantity)                     //// 
+.................... ////    - Wrapper for function 0x01(read coils) in the MODBUS specification.          //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_read_discrete_input(address,start_address,quantity)            //// 
+.................... ////    - Wrapper for function 0x02(read discret input) in the MODBUS specification.  //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_read_holding_registers(address,start_address,quantity)         //// 
+.................... ////    - Wrapper for function 0x03(read holding regs) in the MODBUS specification.   //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_read_input_registers(address,start_address,quantity)           //// 
+.................... ////    - Wrapper for function 0x04(read input regs) in the MODBUS specification.     //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_write_single_coil(address,output_address,on)                   //// 
+.................... ////    - Wrapper for function 0x05(write single coil) in the MODBUS specification.   //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_write_single_register(address,reg_address,reg_value)           //// 
+.................... ////    - Wrapper for function 0x06(write single reg) in the MODBUS specification.    //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_read_exception_status(address)                                 //// 
+.................... ////    - Wrapper for function 0x07(read void status) in the MODBUS specification.    //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_diagnostics(address,sub_func,data)                             //// 
+.................... ////    - Wrapper for function 0x08(diagnostics) in the MODBUS specification.         //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_get_comm_event_counter(address)                                //// 
+.................... ////    - Wrapper for function 0x0B(get comm event count) in the MODBUS specification.//// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_get_comm_event_log(address)                                    //// 
+.................... ////    - Wrapper for function 0x0C(get comm event log) in the MODBUS specification.  //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_write_multiple_coils(address,start_address,quantity,*values)   //// 
+.................... ////    - Wrapper for function 0x0F(write multiple coils) in the MODBUS specification.//// 
+.................... ////    - Special Note: values is a pointer to an int8 array, each byte represents 8  //// 
+.................... ////                    coils.                                                        //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_write_multiple_registers(address,start_address,quantity,*values)/// 
+.................... ////    - Wrapper for function 0x10(write multiple regs) in the MODBUS specification. //// 
+.................... ////    - Special Note: values is a pointer to an int8 array                          //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_report_slave_id(address)                                       //// 
+.................... ////    - Wrapper for function 0x11(report slave id) in the MODBUS specification.     //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_read_file_record(address,byte_count,*request)                  //// 
+.................... ////    - Wrapper for function 0x14(read file record) in the MODBUS specification.    //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_write_file_record(address,byte_count,*request)                 //// 
+.................... ////    - Wrapper for function 0x15(write file record) in the MODBUS specification.   //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_mask_write_register(address,reference_address,AND_mask,OR_mask)//// 
+.................... ////    - Wrapper for function 0x16(read coils) in the MODBUS specification.          //// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_read_write_multiple_registers(address,read_start,read_quantity,//// 
+.................... ////                            write_start,write_quantity, *write_registers_value)   //// 
+.................... ////    - Wrapper for function 0x17(read write mult regs) in the MODBUS specification.//// 
+.................... ////                                                                                  //// 
+.................... ////  exception modbus_read_FIFO_queue(address,FIFO_address)                          //// 
+.................... ////    - Wrapper for function 0x18(read FIFO queue) in the MODBUS specification.     //// 
+.................... ////                                                                                  //// 
+.................... ////                                                                                  //// 
+.................... //// Slave API:                                                                       //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_read_coils_rsp(address,byte_count,*coil_data)                       //// 
+.................... ////    - Wrapper to respond to 0x01(read coils) in the MODBUS specification.         //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_read_discrete_input_rsp(address,byte_count,*input_data)             //// 
+.................... ////    - Wrapper to respond to 0x02(read discret input) in the MODBUS specification. //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_read_holding_registers_rsp(address,byte_count,*reg_data)            //// 
+.................... ////    - Wrapper to respond to 0x03(read holding regs) in the MODBUS specification.  //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_read_input_registers_rsp(address,byte_count,*input_data)            //// 
+.................... ////    - Wrapper to respond to 0x04(read input regs) in the MODBUS specification.    //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_write_single_coil_rsp(address,output_address,output_value)          //// 
+.................... ////    - Wrapper to respond to 0x05(write single coil) in the MODBUS specification.  //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_write_single_register_rsp(address,reg_address,reg_value)            //// 
+.................... ////    - Wrapper to respond to 0x06(write single reg) in the MODBUS specification.   //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_read_exception_status_rsp(address, data)                            //// 
+.................... ////    - Wrapper to respond to 0x07(read void status) in the MODBUS specification.   //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_diagnostics_rsp(address,sub_func,data)                              //// 
+.................... ////    - Wrapper to respond to 0x08(diagnostics) in the MODBUS specification.        //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_get_comm_event_counter_rsp(address,status,event_count)              //// 
+.................... ////    - Wrapper to respond to 0x0B(get comm event count) in the MODBUS specification//// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_get_comm_event_log_rsp(address,status,event_count,message_count,    //// 
+.................... ////                                   *events, events_len)                           //// 
+.................... ////    - Wrapper to respond to 0x0C(get comm event log) in the MODBUS specification. //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_write_multiple_coils_rsp(address,start_address,quantity)            //// 
+.................... ////    - Wrapper to respond to 0x0F(write multiple coils) in the MODBUS specification//// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_write_multiple_registers_rsp(address,start_address,quantity)        //// 
+.................... ////    - Wrapper to respond to 0x10(write multiple regs) in the MODBUS specification.//// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_report_slave_id_rsp(address,slave_id,run_status,*data,data_len)     //// 
+.................... ////    - Wrapper to respond to 0x11(report slave id) in the MODBUS specification.    //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_read_file_record_rsp(address,byte_count,*request)                   //// 
+.................... ////    - Wrapper to respond to 0x14(read file record) in the MODBUS specification.   //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_write_file_record_rsp(address,byte_count,*request)                  //// 
+.................... ////    - Wrapper to respond to 0x15(write file record) in the MODBUS specification.  //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_mask_write_register_rsp(address,reference_address,AND_mask,OR_mask) //// 
+.................... ////    - Wrapper to respond to 0x16(read coils) in the MODBUS specification.         //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_read_write_multiple_registers_rsp(address,*data,data_len)           //// 
+.................... ////    - Wrapper to respond to 0x17(read write mult regs) in the MODBUS specification//// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_read_FIFO_queue_rsp(address,FIFO_len,*data)                         //// 
+.................... ////    - Wrapper to respond to 0x18(read FIFO queue) in the MODBUS specification.    //// 
+.................... ////                                                                                  //// 
+.................... ////  void modbus_exception_rsp(int8 address, int16 func, exception error)            //// 
+.................... ////    - Wrapper to send an exception response.  See exception list below.           //// 
+.................... ////                                                                                  //// 
+.................... //// Exception List:                                                                  //// 
+.................... ////  ILLEGAL_FUNCTION, ILLEGAL_DATA_ADDRESS, ILLEGAL_DATA_VALUE,                     //// 
+.................... ////  SLAVE_DEVICE_FAILURE, ACKNOWLEDGE, SLAVE_DEVICE_BUSY, MEMORY_PARITY_ERROR,      //// 
+.................... ////  GATEWAY_PATH_UNAVAILABLE, GATEWAY_TARGET_NO_RESPONSE                            //// 
+.................... ////                                                                                  //// 
+.................... ////////////////////////////////////////////////////////////////////////////////////////// 
+.................... ////                                                                                  //// 
+.................... //// Revision history:                                                                //// 
+.................... ////  May 8, 2009          Made PCD Compatible                                        //// 
+.................... ////  August 21, 2009      Added Modbus ASCII protocol                                //// 
+.................... ////  September 25, 2009   Fixed Bug in RCV_ON function                               //// 
+.................... ////                                                                                  //// 
+.................... ////////////////////////////////////////////////////////////////////////////////////////// 
+.................... ////                (C) Copyright 1996, 2006 Custom Computer Services                 //// 
+.................... ////        This source code may only be used by licensed users of the CCS            //// 
+.................... ////        C compiler.  This source code may only be distributed to other            //// 
+.................... ////        licensed users of the CCS C compiler.  No other use,                      //// 
+.................... ////        reproduction or distribution is permitted without written                 //// 
+.................... ////        permission.  Derivative programs created using this software              //// 
+.................... ////        in object code form are not restricted in any way.                        //// 
+.................... ////////////////////////////////////////////////////////////////////////////////////////// 
+....................  
+.................... /*Some defines so we can use identifiers to set things up*/ 
+.................... #define MODBUS_TYPE_MASTER 99999 
+.................... #define MODBUS_TYPE_SLAVE  88888 
+.................... #define MODBUS_INT_RDA     77777 
+.................... #define MODBUS_INT_RDA2    66666 
+.................... #define MODBUS_INT_RDA3    44444 
+.................... #define MODBUS_INT_RDA4    33333 
+.................... #define MODBUS_INT_EXT     55555 
+.................... #define MODBUS_RTU         1 
+.................... #define MODBUS_ASCII       2 
+....................  
+.................... #ifndef MODBUS_TYPE 
+.................... #define MODBUS_TYPE MODBUS_TYPE_MASTER 
+.................... #endif 
+....................  
+.................... #ifndef MODBUS_SERIAL_TYPE 
+.................... #define MODBUS_SERIAL_TYPE MODBUS_RTU 
+.................... #endif 
+....................  
+.................... #ifndef MODBUS_SERIAL_INT_SOURCE 
+.................... #define MODBUS_SERIAL_INT_SOURCE MODBUS_INT_RDA    // Select between external interrupt 
+.................... #endif                                             // or asynchronous serial interrupt 
+....................  
+.................... #ifndef MODBUS_SERIAL_BAUD 
+.................... #define MODBUS_SERIAL_BAUD 9600 
+.................... #endif 
+....................  
+.................... #ifndef MODBUS_SERIAL_RX_PIN 
+.................... #define MODBUS_SERIAL_RX_PIN       PIN_C7   // Data receive pin 
+.................... #endif 
+....................  
+.................... #ifndef MODBUS_SERIAL_TX_PIN 
+.................... #define MODBUS_SERIAL_TX_PIN       PIN_C6   // Data transmit pin 
+.................... #endif 
+....................  
+.................... #ifndef MODBUS_SERIAL_ENABLE_PIN 
+.................... #define MODBUS_SERIAL_ENABLE_PIN   0   // Controls DE pin.  RX low, TX high. 
+.................... #endif 
+....................  
+.................... #ifndef MODBUS_SERIAL_RX_ENABLE 
+.................... #define MODBUS_SERIAL_RX_ENABLE    0   // Controls RE pin.  Should keep low. 
+.................... #endif 
+....................  
+.................... #ifndef MODBUS_SERIAL_TIMEOUT 
+....................    #if (MODBUS_SERIAL_TYPE == MODBUS_ASCII) 
+....................       #define MODBUS_SERIAL_TIMEOUT    1000000 
+....................    #else 
+....................       #define MODBUS_SERIAL_TIMEOUT      10000     //in us 
+....................    #endif 
+.................... #endif 
+....................  
+.................... #if( MODBUS_SERIAL_INT_SOURCE == MODBUS_INT_RDA ) 
+....................    #use rs232(baud=MODBUS_SERIAL_BAUD, UART1, bits=8, stop=1, parity=N, stream=MODBUS_SERIAL, errors) 
+*
+00322:  BTFSS  F9E.5
+00324:  BRA    0322
+00326:  MOVFF  FAB,17
+0032A:  MOVFF  FAE,01
+0032E:  BTFSS  17.1
+00330:  BRA    0336
+00332:  BCF    FAB.4
+00334:  BSF    FAB.4
+00336:  RETLW  00
+*
+0043C:  BTFSS  F9E.4
+0043E:  BRA    043C
+00440:  MOVWF  FAD
+00442:  GOTO   044A (RETURN)
+....................    #define RCV_OFF() {disable_interrupts(INT_RDA);} 
+.................... #elif( MODBUS_SERIAL_INT_SOURCE == MODBUS_INT_RDA2 ) 
+....................    #use rs232(baud=MODBUS_SERIAL_BAUD, UART2, bits=8, stop=1, parity=N, stream=MODBUS_SERIAL, errors) 
+....................    #define RCV_OFF() {disable_interrupts(INT_RDA2);} 
+.................... #elif( MODBUS_SERIAL_INT_SOURCE == MODBUS_INT_RDA3 ) 
+....................    #use rs232(baud=MODBUS_SERIAL_BAUD, UART3, bits=8, stop=1, parity=N, stream=MODBUS_SERIAL, errors) 
+....................    #define RCV_OFF() {disable_interrupts(INT_RDA3);} 
+.................... #elif( MODBUS_SERIAL_INT_SOURCE == MODBUS_INT_RDA4 ) 
+....................    #use rs232(baud=MODBUS_SERIAL_BAUD, UART4, bits=8, stop=1, parity=N, stream=MODBUS_SERIAL, errors) 
+....................    #define RCV_OFF() {disable_interrupts(INT_RDA4);} 
+.................... #elif( MODBUS_SERIAL_INT_SOURCE == MODBUS_INT_EXT ) 
+....................    #use rs232(baud=MODBUS_SERIAL_BAUD, xmit=MODBUS_SERIAL_TX_PIN, rcv=MODBUS_SERIAL_RX_PIN, bits=8, stop=1, parity=N, stream=MODBUS_SERIAL, disable_ints) 
+....................    #if defined(__PCD__) 
+....................    #define RCV_OFF() {disable_interrupts(INT_EXT0);} 
+....................    #else 
+....................    #define RCV_OFF() {disable_interrupts(INT_EXT);} 
+....................    #endif 
+.................... #else 
+....................    #error Please define a correct interrupt source 
+.................... #endif 
+....................  
+.................... #ifndef MODBUS_SERIAL_RX_BUFFER_SIZE 
+.................... #define MODBUS_SERIAL_RX_BUFFER_SIZE  64      //size of send/rcv buffer 
+.................... #endif 
+....................  
+.................... #if (MODBUS_TYPE == MODBUS_TYPE_MASTER) 
+.................... int32 modbus_serial_wait=MODBUS_SERIAL_TIMEOUT; 
+....................  
+.................... #define MODBUS_SERIAL_WAIT_FOR_RESPONSE()\ 
+.................... {\ 
+....................     if(address)\ 
+....................     {\ 
+....................         while(!modbus_kbhit() && --modbus_serial_wait)\ 
+....................             delay_us(1);\ 
+....................         if(!modbus_serial_wait)\ 
+....................             modbus_rx.error=TIMEOUT;\ 
+....................     }\ 
+....................     modbus_serial_wait = MODBUS_SERIAL_TIMEOUT;\ 
+.................... } 
+.................... #endif 
+....................  
+.................... #if (MODBUS_SERIAL_INT_SOURCE != MODBUS_INT_EXT) 
+....................    #if defined(__PCD__) 
+....................       #if (MODBUS_SERIAL_INT_SOURCE == MODBUS_INT_RDA) 
+....................          #word TXSTA=getenv("SFR:U1STA")  
+....................          #bit TRMT=TXSTA.8 
+....................       #elif (MODBUS_SERIAL_INT_SOURCE == MODBUS_INT_RDA2) 
+....................          #word TXSTA=getenv("SFR:U2STA") 
+....................          #bit TRMT=TXSTA.8 
+....................       #elif (MODBUS_SERIAL_INT_SOURCE == MODBUS_INT_RDA3) 
+....................          #word TXSTA=getenv("SFR:U3STA") 
+....................          #bit TRMT=TXSTA.8 
+....................       #elif (MODBUS_SERIAL_INT_SOURCE == MODBUS_INT_RDA4) 
+....................          #word TXSTA=getenv("SFR:U4STA") 
+....................          #bit TRMT=TXSTA.8 
+....................       #endif 
+....................    #else 
+....................       #byte TXSTA=getenv("sfr:TXSTA") 
+....................       #bit TRMT=TXSTA.1 
+....................    #endif 
+....................  
+.................... #define WAIT_FOR_HW_BUFFER()\ 
+.................... {\ 
+....................    while(!TRMT);\ 
+.................... }    
+.................... #endif 
+....................  
+.................... int1 modbus_serial_new=0; 
+....................  
+.................... /******************************************************************** 
+.................... These exceptions are defined in the MODBUS protocol.  These can be 
+.................... used by the slave to communicate problems with the transmission back 
+.................... to the master who can also use these to easily check the exceptions.   
+.................... The first exception is the only one that is not part of the protocol  
+.................... specification.  The TIMEOUT exception is returned when no slave  
+.................... responds to the master's request within the timeout period. 
+.................... ********************************************************************/ 
+.................... typedef enum _exception{ILLEGAL_FUNCTION=1,ILLEGAL_DATA_ADDRESS=2,  
+.................... ILLEGAL_DATA_VALUE=3,SLAVE_DEVICE_FAILURE=4,ACKNOWLEDGE=5,SLAVE_DEVICE_BUSY=6,  
+.................... MEMORY_PARITY_ERROR=8,GATEWAY_PATH_UNAVAILABLE=10,GATEWAY_TARGET_NO_RESPONSE=11, 
+.................... TIMEOUT=12} exception; 
+....................  
+.................... /******************************************************************** 
+.................... These functions are defined in the MODBUS protocol.  These can be 
+.................... used by the slave to check the incomming function.  See  
+.................... ex_modbus_slave.c for example usage. 
+.................... ********************************************************************/ 
+.................... typedef enum _function{FUNC_READ_COILS=0x01,FUNC_READ_DISCRETE_INPUT=0x02, 
+.................... FUNC_READ_HOLDING_REGISTERS=0x03,FUNC_READ_INPUT_REGISTERS=0x04, 
+.................... FUNC_WRITE_SINGLE_COIL=0x05,FUNC_WRITE_SINGLE_REGISTER=0x06, 
+.................... FUNC_READ_EXCEPTION_STATUS=0x07,FUNC_DIAGNOSTICS=0x08, 
+.................... FUNC_GET_COMM_EVENT_COUNTER=0x0B,FUNC_GET_COMM_EVENT_LOG=0x0C, 
+.................... FUNC_WRITE_MULTIPLE_COILS=0x0F,FUNC_WRITE_MULTIPLE_REGISTERS=0x10, 
+.................... FUNC_REPORT_SLAVE_ID=0x11,FUNC_READ_FILE_RECORD=0x14, 
+.................... FUNC_WRITE_FILE_RECORD=0x15,FUNC_MASK_WRITE_REGISTER=0x16, 
+.................... FUNC_READ_WRITE_MULTIPLE_REGISTERS=0x17,FUNC_READ_FIFO_QUEUE=0x18} function; 
+....................      
+.................... /*Stages of MODBUS reception.  Used to keep our ISR fast enough.*/ 
+.................... #if (MODBUS_SERIAL_TYPE==MODBUS_ASCII) 
+....................    enum {MODBUS_START=0, MODBUS_GETADDY, MODBUS_GETFUNC, MODBUS_GETDATA, MODBUS_STOP} modbus_serial_state=0; 
+.................... #else 
+....................    enum {MODBUS_GETADDY=0, MODBUS_GETFUNC=1, MODBUS_GETDATA=2} modbus_serial_state = 0; 
+.................... #endif 
+....................  
+.................... /*Global value holding our current CRC value.*/ 
+.................... #if (MODBUS_SERIAL_TYPE==MODBUS_ASCII) 
+....................    unsigned int8 modbus_serial_lrc; 
+.................... #else 
+....................    union 
+....................    { 
+....................       int8 b[2]; 
+....................       int16 d; 
+....................    } modbus_serial_crc; 
+.................... #endif 
+....................  
+.................... /******************************************************************** 
+.................... Our receive struct.  This is used when receiving data as a master or 
+.................... slave.  Once a message is sent to you with your address, you should 
+.................... begin processing that message.  Refer to ex_modbus_slave.c to see  
+.................... how to properly use this structure. 
+.................... ********************************************************************/ 
+.................... struct 
+.................... { 
+....................    int8 address; 
+....................    int8 len;                                //number of bytes in the message received 
+....................    function func;                           //the function of the message received 
+....................    exception error;                         //error recieved, if any 
+....................    int8 data[MODBUS_SERIAL_RX_BUFFER_SIZE]; //data of the message received 
+.................... } modbus_rx; 
+....................  
+.................... /* Table of CRC values for high–order byte */ 
+.................... #if (MODBUS_SERIAL_TYPE == MODBUS_RTU) 
+.................... const unsigned char modbus_auchCRCHi[] = { 
+.................... 0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81, 
+.................... 0x40,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81,0x40,0x00,0xC1,0x81,0x40,0x01,0xC0, 
+.................... 0x80,0x41,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81,0x40,0x00,0xC1,0x81,0x40,0x01, 
+.................... 0xC0,0x80,0x41,0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41,0x01,0xC0,0x80,0x41, 
+.................... 0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81,0x40,0x00,0xC1,0x81, 
+.................... 0x40,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41,0x01,0xC0, 
+.................... 0x80,0x41,0x00,0xC1,0x81,0x40,0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41,0x01, 
+.................... 0xC0,0x80,0x41,0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81,0x40, 
+.................... 0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81, 
+.................... 0x40,0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81,0x40,0x01,0xC0, 
+.................... 0x80,0x41,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81,0x40,0x00,0xC1,0x81,0x40,0x01, 
+.................... 0xC0,0x80,0x41,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41, 
+.................... 0x00,0xC1,0x81,0x40,0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81, 
+.................... 0x40,0x01,0xC0,0x80,0x41,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81,0x40,0x01,0xC0, 
+.................... 0x80,0x41,0x00,0xC1,0x81,0x40,0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41,0x01, 
+.................... 0xC0,0x80,0x41,0x00,0xC1,0x81,0x40,0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41, 
+.................... 0x00,0xC1,0x81,0x40,0x01,0xC0,0x80,0x41,0x01,0xC0,0x80,0x41,0x00,0xC1,0x81, 
+.................... 0x40 
+.................... }; 
+....................  
+.................... /* Table of CRC values for low–order byte */ 
+.................... const char modbus_auchCRCLo[] = { 
+.................... 0x00,0xC0,0xC1,0x01,0xC3,0x03,0x02,0xC2,0xC6,0x06,0x07,0xC7,0x05,0xC5,0xC4, 
+.................... 0x04,0xCC,0x0C,0x0D,0xCD,0x0F,0xCF,0xCE,0x0E,0x0A,0xCA,0xCB,0x0B,0xC9,0x09, 
+.................... 0x08,0xC8,0xD8,0x18,0x19,0xD9,0x1B,0xDB,0xDA,0x1A,0x1E,0xDE,0xDF,0x1F,0xDD, 
+.................... 0x1D,0x1C,0xDC,0x14,0xD4,0xD5,0x15,0xD7,0x17,0x16,0xD6,0xD2,0x12,0x13,0xD3, 
+.................... 0x11,0xD1,0xD0,0x10,0xF0,0x30,0x31,0xF1,0x33,0xF3,0xF2,0x32,0x36,0xF6,0xF7, 
+.................... 0x37,0xF5,0x35,0x34,0xF4,0x3C,0xFC,0xFD,0x3D,0xFF,0x3F,0x3E,0xFE,0xFA,0x3A, 
+.................... 0x3B,0xFB,0x39,0xF9,0xF8,0x38,0x28,0xE8,0xE9,0x29,0xEB,0x2B,0x2A,0xEA,0xEE, 
+.................... 0x2E,0x2F,0xEF,0x2D,0xED,0xEC,0x2C,0xE4,0x24,0x25,0xE5,0x27,0xE7,0xE6,0x26, 
+.................... 0x22,0xE2,0xE3,0x23,0xE1,0x21,0x20,0xE0,0xA0,0x60,0x61,0xA1,0x63,0xA3,0xA2, 
+.................... 0x62,0x66,0xA6,0xA7,0x67,0xA5,0x65,0x64,0xA4,0x6C,0xAC,0xAD,0x6D,0xAF,0x6F, 
+.................... 0x6E,0xAE,0xAA,0x6A,0x6B,0xAB,0x69,0xA9,0xA8,0x68,0x78,0xB8,0xB9,0x79,0xBB, 
+.................... 0x7B,0x7A,0xBA,0xBE,0x7E,0x7F,0xBF,0x7D,0xBD,0xBC,0x7C,0xB4,0x74,0x75,0xB5, 
+.................... 0x77,0xB7,0xB6,0x76,0x72,0xB2,0xB3,0x73,0xB1,0x71,0x70,0xB0,0x50,0x90,0x91, 
+.................... 0x51,0x93,0x53,0x52,0x92,0x96,0x56,0x57,0x97,0x55,0x95,0x94,0x54,0x9C,0x5C, 
+.................... 0x5D,0x9D,0x5F,0x9F,0x9E,0x5E,0x5A,0x9A,0x9B,0x5B,0x99,0x59,0x58,0x98,0x88, 
+.................... 0x48,0x49,0x89,0x4B,0x8B,0x8A,0x4A,0x4E,0x8E,0x8F,0x4F,0x8D,0x4D,0x4C,0x8C, 
+.................... 0x44,0x84,0x85,0x45,0x87,0x47,0x46,0x86,0x82,0x42,0x43,0x83,0x41,0x81,0x80, 
+.................... 0x40 
+.................... }; 
+.................... #endif 
+....................  
+.................... // Purpose:    Enable data reception 
+.................... // Inputs:     None 
+.................... // Outputs:    None 
+.................... void RCV_ON(void) 
+.................... { 
+....................    #if (MODBUS_SERIAL_INT_SOURCE!=MODBUS_INT_EXT) 
+....................       while(kbhit(MODBUS_SERIAL)) {fgetc(MODBUS_SERIAL);}  //Clear RX buffer. Clear RDA interrupt flag. Clear overrun error flag. 
+*
+003CC:  BTFSS  F9E.5
+003CE:  BRA    03D4
+003D0:  RCALL  0322
+....................       #if (MODBUS_SERIAL_INT_SOURCE==MODBUS_INT_RDA) 
+003D2:  BRA    03CC
+....................         clear_interrupt(INT_RDA); 
+....................       #elif (MODBUS_SERIAL_INT_SOURCE==MODBUS_INT_RDA2) 
+....................         clear_interrupt(INT_RDA2); 
+....................       #elif (MODBUS_SERIAL_INT_SOURCE==MODBUS_INT_RDA3) 
+....................         clear_interrupt(INT_RDA3); 
+....................       #else 
+....................         clear_interrupt(INT_RDA4); 
+....................       #endif 
+....................  
+....................       #if (MODBUS_SERIAL_RX_ENABLE!=0)  
+....................          output_low(MODBUS_SERIAL_RX_ENABLE); 
+....................       #endif 
+....................  
+....................       #if (MODBUS_SERIAL_INT_SOURCE==MODBUS_INT_RDA) 
+....................         enable_interrupts(INT_RDA); 
+003D4:  BSF    F9D.5
+....................       #elif (MODBUS_SERIAL_INT_SOURCE==MODBUS_INT_RDA2) 
+....................         enable_interrupts(INT_RDA2); 
+....................       #elif (MODBUS_SERIAL_INT_SOURCE==MODBUS_INT_RDA3) 
+....................         enable_interrupts(INT_RDA3); 
+....................       #else 
+....................         enable_interrupts(INT_RDA4); 
+....................       #endif 
+....................    #else 
+....................       #if defined(__PCD__) 
+....................          clear_interrupt(INT_EXT0); 
+....................       #else 
+....................          clear_interrupt(INT_EXT); 
+....................       #endif 
+....................        
+....................       ext_int_edge(H_TO_L); 
+....................       
+....................       #if (MODBUS_SERIAL_RX_ENABLE!=0)  
+....................          output_low(MODBUS_SERIAL_RX_ENABLE); 
+....................       #endif 
+....................  
+....................       #if defined(__PCD__) 
+....................          enable_interrupts(INT_EXT0); 
+....................       #else 
+....................          enable_interrupts(INT_EXT); 
+....................       #endif 
+....................    #endif 
+.................... } 
+003D6:  RETLW  00
+....................  
+.................... // Purpose:    Initialize RS485 communication. Call this before 
+.................... //             using any other RS485 functions. 
+.................... // Inputs:     None 
+.................... // Outputs:    None 
+.................... void modbus_init() 
+.................... { 
+....................    output_low(MODBUS_SERIAL_ENABLE_PIN); 
+003D8:  BCF    F93.4
+003DA:  BCF    F8A.4
+....................  
+....................    RCV_ON(); 
+003DC:  RCALL  03CC
+....................  
+....................    #if defined(__PCD__) 
+....................       #if (MODBUS_SERIAL_TYPE == MODBUS_RTU) 
+....................          setup_timer2(TMR_INTERNAL | TMR_DIV_BY_8,4999); //~4ms interrupts for 20Mhz clock 
+....................       #endif 
+....................       enable_interrupts(INTR_GLOBAL); 
+....................    #else 
+....................       #if (MODBUS_SERIAL_TYPE == MODBUS_RTU) 
+....................          setup_timer_2(T2_DIV_BY_16,249,5);  //~4ms interrupts 
+003DE:  MOVLW  20
+003E0:  IORLW  06
+003E2:  MOVWF  FCA
+003E4:  MOVLW  F9
+003E6:  MOVWF  FCB
+....................       #endif 
+....................       enable_interrupts(GLOBAL); 
+003E8:  MOVLW  C0
+003EA:  IORWF  FF2,F
+....................    #endif 
+.................... } 
+003EC:  GOTO   07C6 (RETURN)
+....................  
+.................... // Purpose:    Start our timeout timer 
+.................... // Inputs:     Enable, used to turn timer on/off 
+.................... // Outputs:    None 
+.................... // Not used for ASCII mode 
+.................... #if (MODBUS_SERIAL_TYPE == MODBUS_RTU) 
+.................... void modbus_enable_timeout(int1 enable) 
+.................... { 
+....................    disable_interrupts(INT_TIMER2); 
+*
+002E6:  BCF    F9D.1
+....................    if (enable) { 
+002E8:  MOVF   x9F,F
+002EA:  BZ    02F2
+....................       set_timer2(0); 
+002EC:  CLRF   FCC
+....................       clear_interrupt(INT_TIMER2); 
+002EE:  BCF    F9E.1
+....................       enable_interrupts(INT_TIMER2); 
+002F0:  BSF    F9D.1
+....................    } 
+.................... } 
+002F2:  RETLW  00
+.................... #endif 
+....................  
+.................... // Purpose:    Check if we have timed out waiting for a response 
+.................... // Inputs:     None 
+.................... // Outputs:    None 
+.................... // Not used for ASCII mode 
+.................... #if (MODBUS_SERIAL_TYPE == MODBUS_RTU) 
+....................    #int_timer2 
+....................    void modbus_timeout_now(void) 
+....................    { 
+....................       if((modbus_serial_state == MODBUS_GETDATA) && (modbus_serial_crc.d == 0x0000) && (!modbus_serial_new)) 
+002F4:  MOVF   19,W
+002F6:  SUBLW  02
+002F8:  BNZ   030E
+002FA:  MOVF   1A,F
+002FC:  BNZ   030E
+002FE:  MOVF   1B,F
+00300:  BNZ   030E
+00302:  BTFSC  18.0
+00304:  BRA    030E
+....................       { 
+....................          modbus_rx.len-=2; 
+00306:  MOVLW  02
+00308:  SUBWF  1D,F
+....................          modbus_serial_new=TRUE; 
+0030A:  BSF    18.0
+....................       } 
+....................       else 
+0030C:  BRA    0310
+....................          modbus_serial_new=FALSE; 
+0030E:  BCF    18.0
+....................     
+....................       modbus_serial_crc.d=0xFFFF; 
+00310:  MOVLW  FF
+00312:  MOVWF  1B
+00314:  MOVWF  1A
+....................       modbus_serial_state=MODBUS_GETADDY; 
+00316:  CLRF   19
+....................       modbus_enable_timeout(FALSE); 
+00318:  CLRF   x9F
+0031A:  RCALL  02E6
+....................    } 
+.................... #endif 
+....................  
+.................... // Purpose:    Calculate crc of data and updates global crc 
+.................... // Inputs:     Character 
+.................... // Outputs:    None 
+0031C:  BCF    F9E.1
+0031E:  GOTO   0060
+.................... void modbus_calc_crc(char data) 
+.................... { 
+....................    #if (MODBUS_SERIAL_TYPE == MODBUS_ASCII) 
+....................       modbus_serial_lrc+=data; 
+....................    #else 
+....................       unsigned int8 uIndex ; // will index into CRC lookup table 
+....................  
+....................       uIndex = (modbus_serial_crc.b[1]) ^ data; // calculate the CRC 
+*
+00338:  MOVF   1B,W
+0033A:  XORWF  x9F,W
+0033C:  MOVWF  xA0
+....................       modbus_serial_crc.b[1] = (modbus_serial_crc.b[0]) ^ modbus_auchCRCHi[uIndex]; 
+0033E:  CLRF   03
+00340:  MOVF   xA0,W
+00342:  MOVFF  FF2,A1
+00346:  BCF    FF2.7
+00348:  RCALL  00A2
+0034A:  BTFSC  xA1.7
+0034C:  BSF    FF2.7
+0034E:  MOVWF  01
+00350:  MOVF   1A,W
+00352:  XORWF  01,W
+00354:  MOVWF  1B
+....................       modbus_serial_crc.b[0] = modbus_auchCRCLo[uIndex]; 
+00356:  CLRF   03
+00358:  MOVF   xA0,W
+0035A:  MOVFF  FF2,A1
+0035E:  BCF    FF2.7
+00360:  RCALL  01C4
+00362:  BTFSC  xA1.7
+00364:  BSF    FF2.7
+00366:  MOVWF  1A
+....................    #endif 
+.................... } 
+00368:  RETLW  00
+....................  
+.................... // Purpose:    Puts a character onto the serial line 
+.................... // Inputs:     Character 
+.................... // Outputs:    None 
+.................... void modbus_serial_putc(int8 c) 
+.................... { 
+....................    #if (MODBUS_SERIAL_TYPE==MODBUS_ASCII) 
+....................       int8 asciih,asciil; 
+....................        
+....................       asciih=c>>4; 
+....................       if(asciih>9) 
+....................          asciih+=0x37; 
+....................       else 
+....................          asciih+=0x30; 
+....................       asciil=c&0xF; 
+....................       if(asciil>9) 
+....................          asciil+=0x37; 
+....................       else 
+....................          asciil+=0x30; 
+....................       fputc(asciih,MODBUS_SERIAL); 
+....................       fputc(asciil,MODBUS_SERIAL); 
+....................       modbus_calc_crc(c); 
+....................    #else 
+....................       fputc(c, MODBUS_SERIAL); 
+*
+00446:  MOVF   x9A,W
+00448:  BRA    043C
+0044A:  CLRF   16
+0044C:  BTFSC  FF2.7
+0044E:  BSF    16.7
+00450:  BCF    FF2.7
+....................       modbus_calc_crc(c); 
+00452:  MOVFF  9A,9F
+00456:  RCALL  0338
+00458:  BTFSC  16.7
+0045A:  BSF    FF2.7
+....................       delay_us(1000000/MODBUS_SERIAL_BAUD); //one stop bit.  not exact 
+0045C:  MOVLW  22
+0045E:  MOVWF  00
+00460:  DECFSZ 00,F
+00462:  BRA    0460
+00464:  NOP   
+....................    #endif 
+.................... } 
+00466:  RETLW  00
+....................  
+.................... // Purpose:   Interrupt service routine for handling incoming serial data 
+.................... // Inputs:    None 
+.................... // Outputs:   None 
+.................... #if (MODBUS_SERIAL_INT_SOURCE==MODBUS_INT_RDA) 
+.................... #int_rda 
+.................... #elif (MODBUS_SERIAL_INT_SOURCE==MODBUS_INT_RDA2) 
+.................... #int_rda2 
+.................... #elif (MODBUS_SERIAL_INT_SOURCE==MODBUS_INT_RDA3) 
+.................... #int_rda3 
+.................... #elif (MODBUS_SERIAL_INT_SOURCE==MODBUS_INT_RDA4) 
+.................... #int_rda4 
+.................... #elif (MODBUS_SERIAL_INT_SOURCE==MODBUS_INT_EXT) 
+.................... #if defined(__PCD__) 
+.................... #int_ext0 
+.................... #else 
+.................... #int_ext 
+.................... #endif 
+.................... #else 
+.................... #error Please define a correct interrupt source 
+.................... #endif 
+.................... void incomming_modbus_serial() { 
+....................    char c; 
+....................    #if (MODBUS_SERIAL_TYPE==MODBUS_ASCII) 
+....................       static int1 two_characters=0; 
+....................       static int8 datah,datal,data; 
+....................    #endif 
+....................  
+....................    c=fgetc(MODBUS_SERIAL); 
+*
+0036A:  RCALL  0322
+0036C:  MOVFF  01,9E
+....................     
+....................    if (!modbus_serial_new) 
+00370:  BTFSC  18.0
+00372:  BRA    03C6
+....................    { 
+....................       #if (MODBUS_SERIAL_TYPE==MODBUS_ASCII) 
+....................          if(modbus_serial_state == MODBUS_START) 
+....................          { 
+....................             if(c==':') 
+....................                modbus_serial_state++; 
+....................          } 
+....................          else if(modbus_serial_state == MODBUS_GETADDY) 
+....................          { 
+....................             if(!two_characters) 
+....................             { 
+....................                if(c>=0x41) 
+....................                   datah=((c-0x37)<<4); 
+....................                else 
+....................                   datah=((c-0x30)<<4); 
+....................                modbus_serial_lrc=0; 
+....................             } 
+....................             else 
+....................             { 
+....................                if(c>=0x41) 
+....................                   datal=c-0x37; 
+....................                else 
+....................                   datal=c-0x30; 
+....................                data=(datah | datal); 
+....................                modbus_rx.address=data; 
+....................                modbus_calc_crc(data); 
+....................                modbus_serial_state++; 
+....................             } 
+....................             two_characters++; 
+....................          } 
+....................          else if(modbus_serial_state == MODBUS_GETFUNC) 
+....................          { 
+....................             if(!two_characters) 
+....................             { 
+....................                if(c>=0x41) 
+....................                   datah=((c-0x37)<<4); 
+....................                else 
+....................                   datah=((c-0x30)<<4); 
+....................             } 
+....................             else 
+....................             { 
+....................                if(c>=0x41) 
+....................                   datal=c-0x37; 
+....................                else 
+....................                   datal=c-0x30; 
+....................                data=(datah | datal); 
+....................                modbus_rx.func=data; 
+....................                modbus_calc_crc(data); 
+....................                modbus_serial_state++; 
+....................                modbus_rx.len=0; 
+....................                modbus_rx.error=0; 
+....................             } 
+....................             two_characters++; 
+....................          } 
+....................          else if(modbus_serial_state == MODBUS_GETDATA) 
+....................          { 
+....................             if(c=='\r') 
+....................             { 
+....................                modbus_serial_state++; 
+....................                modbus_rx.len--; 
+....................                modbus_serial_lrc-=data; 
+....................             } 
+....................             else if(!two_characters) 
+....................             { 
+....................                if(c>=0x41) 
+....................                   datah=((c-0x37)<<4); 
+....................                else 
+....................                   datah=((c-0x30)<<4); 
+....................                two_characters++; 
+....................             } 
+....................             else 
+....................             { 
+....................                if(c>=0x41) 
+....................                   datal=c-0x37; 
+....................                else 
+....................                   datal=c-0x30; 
+....................                data=(datah | datal); 
+....................                if (modbus_rx.len>=MODBUS_SERIAL_RX_BUFFER_SIZE) 
+....................                   modbus_rx.len=MODBUS_SERIAL_RX_BUFFER_SIZE-1; 
+....................                modbus_rx.data[modbus_rx.len]=data; 
+....................                modbus_rx.len++; 
+....................                modbus_calc_crc(data); 
+....................                two_characters++; 
+....................             } 
+....................          } 
+....................          else if(modbus_serial_state==MODBUS_STOP) 
+....................          { 
+....................             if(c=='\n') 
+....................             { 
+....................                modbus_serial_lrc=((0xFF-modbus_serial_lrc)+1); 
+....................                if(modbus_serial_lrc==data) 
+....................                   modbus_serial_new=TRUE; 
+....................             } 
+....................             modbus_serial_state=MODBUS_START; 
+....................             two_characters=0; 
+....................          } 
+....................       #else 
+....................              
+....................          if(modbus_serial_state == MODBUS_GETADDY) 
+00374:  MOVF   19,F
+00376:  BNZ   038A
+....................          { 
+....................             modbus_serial_crc.d = 0xFFFF; 
+00378:  MOVLW  FF
+0037A:  MOVWF  1B
+0037C:  MOVWF  1A
+....................             modbus_rx.address = c; 
+0037E:  MOVFF  9E,1C
+....................             modbus_serial_state++; 
+00382:  INCF   19,F
+....................             modbus_rx.len = 0; 
+00384:  CLRF   1D
+....................             modbus_rx.error=0; 
+00386:  CLRF   1F
+....................          } 
+....................          else if(modbus_serial_state == MODBUS_GETFUNC) 
+00388:  BRA    03BA
+0038A:  DECFSZ 19,W
+0038C:  BRA    0396
+....................          { 
+....................             modbus_rx.func = c; 
+0038E:  MOVFF  9E,1E
+....................             modbus_serial_state++; 
+00392:  INCF   19,F
+....................          } 
+....................          else if(modbus_serial_state == MODBUS_GETDATA) 
+00394:  BRA    03BA
+00396:  MOVF   19,W
+00398:  SUBLW  02
+0039A:  BNZ   03BA
+....................          { 
+....................             if (modbus_rx.len>=MODBUS_SERIAL_RX_BUFFER_SIZE) {modbus_rx.len=MODBUS_SERIAL_RX_BUFFER_SIZE-1;} 
+0039C:  MOVF   1D,W
+0039E:  SUBLW  3F
+003A0:  BC    03A6
+003A2:  MOVLW  3F
+003A4:  MOVWF  1D
+....................             modbus_rx.data[modbus_rx.len]=c; 
+003A6:  CLRF   03
+003A8:  MOVF   1D,W
+003AA:  ADDLW  20
+003AC:  MOVWF  FE9
+003AE:  MOVLW  00
+003B0:  ADDWFC 03,W
+003B2:  MOVWF  FEA
+003B4:  MOVFF  9E,FEF
+....................             modbus_rx.len++; 
+003B8:  INCF   1D,F
+....................          } 
+....................     
+....................          modbus_calc_crc(c); 
+003BA:  MOVFF  9E,9F
+003BE:  RCALL  0338
+....................          modbus_enable_timeout(TRUE); 
+003C0:  MOVLW  01
+003C2:  MOVWF  x9F
+003C4:  RCALL  02E6
+....................       #endif 
+....................    } 
+....................    #if (MODBUS_TYPE == MODBUS_TYPE_MASTER) 
+....................       modbus_serial_wait=MODBUS_SERIAL_TIMEOUT; 
+....................    #endif 
+.................... } 
+....................  
+.................... // Purpose:    Send a message over the RS485 bus 
+.................... // Inputs:     1) The destination address 
+.................... //             2) The number of bytes of data to send 
+.................... //             3) A pointer to the data to send 
+.................... //             4) The length of the data 
+.................... // Outputs:    TRUE if successful 
+.................... //             FALSE if failed 
+.................... // Note:       Format:  source | destination | data-length | data | checksum 
+003C6:  BCF    F9E.5
+003C8:  GOTO   0060
+.................... void modbus_serial_send_start(int8 to, int8 func) 
+.................... { 
+....................    #if (MODBUS_SERIAL_TYPE==MODBUS_ASCII) 
+....................       modbus_serial_lrc=0; 
+....................    #else 
+....................       modbus_serial_crc.d=0xFFFF; 
+*
+00468:  MOVLW  FF
+0046A:  MOVWF  1B
+0046C:  MOVWF  1A
+....................    #endif 
+....................    modbus_serial_new=FALSE; 
+0046E:  BCF    18.0
+....................  
+....................    RCV_OFF(); 
+00470:  BCF    F9D.5
+....................     
+.................... #if (MODBUS_SERIAL_ENABLE_PIN!=0)  
+....................    output_high(MODBUS_SERIAL_ENABLE_PIN); 
+00472:  BCF    F93.4
+00474:  BSF    F8A.4
+.................... #endif 
+....................  
+....................    #if (MODBUS_SERIAL_TYPE==MODBUS_RTU) 
+....................       delay_us(3500000/MODBUS_SERIAL_BAUD); //3.5 character delay 
+00476:  MOVLW  79
+00478:  MOVWF  00
+0047A:  DECFSZ 00,F
+0047C:  BRA    047A
+....................    #else 
+....................       fputc(':',MODBUS_SERIAL); 
+....................    #endif 
+....................  
+....................    modbus_serial_putc(to); 
+0047E:  MOVFF  98,9A
+00482:  RCALL  0446
+....................    modbus_serial_putc(func); 
+00484:  MOVFF  99,9A
+00488:  RCALL  0446
+.................... } 
+0048A:  RETLW  00
+....................  
+.................... void modbus_serial_send_stop() 
+.................... { 
+....................    #if (MODBUS_SERIAL_TYPE == MODBUS_ASCII) 
+....................       int8 i; 
+....................        
+....................       for(i=0;i<8;i++) 
+....................       { 
+....................          if(bit_test(modbus_serial_lrc,i)) 
+....................             bit_clear(modbus_serial_lrc,i); 
+....................          else 
+....................             bit_set(modbus_serial_lrc,i); 
+....................       } 
+....................       modbus_serial_lrc++; 
+....................        
+....................       modbus_serial_putc(modbus_serial_lrc); 
+....................       fputc('\r',MODBUS_SERIAL); 
+....................       fputc('\n',MODBUS_SERIAL); 
+....................    #else 
+....................       int8 crc_low, crc_high; 
+....................     
+....................       crc_high=modbus_serial_crc.b[1]; 
+0048C:  MOVFF  1B,99
+....................       crc_low=modbus_serial_crc.b[0]; 
+00490:  MOVFF  1A,98
+....................     
+....................       modbus_serial_putc(crc_high); 
+00494:  MOVFF  99,9A
+00498:  RCALL  0446
+....................       modbus_serial_putc(crc_low); 
+0049A:  MOVFF  98,9A
+0049E:  RCALL  0446
+....................    #endif 
+....................     
+.................... #if (MODBUS_SERIAL_INT_SOURCE!=MODBUS_INT_EXT) 
+....................    WAIT_FOR_HW_BUFFER(); 
+004A0:  BTFSS  FAC.1
+004A2:  BRA    04A0
+.................... #endif 
+....................     
+....................    #if (MODBUS_SERIAL_TYPE == MODBUS_RTU) 
+....................       delay_us(3500000/MODBUS_SERIAL_BAUD); //3.5 character delay 
+004A4:  MOVLW  79
+004A6:  MOVWF  00
+004A8:  DECFSZ 00,F
+004AA:  BRA    04A8
+....................    #endif 
+....................  
+....................    RCV_ON(); 
+004AC:  RCALL  03CC
+....................  
+.................... #if (MODBUS_SERIAL_ENABLE_PIN!=0)  
+....................    output_low(MODBUS_SERIAL_ENABLE_PIN); 
+004AE:  BCF    F93.4
+004B0:  BCF    F8A.4
+.................... #endif 
+....................  
+....................    #if (MODBUS_SERIAL_TYPE == MODBUS_ASCII) 
+....................       modbus_serial_lrc=0; 
+....................    #else 
+....................       modbus_serial_crc.d=0xFFFF; 
+004B2:  MOVLW  FF
+004B4:  MOVWF  1B
+004B6:  MOVWF  1A
+....................    #endif 
+.................... } 
+004B8:  RETLW  00
+....................  
+.................... // Purpose:    Get a message from the RS485 bus and store it in a buffer 
+.................... // Inputs:     None 
+.................... // Outputs:    TRUE if a message was received 
+.................... //             FALSE if no message is available 
+.................... // Note:       Data will be filled in at the modbus_rx struct: 
+.................... int1 modbus_kbhit() 
+.................... { 
+....................    if(!modbus_serial_new) 
+*
+003F0:  BTFSC  18.0
+003F2:  BRA    03FC
+....................       return FALSE; 
+003F4:  MOVLW  00
+003F6:  MOVWF  01
+003F8:  BRA    040E
+....................    else if(modbus_rx.func & 0x80)           //did we receive an error? 
+003FA:  BRA    0408
+003FC:  BTFSS  1E.7
+003FE:  BRA    0408
+....................    { 
+....................       modbus_rx.error = modbus_rx.data[0];  //if so grab the error and return true 
+00400:  MOVFF  20,1F
+....................       modbus_rx.len = 1; 
+00404:  MOVLW  01
+00406:  MOVWF  1D
+....................    } 
+....................    modbus_serial_new=FALSE; 
+00408:  BCF    18.0
+....................    return TRUE; 
+0040A:  MOVLW  01
+0040C:  MOVWF  01
+.................... } 
+0040E:  GOTO   07CC (RETURN)
+....................  
+.................... #if (MODBUS_TYPE==MODBUS_TYPE_MASTER) 
+.................... /*MODBUS Master Functions*/ 
+....................  
+.................... /******************************************************************** 
+.................... The following structs are used for read/write_sub_request.  These 
+.................... functions take in one of these structs. 
+.................... Please refer to the MODBUS protocol specification if you do not 
+.................... understand the members of the structure. 
+.................... ********************************************************************/ 
+.................... typedef struct _modbus_read_sub_request 
+.................... { 
+....................    int8 reference_type; 
+....................    int16 file_number; 
+....................    int16 record_number; 
+....................    int16 record_length; 
+.................... } modbus_read_sub_request; 
+....................  
+.................... typedef struct _modbus_write_sub_request 
+.................... { 
+....................    int8 reference_type; 
+....................    int16 file_number; 
+....................    int16 record_number; 
+....................    int16 record_length; 
+....................    int16 data[MODBUS_SERIAL_RX_BUFFER_SIZE-8]; 
+.................... } modbus_write_sub_request; 
+....................  
+....................  
+.................... /******************************************************************** 
+.................... The following functions are defined in the MODBUS protocol.  Please 
+.................... refer to http://www.modbus.org for the purpose of each of these. 
+.................... All functions take the slaves address as their first parameter. 
+.................... Each function returns the exception code received from the response. 
+.................... The function will return 0 if there were no errors in transmission. 
+.................... ********************************************************************/ 
+....................  
+.................... /* 
+.................... read_coils 
+.................... Input:     int8       address            Slave Address 
+....................            int16      start_address      Address to start reading from 
+....................            int16      quantity           Amount of addresses to read 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_read_coils(int8 address, int16 start_address, int16 quantity) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_READ_COILS); 
+....................  
+....................    modbus_serial_putc(make8(start_address,1)); 
+....................    modbus_serial_putc(make8(start_address,0)); 
+....................  
+....................    modbus_serial_putc(make8(quantity,1)); 
+....................    modbus_serial_putc(make8(quantity,0)); 
+....................  
+....................    modbus_serial_send_stop(); 
+....................     
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... read_discrete_input 
+.................... Input:     int8       address            Slave Address 
+....................            int16      start_address      Address to start reading from 
+....................            int16      quantity           Amount of addresses to read 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_read_discrete_input(int8 address, int16 start_address, int16 quantity) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_READ_DISCRETE_INPUT); 
+....................  
+....................    modbus_serial_putc(make8(start_address,1)); 
+....................    modbus_serial_putc(make8(start_address,0)); 
+....................  
+....................    modbus_serial_putc(make8(quantity,1)); 
+....................    modbus_serial_putc(make8(quantity,0)); 
+....................  
+....................    modbus_serial_send_stop(); 
+....................        
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... read_holding_registers 
+.................... Input:     int8       address            Slave Address 
+....................            int16      start_address      Address to start reading from 
+....................            int16      quantity           Amount of addresses to read 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_read_holding_registers(int8 address, int16 start_address, int16 quantity) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_READ_HOLDING_REGISTERS); 
+....................  
+....................    modbus_serial_putc(make8(start_address,1)); 
+....................    modbus_serial_putc(make8(start_address,0)); 
+....................  
+....................    modbus_serial_putc(make8(quantity,1)); 
+....................    modbus_serial_putc(make8(quantity,0)); 
+....................  
+....................    modbus_serial_send_stop(); 
+....................     
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... read_input_registers 
+.................... Input:     int8       address            Slave Address 
+....................            int16      start_address      Address to start reading from 
+....................            int16      quantity           Amount of addresses to read 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_read_input_registers(int8 address, int16 start_address, int16 quantity) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_READ_INPUT_REGISTERS); 
+....................  
+....................    modbus_serial_putc(make8(start_address,1)); 
+....................    modbus_serial_putc(make8(start_address,0)); 
+....................  
+....................    modbus_serial_putc(make8(quantity,1)); 
+....................    modbus_serial_putc(make8(quantity,0)); 
+....................  
+....................    modbus_serial_send_stop(); 
+....................     
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... write_single_coil 
+.................... Input:     int8       address            Slave Address 
+....................            int16      output_address     Address to write into 
+....................            int1       on                 true for on, false for off 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_write_single_coil(int8 address, int16 output_address, int1 on) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_WRITE_SINGLE_COIL); 
+....................  
+....................    modbus_serial_putc(make8(output_address,1)); 
+....................    modbus_serial_putc(make8(output_address,0)); 
+....................  
+....................    if(on) 
+....................        modbus_serial_putc(0xFF); 
+....................    else 
+....................        modbus_serial_putc(0x00); 
+....................     
+....................    modbus_serial_putc(0x00); 
+....................  
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... write_single_register 
+.................... Input:     int8       address            Slave Address 
+....................            int16      reg_address        Address to write into 
+....................            int16      reg_value          Value to write 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_write_single_register(int8 address, int16 reg_address, int16 reg_value) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_WRITE_SINGLE_REGISTER); 
+....................  
+....................    modbus_serial_putc(make8(reg_address,1)); 
+....................    modbus_serial_putc(make8(reg_address,0)); 
+....................  
+....................    modbus_serial_putc(make8(reg_value,1)); 
+....................    modbus_serial_putc(make8(reg_value,0)); 
+....................  
+....................    modbus_serial_send_stop(); 
+....................     
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... read_exception_status 
+.................... Input:     int8       address            Slave Address 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_read_exception_status(int8 address) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_READ_EXCEPTION_STATUS); 
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... diagnostics 
+.................... Input:     int8       address            Slave Address 
+....................            int16      sub_func           Subfunction to send 
+....................            int16      data               Data to send, changes based on subfunction 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_diagnostics(int8 address, int16 sub_func, int16 data) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_DIAGNOSTICS); 
+....................  
+....................    modbus_serial_putc(make8(sub_func,1)); 
+....................    modbus_serial_putc(make8(sub_func,0)); 
+....................  
+....................    modbus_serial_putc(make8(data,1)); 
+....................    modbus_serial_putc(make8(data,0)); 
+....................  
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... get_comm_event_couter 
+.................... Input:     int8       address            Slave Address 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_get_comm_event_counter(int8 address) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_GET_COMM_EVENT_COUNTER); 
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... get_comm_event_log 
+.................... Input:     int8       address            Slave Address 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_get_comm_event_log(int8 address) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_GET_COMM_EVENT_LOG); 
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... write_multiple_coils 
+.................... Input:     int8       address            Slave Address 
+....................            int16      start_address      Address to start at 
+....................            int16      quantity           Amount of coils to write to 
+....................            int1*      values             A pointer to an array holding the values to write 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_write_multiple_coils(int8 address, int16 start_address, int16 quantity, 
+....................                            int8 *values) 
+.................... { 
+....................    int8 i,count; 
+....................     
+....................    count = (int8)((quantity/8)); 
+....................     
+....................    if(quantity%8) 
+....................       count++;       
+....................  
+....................    modbus_serial_send_start(address, FUNC_WRITE_MULTIPLE_COILS); 
+....................  
+....................    modbus_serial_putc(make8(start_address,1)); 
+....................    modbus_serial_putc(make8(start_address,0)); 
+....................  
+....................    modbus_serial_putc(make8(quantity,1)); 
+....................    modbus_serial_putc(make8(quantity,0)); 
+....................  
+....................    modbus_serial_putc(count); 
+....................  
+....................    for(i=0; i < count; ++i)  
+....................       modbus_serial_putc(values[i]); 
+....................  
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... write_multiple_registers 
+.................... Input:     int8       address            Slave Address 
+....................            int16      start_address      Address to start at 
+....................            int16      quantity           Amount of coils to write to 
+....................            int16*     values             A pointer to an array holding the data to write 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_write_multiple_registers(int8 address, int16 start_address, int16 quantity, 
+....................                            int16 *values) 
+.................... { 
+....................    int8 i,count; 
+....................     
+....................    count = quantity*2; 
+....................  
+....................    modbus_serial_send_start(address, FUNC_WRITE_MULTIPLE_REGISTERS); 
+....................  
+....................    modbus_serial_putc(make8(start_address,1)); 
+....................    modbus_serial_putc(make8(start_address,0)); 
+....................  
+....................    modbus_serial_putc(make8(quantity,1)); 
+....................    modbus_serial_putc(make8(quantity,0)); 
+....................     
+....................    modbus_serial_putc(count); 
+....................  
+....................    for(i=0; i < quantity; ++i) 
+....................    { 
+....................       modbus_serial_putc(make8(values[i],1)); 
+....................       modbus_serial_putc(make8(values[i],0)); 
+....................    } 
+....................  
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... report_slave_id 
+.................... Input:     int8       address            Slave Address 
+.................... Output:    exception                     0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_report_slave_id(int8 address) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_REPORT_SLAVE_ID); 
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... read_file_record 
+.................... Input:     int8                address            Slave Address 
+....................            int8                byte_count         Number of bytes to read 
+....................            read_sub_request*   request            Structure holding record information 
+.................... Output:    exception                              0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_read_file_record(int8 address, int8 byte_count,  
+....................                             modbus_read_sub_request *request) 
+.................... { 
+....................    int8 i; 
+....................  
+....................    modbus_serial_send_start(address, FUNC_READ_FILE_RECORD); 
+....................  
+....................    modbus_serial_putc(byte_count); 
+....................  
+....................    for(i=0; i < (byte_count/7); i+=7) 
+....................    { 
+....................       modbus_serial_putc(request->reference_type); 
+....................       modbus_serial_putc(make8(request->file_number, 1)); 
+....................       modbus_serial_putc(make8(request->file_number, 0)); 
+....................       modbus_serial_putc(make8(request->record_number, 1)); 
+....................       modbus_serial_putc(make8(request->record_number, 0)); 
+....................       modbus_serial_putc(make8(request->record_length, 1)); 
+....................       modbus_serial_putc(make8(request->record_length, 0)); 
+....................       request++; 
+....................    } 
+....................  
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... write_file_record 
+.................... Input:     int8                address            Slave Address 
+....................            int8                byte_count         Number of bytes to read 
+....................            read_sub_request*   request            Structure holding record/data information 
+.................... Output:    exception                              0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_write_file_record(int8 address, int8 byte_count,  
+....................                             modbus_write_sub_request *request) 
+.................... { 
+....................    int8 i, j=0; 
+....................  
+....................    modbus_serial_send_start(address, FUNC_WRITE_FILE_RECORD); 
+....................  
+....................    modbus_serial_putc(byte_count); 
+....................  
+....................    for(i=0; i < byte_count; i+=(7+(j*2))) 
+....................    { 
+....................       modbus_serial_putc(request->reference_type); 
+....................       modbus_serial_putc(make8(request->file_number, 1)); 
+....................       modbus_serial_putc(make8(request->file_number, 0)); 
+....................       modbus_serial_putc(make8(request->record_number, 1)); 
+....................       modbus_serial_putc(make8(request->record_number, 0)); 
+....................       modbus_serial_putc(make8(request->record_length, 1)); 
+....................       modbus_serial_putc(make8(request->record_length, 0)); 
+....................  
+....................       for(j=0; (j < request->record_length) &&  
+....................             (j < MODBUS_SERIAL_RX_BUFFER_SIZE-8); j+=2) 
+....................       { 
+....................          modbus_serial_putc(make8(request->data[j], 1)); 
+....................          modbus_serial_putc(make8(request->data[j], 0)); 
+....................       } 
+....................       request++; 
+....................    } 
+....................  
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... mask_write_register 
+.................... Input:     int8       address            Slave Address 
+....................            int16      reference_address  Address to mask 
+....................            int16      AND_mask           A mask to AND with the data at reference_address 
+....................            int16      OR_mask            A mask to OR with the data at reference_address 
+.................... Output:    exception                              0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_mask_write_register(int8 address, int16 reference_address, 
+....................                            int16 AND_mask, int16 OR_mask) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_MASK_WRITE_REGISTER); 
+....................  
+....................    modbus_serial_putc(make8(reference_address,1)); 
+....................    modbus_serial_putc(make8(reference_address,0)); 
+....................  
+....................    modbus_serial_putc(make8(AND_mask,1)); 
+....................    modbus_serial_putc(make8(AND_mask,0)); 
+....................  
+....................    modbus_serial_putc(make8(OR_mask, 1)); 
+....................    modbus_serial_putc(make8(OR_mask, 0)); 
+....................  
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... read_write_multiple_registers 
+.................... Input:     int8       address                Slave Address 
+....................            int16      read_start             Address to start reading 
+....................            int16      read_quantity          Amount of registers to read 
+....................            int16      write_start            Address to start writing 
+....................            int16      write_quantity         Amount of registers to write 
+....................            int16*     write_registers_value  Pointer to an aray us to write 
+.................... Output:    exception                         0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_read_write_multiple_registers(int8 address, int16 read_start, 
+....................                                     int16 read_quantity, int16 write_start, 
+....................                                     int16 write_quantity, 
+....................                                     int16 *write_registers_value) 
+.................... { 
+....................    int8 i; 
+....................  
+....................    modbus_serial_send_start(address, FUNC_READ_WRITE_MULTIPLE_REGISTERS); 
+....................  
+....................    modbus_serial_putc(make8(read_start,1)); 
+....................    modbus_serial_putc(make8(read_start,0)); 
+....................  
+....................    modbus_serial_putc(make8(read_quantity,1)); 
+....................    modbus_serial_putc(make8(read_quantity,0)); 
+....................  
+....................    modbus_serial_putc(make8(write_start, 1)); 
+....................    modbus_serial_putc(make8(write_start, 0)); 
+....................  
+....................    modbus_serial_putc(make8(write_quantity, 1)); 
+....................    modbus_serial_putc(make8(write_quantity, 0)); 
+....................  
+....................    modbus_serial_putc((int8)(2*write_quantity)); 
+....................  
+....................    for(i=0; i < write_quantity ; i+=2) 
+....................    { 
+....................       modbus_serial_putc(make8(write_registers_value[i], 1)); 
+....................       modbus_serial_putc(make8(write_registers_value[i+1], 0)); 
+....................    } 
+....................  
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... /* 
+.................... read_FIFO_queue 
+.................... Input:     int8       address           Slave Address 
+....................            int16      FIFO_address      FIFO address 
+.................... Output:    exception                    0 if no error, else the exception 
+.................... */ 
+.................... exception modbus_read_FIFO_queue(int8 address, int16 FIFO_address) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_READ_FIFO_QUEUE); 
+....................  
+....................    modbus_serial_putc(make8(FIFO_address, 1)); 
+....................    modbus_serial_putc(make8(FIFO_address, 0)); 
+....................  
+....................    modbus_serial_send_stop(); 
+....................  
+....................    MODBUS_SERIAL_WAIT_FOR_RESPONSE(); 
+....................  
+....................    return modbus_rx.error; 
+.................... } 
+....................  
+.................... #else 
+.................... /*MODBUS Slave Functions*/ 
+....................  
+.................... /******************************************************************** 
+.................... The following structs are used for read/write_sub_request_rsp.  These 
+.................... functions take in one of these structs.  Please refer to the MODBUS 
+.................... protocol specification if you do not understand the members of the 
+.................... structure. 
+.................... ********************************************************************/ 
+.................... typedef struct _modbus_read_sub_request_rsp 
+.................... { 
+....................    int8 record_length; 
+....................    int8 reference_type; 
+....................    int16 data[((MODBUS_SERIAL_RX_BUFFER_SIZE)/2)-3]; 
+.................... } modbus_read_sub_request_rsp; 
+....................  
+.................... typedef struct _modbus_write_sub_request_rsp 
+.................... { 
+....................    int8 reference_type; 
+....................    int16 file_number; 
+....................    int16 record_number; 
+....................    int16 record_length; 
+....................    int16 data[((MODBUS_SERIAL_RX_BUFFER_SIZE)/2)-8]; 
+.................... } modbus_write_sub_request_rsp; 
+....................  
+....................  
+.................... /******************************************************************** 
+.................... The following slave functions are defined in the MODBUS protocol. 
+.................... Please refer to http://www.modbus.org for the purpose of each of 
+.................... these.  All functions take the slaves address as their first 
+.................... parameter. 
+.................... ********************************************************************/ 
+....................  
+.................... /* 
+.................... read_coils_rsp 
+.................... Input:     int8       address            Slave Address 
+....................            int8       byte_count         Number of bytes being sent 
+....................            int8*      coil_data          Pointer to an array of data to send 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_read_coils_rsp(int8 address, int8 byte_count, int8* coil_data) 
+.................... { 
+....................    int8 i; 
+....................  
+....................    modbus_serial_send_start(address, FUNC_READ_COILS); 
+....................  
+....................    modbus_serial_putc(byte_count); 
+....................  
+....................    for(i=0; i < byte_count; ++i) 
+....................    { 
+....................       modbus_serial_putc(*coil_data); 
+....................       coil_data++; 
+....................    } 
+....................  
+....................    modbus_serial_send_stop(); 
+.................... } 
+....................  
+.................... /* 
+.................... read_discrete_input_rsp 
+.................... Input:     int8       address            Slave Address 
+....................            int8       byte_count         Number of bytes being sent 
+....................            int8*      input_data         Pointer to an array of data to send 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_read_discrete_input_rsp(int8 address, int8 byte_count,  
+....................                                     int8 *input_data) 
+.................... { 
+....................    int8 i; 
+....................  
+....................    modbus_serial_send_start(address, FUNC_READ_DISCRETE_INPUT); 
+*
+004D6:  MOVFF  8F,98
+004DA:  MOVLW  02
+004DC:  MOVWF  x99
+004DE:  RCALL  0468
+....................  
+....................    modbus_serial_putc(byte_count); 
+004E0:  MOVFF  90,9A
+004E4:  RCALL  0446
+....................  
+....................    for(i=0; i < byte_count; ++i) 
+004E6:  CLRF   x93
+004E8:  MOVF   x90,W
+004EA:  SUBWF  x93,W
+004EC:  BC    050E
+....................    { 
+....................       modbus_serial_putc(*input_data); 
+004EE:  MOVFF  92,03
+004F2:  MOVFF  91,FE9
+004F6:  MOVFF  92,FEA
+004FA:  MOVFF  FEF,94
+004FE:  MOVFF  94,9A
+00502:  RCALL  0446
+....................       input_data++; 
+00504:  INCF   x91,F
+00506:  BTFSC  FD8.2
+00508:  INCF   x92,F
+....................    } 
+0050A:  INCF   x93,F
+0050C:  BRA    04E8
+....................  
+....................    modbus_serial_send_stop(); 
+0050E:  RCALL  048C
+.................... } 
+00510:  RETLW  00
+....................  
+.................... /* 
+.................... read_holding_registers_rsp 
+.................... Input:     int8       address            Slave Address 
+....................            int8       byte_count         Number of bytes being sent 
+....................            int8*      reg_data           Pointer to an array of data to send 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_read_holding_registers_rsp(int8 address, int8 byte_count,  
+....................                                         int16 *reg_data) 
+.................... { 
+....................    int8 i; 
+....................  
+....................    modbus_serial_send_start(address, FUNC_READ_HOLDING_REGISTERS); 
+00512:  MOVFF  92,98
+00516:  MOVLW  03
+00518:  MOVWF  x99
+0051A:  RCALL  0468
+....................  
+....................    modbus_serial_putc(byte_count); 
+0051C:  MOVFF  93,9A
+00520:  RCALL  0446
+....................  
+....................    for(i=0; i < byte_count; i+=2) 
+00522:  CLRF   x96
+00524:  MOVF   x93,W
+00526:  SUBWF  x96,W
+00528:  BC    0578
+....................    { 
+....................       modbus_serial_putc(make8(*reg_data,1)); 
+0052A:  MOVFF  95,03
+0052E:  MOVFF  94,FE9
+00532:  MOVFF  95,FEA
+00536:  MOVFF  FEC,98
+0053A:  MOVF   FED,F
+0053C:  MOVFF  FEF,97
+00540:  MOVFF  98,99
+00544:  MOVFF  98,9A
+00548:  RCALL  0446
+....................       modbus_serial_putc(make8(*reg_data,0)); 
+0054A:  MOVFF  95,03
+0054E:  MOVFF  94,FE9
+00552:  MOVFF  95,FEA
+00556:  MOVFF  FEC,98
+0055A:  MOVF   FED,F
+0055C:  MOVFF  FEF,97
+00560:  MOVFF  97,99
+00564:  MOVFF  97,9A
+00568:  RCALL  0446
+....................       reg_data++; 
+0056A:  MOVLW  02
+0056C:  ADDWF  x94,F
+0056E:  BTFSC  FD8.0
+00570:  INCF   x95,F
+....................    } 
+00572:  MOVLW  02
+00574:  ADDWF  x96,F
+00576:  BRA    0524
+....................  
+....................    modbus_serial_send_stop(); 
+00578:  RCALL  048C
+.................... } 
+0057A:  GOTO   0926 (RETURN)
+....................  
+.................... /* 
+.................... read_input_registers_rsp 
+.................... Input:     int8       address            Slave Address 
+....................            int8       byte_count         Number of bytes being sent 
+....................            int8*      input_data         Pointer to an array of data to send 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_read_input_registers_rsp(int8 address, int8 byte_count,  
+....................                                         int16 *input_data) 
+.................... { 
+....................    int8 i; 
+....................  
+....................    modbus_serial_send_start(address, FUNC_READ_INPUT_REGISTERS); 
+0057E:  MOVFF  92,98
+00582:  MOVLW  04
+00584:  MOVWF  x99
+00586:  RCALL  0468
+....................  
+....................    modbus_serial_putc(byte_count); 
+00588:  MOVFF  93,9A
+0058C:  RCALL  0446
+....................  
+....................    for(i=0; i < byte_count; i+=2) 
+0058E:  CLRF   x96
+00590:  MOVF   x93,W
+00592:  SUBWF  x96,W
+00594:  BC    05E4
+....................    { 
+....................       modbus_serial_putc(make8(*input_data,1)); 
+00596:  MOVFF  95,03
+0059A:  MOVFF  94,FE9
+0059E:  MOVFF  95,FEA
+005A2:  MOVFF  FEC,98
+005A6:  MOVF   FED,F
+005A8:  MOVFF  FEF,97
+005AC:  MOVFF  98,99
+005B0:  MOVFF  98,9A
+005B4:  RCALL  0446
+....................       modbus_serial_putc(make8(*input_data,0)); 
+005B6:  MOVFF  95,03
+005BA:  MOVFF  94,FE9
+005BE:  MOVFF  95,FEA
+005C2:  MOVFF  FEC,98
+005C6:  MOVF   FED,F
+005C8:  MOVFF  FEF,97
+005CC:  MOVFF  97,99
+005D0:  MOVFF  97,9A
+005D4:  RCALL  0446
+....................       input_data++; 
+005D6:  MOVLW  02
+005D8:  ADDWF  x94,F
+005DA:  BTFSC  FD8.0
+005DC:  INCF   x95,F
+....................    } 
+005DE:  MOVLW  02
+005E0:  ADDWF  x96,F
+005E2:  BRA    0590
+....................  
+....................    modbus_serial_send_stop(); 
+005E4:  RCALL  048C
+.................... } 
+005E6:  GOTO   0926 (RETURN)
+....................  
+.................... /* 
+.................... write_single_coil_rsp 
+.................... Input:     int8       address            Slave Address 
+....................            int16      output_address     Echo of output address received 
+....................            int16      output_value       Echo of output value received 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_write_single_coil_rsp(int8 address, int16 output_address,  
+....................                                     int16 output_value) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_WRITE_SINGLE_COIL); 
+005EA:  MOVFF  91,98
+005EE:  MOVLW  05
+005F0:  MOVWF  x99
+005F2:  RCALL  0468
+....................  
+....................    modbus_serial_putc(make8(output_address,1)); 
+005F4:  MOVFF  93,96
+005F8:  MOVFF  93,9A
+005FC:  RCALL  0446
+....................    modbus_serial_putc(make8(output_address,0)); 
+005FE:  MOVFF  92,96
+00602:  MOVFF  92,9A
+00606:  RCALL  0446
+....................  
+....................    modbus_serial_putc(make8(output_value,1)); 
+00608:  MOVFF  95,96
+0060C:  MOVFF  95,9A
+00610:  RCALL  0446
+....................    modbus_serial_putc(make8(output_value,0)); 
+00612:  MOVFF  94,96
+00616:  MOVFF  94,9A
+0061A:  RCALL  0446
+....................  
+....................    modbus_serial_send_stop(); 
+0061C:  RCALL  048C
+.................... } 
+0061E:  GOTO   09BE (RETURN)
+....................  
+.................... /* 
+.................... write_single_register_rsp 
+.................... Input:     int8       address            Slave Address 
+....................            int16      reg_address        Echo of register address received 
+....................            int16      reg_value          Echo of register value received 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_write_single_register_rsp(int8 address, int16 reg_address,  
+....................                                         int16 reg_value) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_WRITE_SINGLE_REGISTER); 
+00622:  MOVFF  93,98
+00626:  MOVLW  06
+00628:  MOVWF  x99
+0062A:  RCALL  0468
+....................  
+....................    modbus_serial_putc(make8(reg_address,1)); 
+0062C:  MOVFF  95,98
+00630:  MOVFF  95,9A
+00634:  RCALL  0446
+....................    modbus_serial_putc(make8(reg_address,0)); 
+00636:  MOVFF  94,98
+0063A:  MOVFF  94,9A
+0063E:  RCALL  0446
+....................  
+....................    modbus_serial_putc(make8(reg_value,1)); 
+00640:  MOVFF  97,98
+00644:  MOVFF  97,9A
+00648:  RCALL  0446
+....................    modbus_serial_putc(make8(reg_value,0)); 
+0064A:  MOVFF  96,98
+0064E:  MOVFF  96,9A
+00652:  RCALL  0446
+....................  
+....................    modbus_serial_send_stop(); 
+00654:  RCALL  048C
+.................... } 
+00656:  GOTO   0A22 (RETURN)
+....................  
+.................... /* 
+.................... read_exception_status_rsp 
+.................... Input:     int8       address            Slave Address 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_read_exception_status_rsp(int8 address, int8 data) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_READ_EXCEPTION_STATUS); 
+....................    modbus_serial_send_stop(); 
+.................... } 
+....................  
+.................... /* 
+.................... diagnostics_rsp 
+.................... Input:     int8       address            Slave Address 
+....................            int16      sub_func           Echo of sub function received 
+....................            int16      data               Echo of data received 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_diagnostics_rsp(int8 address, int16 sub_func, int16 data) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_DIAGNOSTICS); 
+....................  
+....................    modbus_serial_putc(make8(sub_func,1)); 
+....................    modbus_serial_putc(make8(sub_func,0)); 
+....................  
+....................    modbus_serial_putc(make8(data,1)); 
+....................    modbus_serial_putc(make8(data,0)); 
+....................  
+....................    modbus_serial_send_stop(); 
+.................... } 
+....................  
+.................... /* 
+.................... get_comm_event_counter_rsp 
+.................... Input:     int8       address            Slave Address 
+....................            int16      status             Status, refer to MODBUS documentation 
+....................            int16      event_count        Count of events 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_get_comm_event_counter_rsp(int8 address, int16 status,  
+....................                                         int16 event_count) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_GET_COMM_EVENT_COUNTER); 
+....................  
+....................    modbus_serial_putc(make8(status, 1)); 
+....................    modbus_serial_putc(make8(status, 0)); 
+....................  
+....................    modbus_serial_putc(make8(event_count, 1)); 
+....................    modbus_serial_putc(make8(event_count, 0)); 
+....................  
+....................    modbus_serial_send_stop(); 
+.................... } 
+....................  
+.................... /* 
+.................... get_comm_event_counter_rsp 
+.................... Input:     int8       address            Slave Address 
+....................            int16      status             Status, refer to MODBUS documentation 
+....................            int16      event_count        Count of events 
+....................            int16      message_count      Count of messages 
+....................            int8*      events             Pointer to event data 
+....................            int8       events_len         Length of event data in bytes 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_get_comm_event_log_rsp(int8 address, int16 status, 
+....................                                     int16 event_count, int16 message_count,  
+....................                                     int8 *events, int8 events_len) 
+.................... { 
+....................    int8 i; 
+....................      
+....................    modbus_serial_send_start(address, FUNC_GET_COMM_EVENT_LOG); 
+....................  
+....................    modbus_serial_putc(events_len+6); 
+....................  
+....................    modbus_serial_putc(make8(status, 1)); 
+....................    modbus_serial_putc(make8(status, 0)); 
+....................  
+....................    modbus_serial_putc(make8(event_count, 1)); 
+....................    modbus_serial_putc(make8(event_count, 0)); 
+....................  
+....................    modbus_serial_putc(make8(message_count, 1)); 
+....................    modbus_serial_putc(make8(message_count, 0)); 
+....................  
+....................    for(i=0; i < events_len; ++i) 
+....................    { 
+....................       modbus_serial_putc(*events); 
+....................       events++; 
+....................    } 
+....................  
+....................    modbus_serial_send_stop(); 
+.................... } 
+....................  
+.................... /* 
+.................... write_multiple_coils_rsp 
+.................... Input:     int8       address            Slave Address 
+....................            int16      start_address      Echo of address to start at 
+....................            int16      quantity           Echo of amount of coils written to 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_write_multiple_coils_rsp(int8 address, int16 start_address,  
+....................                                         int16 quantity) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_WRITE_MULTIPLE_COILS); 
+*
+006C0:  MOVFF  93,98
+006C4:  MOVLW  0F
+006C6:  MOVWF  x99
+006C8:  RCALL  0468
+....................  
+....................    modbus_serial_putc(make8(start_address,1)); 
+006CA:  MOVFF  95,98
+006CE:  MOVFF  95,9A
+006D2:  RCALL  0446
+....................    modbus_serial_putc(make8(start_address,0)); 
+006D4:  MOVFF  94,98
+006D8:  MOVFF  94,9A
+006DC:  RCALL  0446
+....................  
+....................    modbus_serial_putc(make8(quantity,1)); 
+006DE:  MOVFF  97,98
+006E2:  MOVFF  97,9A
+006E6:  RCALL  0446
+....................    modbus_serial_putc(make8(quantity,0)); 
+006E8:  MOVFF  96,98
+006EC:  MOVFF  96,9A
+006F0:  RCALL  0446
+....................  
+....................    modbus_serial_send_stop(); 
+006F2:  RCALL  048C
+.................... } 
+006F4:  GOTO   0AE6 (RETURN)
+....................  
+.................... /* 
+.................... write_multiple_registers_rsp 
+.................... Input:     int8       address            Slave Address 
+....................            int16      start_address      Echo of address to start at 
+....................            int16      quantity           Echo of amount of registers written to 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_write_multiple_registers_rsp(int8 address, int16 start_address,  
+....................                                             int16 quantity) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_WRITE_MULTIPLE_REGISTERS); 
+006F8:  MOVFF  93,98
+006FC:  MOVLW  10
+006FE:  MOVWF  x99
+00700:  RCALL  0468
+....................  
+....................    modbus_serial_putc(make8(start_address,1)); 
+00702:  MOVFF  95,98
+00706:  MOVFF  95,9A
+0070A:  RCALL  0446
+....................    modbus_serial_putc(make8(start_address,0)); 
+0070C:  MOVFF  94,98
+00710:  MOVFF  94,9A
+00714:  RCALL  0446
+....................  
+....................    modbus_serial_putc(make8(quantity,1)); 
+00716:  MOVFF  97,98
+0071A:  MOVFF  97,9A
+0071E:  RCALL  0446
+....................    modbus_serial_putc(make8(quantity,0)); 
+00720:  MOVFF  96,98
+00724:  MOVFF  96,9A
+00728:  RCALL  0446
+....................  
+....................    modbus_serial_send_stop(); 
+0072A:  RCALL  048C
+.................... } 
+0072C:  GOTO   0B9C (RETURN)
+....................  
+.................... /* 
+.................... report_slave_id_rsp 
+.................... Input:     int8       address            Slave Address 
+....................            int8       slave_id           Slave Address 
+....................            int8       run_status         Are we running? 
+....................            int8*      data               Pointer to an array holding the data 
+....................            int8       data_len           Length of data in bytes 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_report_slave_id_rsp(int8 address, int8 slave_id, int1 run_status, 
+....................                               int8 *data, int8 data_len) 
+.................... { 
+....................    int8 i; 
+....................  
+....................    modbus_serial_send_start(address, FUNC_REPORT_SLAVE_ID); 
+....................  
+....................    modbus_serial_putc(data_len+2); 
+....................    modbus_serial_putc(slave_id); 
+....................  
+....................    if(run_status) 
+....................     modbus_serial_putc(0xFF); 
+....................    else 
+....................     modbus_serial_putc(0x00); 
+....................  
+....................    for(i=0; i < data_len; ++i) 
+....................    { 
+....................       modbus_serial_putc(*data); 
+....................       data++; 
+....................    } 
+....................  
+....................    modbus_serial_send_stop(); 
+.................... } 
+....................  
+.................... /* 
+.................... read_file_record_rsp 
+.................... Input:     int8                     address            Slave Address 
+....................            int8                     byte_count         Number of bytes to send 
+....................            read_sub_request_rsp*    request            Structure holding record/data information 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_read_file_record_rsp(int8 address, int8 byte_count,  
+....................                                     modbus_read_sub_request_rsp *request) 
+.................... { 
+....................    int8 i=0,j; 
+....................  
+....................    modbus_serial_send_start(address, FUNC_READ_FILE_RECORD); 
+....................  
+....................    modbus_serial_putc(byte_count); 
+....................  
+....................    while(i < byte_count); 
+....................    { 
+....................       modbus_serial_putc(request->record_length); 
+....................       modbus_serial_putc(request->reference_type); 
+....................  
+....................       for(j=0; (j < request->record_length); j+=2) 
+....................       { 
+....................          modbus_serial_putc(make8(request->data[j], 1)); 
+....................          modbus_serial_putc(make8(request->data[j], 0)); 
+....................       } 
+....................  
+....................       i += (request->record_length)+1; 
+....................       request++; 
+....................    } 
+....................  
+....................    modbus_serial_send_stop(); 
+.................... } 
+....................  
+.................... /* 
+.................... write_file_record_rsp 
+.................... Input:     int8                     address            Slave Address 
+....................            int8                     byte_count         Echo of number of bytes sent 
+....................            write_sub_request_rsp*   request            Echo of Structure holding record information 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_write_file_record_rsp(int8 address, int8 byte_count,  
+....................                                     modbus_write_sub_request_rsp *request) 
+.................... { 
+....................    int8 i, j=0; 
+....................  
+....................    modbus_serial_send_start(address, FUNC_WRITE_FILE_RECORD); 
+....................  
+....................    modbus_serial_putc(byte_count); 
+....................  
+....................    for(i=0; i < byte_count; i+=(7+(j*2))) 
+....................    { 
+....................       modbus_serial_putc(request->reference_type); 
+....................       modbus_serial_putc(make8(request->file_number, 1)); 
+....................       modbus_serial_putc(make8(request->file_number, 0)); 
+....................       modbus_serial_putc(make8(request->record_number, 1)); 
+....................       modbus_serial_putc(make8(request->record_number, 0)); 
+....................       modbus_serial_putc(make8(request->record_length, 1)); 
+....................       modbus_serial_putc(make8(request->record_length, 0)); 
+....................  
+....................       for(j=0; (j < request->record_length); j+=2) 
+....................       { 
+....................          modbus_serial_putc(make8(request->data[j], 1)); 
+....................          modbus_serial_putc(make8(request->data[j], 0)); 
+....................       } 
+....................    } 
+....................  
+....................    modbus_serial_send_stop(); 
+.................... } 
+....................  
+.................... /* 
+.................... mask_write_register_rsp 
+.................... Input:     int8        address            Slave Address 
+....................            int16       reference_address  Echo of reference address 
+....................            int16       AND_mask           Echo of AND mask 
+....................            int16       OR_mask            Echo or OR mask 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_mask_write_register_rsp(int8 address, int16 reference_address, 
+....................                            int16 AND_mask, int16 OR_mask) 
+.................... { 
+....................    modbus_serial_send_start(address, FUNC_MASK_WRITE_REGISTER); 
+....................  
+....................    modbus_serial_putc(make8(reference_address,1)); 
+....................    modbus_serial_putc(make8(reference_address,0)); 
+....................  
+....................    modbus_serial_putc(make8(AND_mask,1)); 
+....................    modbus_serial_putc(make8(AND_mask,0)); 
+....................  
+....................    modbus_serial_putc(make8(OR_mask, 1)); 
+....................    modbus_serial_putc(make8(OR_mask, 0)); 
+....................  
+....................    modbus_serial_send_stop(); 
+.................... } 
+....................  
+.................... /* 
+.................... read_write_multiple_registers_rsp 
+.................... Input:     int8        address            Slave Address 
+....................            int16*      data               Pointer to an array of data 
+....................            int8        data_len           Length of data in bytes 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_read_write_multiple_registers_rsp(int8 address, int8 data_len,  
+....................                                                 int16 *data) 
+.................... { 
+....................    int8 i; 
+....................  
+....................    modbus_serial_send_start(address, FUNC_READ_WRITE_MULTIPLE_REGISTERS); 
+....................  
+....................    modbus_serial_putc(data_len*2); 
+....................  
+....................    for(i=0; i < data_len*2; i+=2) 
+....................    { 
+....................       modbus_serial_putc(make8(data[i], 1)); 
+....................       modbus_serial_putc(make8(data[i], 0)); 
+....................    } 
+....................  
+....................    modbus_serial_send_stop(); 
+.................... } 
+....................  
+.................... /* 
+.................... read_FIFO_queue_rsp 
+.................... Input:     int8        address            Slave Address 
+....................            int16       FIFO_len           Length of FIFO in bytes 
+....................            int16*      data               Pointer to an array of data 
+.................... Output:    void 
+.................... */ 
+.................... void modbus_read_FIFO_queue_rsp(int8 address, int16 FIFO_len, int16 *data) 
+.................... { 
+....................    int8 i; 
+....................    int16 byte_count; 
+....................  
+....................    byte_count = ((FIFO_len*2)+2); 
+....................  
+....................    modbus_serial_send_start(address, FUNC_READ_FIFO_QUEUE); 
+....................  
+....................    modbus_serial_putc(make8(byte_count, 1)); 
+....................    modbus_serial_putc(make8(byte_count, 0)); 
+....................  
+....................    modbus_serial_putc(make8(FIFO_len, 1)); 
+....................    modbus_serial_putc(make8(FIFO_len, 0)); 
+....................  
+....................    for(i=0; i < FIFO_len; i+=2) 
+....................    { 
+....................       modbus_serial_putc(make8(data[i], 1)); 
+....................       modbus_serial_putc(make8(data[i], 0)); 
+....................    } 
+....................  
+....................    modbus_serial_send_stop(); 
+.................... } 
+....................  
+.................... void modbus_exception_rsp(int8 address, int16 func, exception error) 
+.................... { 
+....................    modbus_serial_send_start(address, func|0x80); 
+*
+004BA:  MOVF   x90,W
+004BC:  IORLW  80
+004BE:  MOVWF  x93
+004C0:  MOVFF  91,94
+004C4:  MOVFF  8F,98
+004C8:  MOVWF  x99
+004CA:  RCALL  0468
+....................    modbus_serial_putc(error); 
+004CC:  MOVFF  92,9A
+004D0:  RCALL  0446
+....................    modbus_serial_send_stop(); 
+004D2:  RCALL  048C
+.................... } 
+004D4:  RETLW  00
+....................  
+.................... #endif 
+....................  
+....................  
+.................... #define MODBUS_ADDRESS 0x01 
+....................  
+.................... /*This function may come in handy for you since MODBUS uses MSB first.*/ 
+.................... int8 swap_bits(int8 c) 
+.................... { 
+....................    return ((c&1)?128:0)|((c&2)?64:0)|((c&4)?32:0)|((c&8)?16:0)|((c&16)?8:0) 
+....................           |((c&32)?4:0)|((c&64)?2:0)|((c&128)?1:0); 
+*
+0065A:  BTFSS  x8F.0
+0065C:  BRA    0662
+0065E:  MOVLW  80
+00660:  BRA    0664
+00662:  MOVLW  00
+00664:  MOVWF  x90
+00666:  BTFSS  x8F.1
+00668:  BRA    066E
+0066A:  MOVLW  40
+0066C:  BRA    0670
+0066E:  MOVLW  00
+00670:  IORWF  x90,F
+00672:  BTFSS  x8F.2
+00674:  BRA    067A
+00676:  MOVLW  20
+00678:  BRA    067C
+0067A:  MOVLW  00
+0067C:  IORWF  x90,F
+0067E:  BTFSS  x8F.3
+00680:  BRA    0686
+00682:  MOVLW  10
+00684:  BRA    0688
+00686:  MOVLW  00
+00688:  IORWF  x90,F
+0068A:  BTFSS  x8F.4
+0068C:  BRA    0692
+0068E:  MOVLW  08
+00690:  BRA    0694
+00692:  MOVLW  00
+00694:  IORWF  x90,F
+00696:  BTFSS  x8F.5
+00698:  BRA    069E
+0069A:  MOVLW  04
+0069C:  BRA    06A0
+0069E:  MOVLW  00
+006A0:  IORWF  x90,F
+006A2:  BTFSS  x8F.6
+006A4:  BRA    06AA
+006A6:  MOVLW  02
+006A8:  BRA    06AC
+006AA:  MOVLW  00
+006AC:  IORWF  x90,F
+006AE:  BTFSS  x8F.7
+006B0:  BRA    06B6
+006B2:  MOVLW  01
+006B4:  BRA    06B8
+006B6:  MOVLW  00
+006B8:  IORWF  x90,W
+006BA:  MOVWF  01
+.................... } 
+006BC:  GOTO   0A52 (RETURN)
+....................  
+.................... void main() 
+.................... { 
+*
+00730:  CLRF   FF8
+00732:  BCF    FD0.7
+00734:  BSF    07.7
+00736:  CLRF   FEA
+00738:  CLRF   FE9
+0073A:  BCF    FB8.3
+0073C:  MOVLW  19
+0073E:  MOVWF  FAF
+00740:  MOVLW  A6
+00742:  MOVWF  FAC
+00744:  MOVLW  90
+00746:  MOVWF  FAB
+00748:  BCF    18.0
+0074A:  CLRF   19
+0074C:  MOVF   FC1,W
+0074E:  ANDLW  C0
+00750:  IORLW  0F
+00752:  MOVWF  FC1
+00754:  MOVLW  07
+00756:  MOVWF  FB4
+00758:  CLRF   17
+0075A:  MOVLW  07
+0075C:  MOVWF  60
+0075E:  MOVLW  09
+00760:  MOVWF  61
+*
+007C0:  CLRF   x83
+007C2:  CLRF   x82
+....................    int8 coils = 0b00000111; 
+....................    int8 inputs = 0b00001001; 
+....................    int16 hold_regs[] = {0x8800,0x7700,0x6600,0x5500,0x4400,0x3300,0x2200,0x1100}; 
+*
+00762:  CLRF   62
+00764:  MOVLW  88
+00766:  MOVWF  63
+00768:  CLRF   64
+0076A:  MOVLW  77
+0076C:  MOVWF  65
+0076E:  CLRF   66
+00770:  MOVLW  66
+00772:  MOVWF  67
+00774:  CLRF   68
+00776:  MOVLW  55
+00778:  MOVWF  69
+0077A:  CLRF   6A
+0077C:  MOVLW  44
+0077E:  MOVWF  6B
+00780:  CLRF   6C
+00782:  MOVLW  33
+00784:  MOVWF  6D
+00786:  CLRF   6E
+00788:  MOVLW  22
+0078A:  MOVWF  6F
+0078C:  CLRF   70
+0078E:  MOVLW  11
+00790:  MOVWF  71
+....................    int16 input_regs[] = {0x1100,0x2200,0x3300,0x4400,0x5500,0x6600,0x7700,0x8800}; 
+00792:  CLRF   72
+00794:  MOVWF  73
+00796:  CLRF   74
+00798:  MOVLW  22
+0079A:  MOVWF  75
+0079C:  CLRF   76
+0079E:  MOVLW  33
+007A0:  MOVWF  77
+007A2:  CLRF   78
+007A4:  MOVLW  44
+007A6:  MOVWF  79
+007A8:  CLRF   7A
+007AA:  MOVLW  55
+007AC:  MOVWF  7B
+007AE:  CLRF   7C
+007B0:  MOVLW  66
+007B2:  MOVWF  7D
+007B4:  CLRF   7E
+007B6:  MOVLW  77
+007B8:  MOVWF  7F
+007BA:  CLRF   x80
+007BC:  MOVLW  88
+007BE:  MOVWF  x81
+....................    int16 event_count = 0; 
+....................  
+....................    long int ADC_value0,ADC_value1,ADC_value2; 
+....................  
+.................... //   lcd_init(); 
+.................... //      delay_ms(6);    
+....................  
+....................        
+.................... //      setup_adc(ADC_CLOCK_INTERNAL); 
+.................... //   setup_adc_ports( RA0_RA1_RA3_ANALOG ); 
+....................    //setup_adc(adc_clock_internal); 
+....................     
+....................    modbus_init(); 
+*
+007C4:  BRA    03D8
+....................  
+.................... //   lcd_gotoxy(1,1);    
+.................... //   printf(lcd_putc,"Modbus Slave                  "); 
+.................... //   lcd_gotoxy(1,2);      
+.................... //   printf(lcd_putc,"addr 0x%X CH0-1                 ",MODBUS_ADDRESS); 
+.................... //      delay_ms(2000); 
+....................  
+....................    while(TRUE) 
+....................    { 
+....................    output_toggle(PIN_C0); 
+007C6:  BCF    F94.0
+007C8:  BTG    F8B.0
+....................    /* 
+....................     set_adc_channel(2); 
+....................          delay_us(20); 
+....................      ADC_value0=read_adc(); 
+....................      input_regs[0]=ADC_value0; 
+....................  
+....................     set_adc_channel(6); 
+....................          delay_us(20); 
+....................      ADC_value1=read_adc(); 
+....................      input_regs[1]=ADC_value1; 
+....................  
+....................     set_adc_channel(7); 
+....................          delay_us(20); 
+....................      ADC_value2=read_adc(); 
+....................      input_regs[2]=ADC_value2; 
+....................      */ 
+....................     while(!modbus_kbhit()); 
+007CA:  BRA    03F0
+007CC:  MOVF   01,F
+007CE:  BZ    07CA
+....................      output_toggle(PIN_A0); 
+007D0:  BCF    F92.0
+007D2:  BTG    F89.0
+....................       delay_ms(200); 
+007D4:  MOVLW  C8
+007D6:  MOVWF  x8F
+007D8:  BRA    0412
+....................        
+....................       //check address against our address, 0 is broadcast 
+....................       if((modbus_rx.address == MODBUS_ADDRESS) || modbus_rx.address == 0) 
+007DA:  DECFSZ 1C,W
+007DC:  BRA    07E0
+007DE:  BRA    07E6
+007E0:  MOVF   1C,F
+007E2:  BTFSS  FD8.2
+007E4:  BRA    0BB2
+....................       { 
+....................          switch(modbus_rx.func) 
+....................          { 
+007E6:  MOVF   1E,W
+007E8:  XORLW  01
+007EA:  BZ    0812
+007EC:  XORLW  03
+007EE:  BZ    0812
+007F0:  XORLW  01
+007F2:  BZ    08AA
+007F4:  XORLW  07
+007F6:  BZ    08AA
+007F8:  XORLW  01
+007FA:  BTFSC  FD8.2
+007FC:  BRA    092E
+007FE:  XORLW  03
+00800:  BTFSC  FD8.2
+00802:  BRA    09C6
+00804:  XORLW  09
+00806:  BTFSC  FD8.2
+00808:  BRA    0A24
+0080A:  XORLW  1F
+0080C:  BTFSC  FD8.2
+0080E:  BRA    0AEE
+00810:  BRA    0BA4
+....................             case FUNC_READ_COILS:    //read coils 
+....................             case FUNC_READ_DISCRETE_INPUT:    //read inputs 
+....................                if(modbus_rx.data[0] || modbus_rx.data[2] || 
+....................                   modbus_rx.data[1] >= 8 || modbus_rx.data[3]+modbus_rx.data[1] > 8) 
+00812:  MOVF   20,F
+00814:  BNZ   0828
+00816:  MOVF   22,F
+00818:  BNZ   0828
+0081A:  MOVF   21,W
+0081C:  SUBLW  07
+0081E:  BNC   0828
+00820:  MOVF   21,W
+00822:  ADDWF  23,W
+00824:  SUBLW  08
+00826:  BC    083A
+....................                   modbus_exception_rsp(MODBUS_ADDRESS,modbus_rx.func,ILLEGAL_DATA_ADDRESS); 
+00828:  MOVLW  01
+0082A:  MOVWF  x8F
+0082C:  CLRF   x91
+0082E:  MOVFF  1E,90
+00832:  MOVLW  02
+00834:  MOVWF  x92
+00836:  RCALL  04BA
+....................                else 
+00838:  BRA    08A8
+....................                { 
+....................                   int8 data; 
+....................                    
+....................                   if(modbus_rx.func == FUNC_READ_COILS) 
+0083A:  DECFSZ 1E,W
+0083C:  BRA    0852
+....................                      data = coils>>(modbus_rx.data[1]);      //move to the starting coil 
+0083E:  MOVFF  60,8A
+00842:  MOVF   21,W
+00844:  MOVWF  01
+00846:  BZ    0850
+00848:  BCF    FD8.0
+0084A:  RRCF   x8A,F
+0084C:  DECFSZ 01,F
+0084E:  BRA    0848
+....................                   else 
+00850:  BRA    0864
+....................                      data = inputs>>(modbus_rx.data[1]);      //move to the starting input 
+00852:  MOVFF  61,8A
+00856:  MOVF   21,W
+00858:  MOVWF  01
+0085A:  BZ    0864
+0085C:  BCF    FD8.0
+0085E:  RRCF   x8A,F
+00860:  DECFSZ 01,F
+00862:  BRA    085C
+....................  
+....................                   data = data & (0xFF>>(8-modbus_rx.data[3]));  //0 out values after quantity 
+00864:  MOVLW  08
+00866:  BSF    FD8.0
+00868:  SUBFWB 23,W
+0086A:  MOVWF  01
+0086C:  MOVLW  FF
+0086E:  MOVWF  00
+00870:  MOVF   01,F
+00872:  BZ    087C
+00874:  BCF    FD8.0
+00876:  RRCF   00,F
+00878:  DECFSZ 01,F
+0087A:  BRA    0874
+0087C:  MOVF   00,W
+0087E:  ANDWF  x8A,F
+....................  
+....................                   if(modbus_rx.func == FUNC_READ_COILS) 
+00880:  DECFSZ 1E,W
+00882:  BRA    0894
+....................                      modbus_read_discrete_input_rsp(MODBUS_ADDRESS, 0x01, &data); 
+00884:  MOVLW  01
+00886:  MOVWF  x8F
+00888:  MOVWF  x90
+0088A:  CLRF   x92
+0088C:  MOVLW  8A
+0088E:  MOVWF  x91
+00890:  RCALL  04D6
+....................                   else 
+00892:  BRA    08A2
+....................                      modbus_read_discrete_input_rsp(MODBUS_ADDRESS, 0x01, &data); 
+00894:  MOVLW  01
+00896:  MOVWF  x8F
+00898:  MOVWF  x90
+0089A:  CLRF   x92
+0089C:  MOVLW  8A
+0089E:  MOVWF  x91
+008A0:  RCALL  04D6
+....................                       
+....................                   event_count++; 
+008A2:  INCF   x82,F
+008A4:  BTFSC  FD8.2
+008A6:  INCF   x83,F
+....................                } 
+....................                break; 
+008A8:  BRA    0BB2
+....................             case FUNC_READ_HOLDING_REGISTERS: 
+....................             case FUNC_READ_INPUT_REGISTERS: 
+....................                if(modbus_rx.data[0] || modbus_rx.data[2] || 
+....................                   modbus_rx.data[1] >= 8 || modbus_rx.data[3]+modbus_rx.data[1] > 8) 
+008AA:  MOVF   20,F
+008AC:  BNZ   08C0
+008AE:  MOVF   22,F
+008B0:  BNZ   08C0
+008B2:  MOVF   21,W
+008B4:  SUBLW  07
+008B6:  BNC   08C0
+008B8:  MOVF   21,W
+008BA:  ADDWF  23,W
+008BC:  SUBLW  08
+008BE:  BC    08D2
+....................                   modbus_exception_rsp(MODBUS_ADDRESS,modbus_rx.func,ILLEGAL_DATA_ADDRESS); 
+008C0:  MOVLW  01
+008C2:  MOVWF  x8F
+008C4:  CLRF   x91
+008C6:  MOVFF  1E,90
+008CA:  MOVLW  02
+008CC:  MOVWF  x92
+008CE:  RCALL  04BA
+....................                else 
+008D0:  BRA    092C
+....................                { 
+....................                   if(modbus_rx.func == FUNC_READ_HOLDING_REGISTERS) 
+008D2:  MOVF   1E,W
+008D4:  SUBLW  03
+008D6:  BNZ   0900
+....................                      modbus_read_holding_registers_rsp(MODBUS_ADDRESS,(modbus_rx.data[3]*2),hold_regs+modbus_rx.data[1]); 
+008D8:  BCF    FD8.0
+008DA:  RLCF   23,W
+008DC:  MOVWF  x8F
+008DE:  BCF    FD8.0
+008E0:  RLCF   21,W
+008E2:  ADDLW  62
+008E4:  MOVWF  x90
+008E6:  CLRF   x91
+008E8:  BTFSC  FD8.0
+008EA:  INCF   x91,F
+008EC:  MOVLW  01
+008EE:  MOVWF  x92
+008F0:  MOVFF  8F,93
+008F4:  MOVFF  91,95
+008F8:  MOVFF  90,94
+008FC:  BRA    0512
+....................                   else 
+008FE:  BRA    0926
+....................                      modbus_read_input_registers_rsp(MODBUS_ADDRESS,(modbus_rx.data[3]*2),input_regs+modbus_rx.data[1]); 
+00900:  BCF    FD8.0
+00902:  RLCF   23,W
+00904:  MOVWF  x8F
+00906:  BCF    FD8.0
+00908:  RLCF   21,W
+0090A:  ADDLW  72
+0090C:  MOVWF  x90
+0090E:  CLRF   x91
+00910:  BTFSC  FD8.0
+00912:  INCF   x91,F
+00914:  MOVLW  01
+00916:  MOVWF  x92
+00918:  MOVFF  8F,93
+0091C:  MOVFF  91,95
+00920:  MOVFF  90,94
+00924:  BRA    057E
+....................                    
+....................                   event_count++; 
+00926:  INCF   x82,F
+00928:  BTFSC  FD8.2
+0092A:  INCF   x83,F
+....................                } 
+....................                break; 
+0092C:  BRA    0BB2
+....................             case FUNC_WRITE_SINGLE_COIL:      //write coil 
+....................                if(modbus_rx.data[0] || modbus_rx.data[3] || modbus_rx.data[1] > 8) 
+0092E:  MOVF   20,F
+00930:  BNZ   093C
+00932:  MOVF   23,F
+00934:  BNZ   093C
+00936:  MOVF   21,W
+00938:  SUBLW  08
+0093A:  BC    094E
+....................                   modbus_exception_rsp(MODBUS_ADDRESS,modbus_rx.func,ILLEGAL_DATA_ADDRESS); 
+0093C:  MOVLW  01
+0093E:  MOVWF  x8F
+00940:  CLRF   x91
+00942:  MOVFF  1E,90
+00946:  MOVLW  02
+00948:  MOVWF  x92
+0094A:  RCALL  04BA
+....................                else if(modbus_rx.data[2] != 0xFF && modbus_rx.data[2] != 0x00) 
+0094C:  BRA    09C4
+0094E:  INCFSZ 22,W
+00950:  BRA    0954
+00952:  BRA    096A
+00954:  MOVF   22,F
+00956:  BZ    096A
+....................                   modbus_exception_rsp(MODBUS_ADDRESS,modbus_rx.func,ILLEGAL_DATA_VALUE); 
+00958:  MOVLW  01
+0095A:  MOVWF  x8F
+0095C:  CLRF   x91
+0095E:  MOVFF  1E,90
+00962:  MOVLW  03
+00964:  MOVWF  x92
+00966:  RCALL  04BA
+....................                else 
+00968:  BRA    09C4
+....................                { 
+....................                   //coils are stored msb->lsb so we must use 7-address 
+....................                   if(modbus_rx.data[2] == 0xFF) 
+0096A:  INCFSZ 22,W
+0096C:  BRA    0986
+....................                      bit_set(coils,modbus_rx.data[1]); 
+0096E:  MOVLW  01
+00970:  MOVWF  00
+00972:  MOVF   21,W
+00974:  MOVWF  01
+00976:  BZ    0980
+00978:  BCF    FD8.0
+0097A:  RLCF   00,F
+0097C:  DECFSZ 01,F
+0097E:  BRA    0978
+00980:  MOVF   00,W
+00982:  IORWF  60,F
+....................                   else 
+00984:  BRA    099E
+....................                      bit_clear(coils,modbus_rx.data[1]); 
+00986:  MOVLW  01
+00988:  MOVWF  00
+0098A:  MOVF   21,W
+0098C:  MOVWF  01
+0098E:  BZ    0998
+00990:  BCF    FD8.0
+00992:  RLCF   00,F
+00994:  DECFSZ 01,F
+00996:  BRA    0990
+00998:  MOVF   00,W
+0099A:  XORLW  FF
+0099C:  ANDWF  60,F
+....................  
+....................                   modbus_write_single_coil_rsp(MODBUS_ADDRESS,modbus_rx.data[1],((int16)(modbus_rx.data[2]))<<8); 
+0099E:  CLRF   x90
+009A0:  MOVFF  22,8F
+009A4:  MOVFF  22,90
+009A8:  CLRF   x8F
+009AA:  MOVLW  01
+009AC:  MOVWF  x91
+009AE:  CLRF   x93
+009B0:  MOVFF  21,92
+009B4:  MOVFF  22,95
+009B8:  MOVFF  8F,94
+009BC:  BRA    05EA
+....................                    
+....................                   event_count++; 
+009BE:  INCF   x82,F
+009C0:  BTFSC  FD8.2
+009C2:  INCF   x83,F
+....................                } 
+....................                break; 
+009C4:  BRA    0BB2
+....................             case FUNC_WRITE_SINGLE_REGISTER: 
+....................                if(modbus_rx.data[0] || modbus_rx.data[1] >= 8) 
+009C6:  MOVF   20,F
+009C8:  BNZ   09D0
+009CA:  MOVF   21,W
+009CC:  SUBLW  07
+009CE:  BC    09E2
+....................                   modbus_exception_rsp(MODBUS_ADDRESS,modbus_rx.func,ILLEGAL_DATA_ADDRESS); 
+009D0:  MOVLW  01
+009D2:  MOVWF  x8F
+009D4:  CLRF   x91
+009D6:  MOVFF  1E,90
+009DA:  MOVLW  02
+009DC:  MOVWF  x92
+009DE:  RCALL  04BA
+....................                else 
+009E0:  BRA    0A22
+....................                { 
+....................                   //the registers are stored in little endian format 
+....................                   hold_regs[modbus_rx.data[1]] = make16(modbus_rx.data[3],modbus_rx.data[2]); 
+009E2:  BCF    FD8.0
+009E4:  RLCF   21,W
+009E6:  CLRF   03
+009E8:  ADDLW  62
+009EA:  MOVWF  FE9
+009EC:  MOVLW  00
+009EE:  ADDWFC 03,W
+009F0:  MOVWF  FEA
+009F2:  MOVFF  23,FEC
+009F6:  MOVF   FED,F
+009F8:  MOVFF  22,FEF
+....................  
+....................                   modbus_write_single_register_rsp(MODBUS_ADDRESS, 
+....................                                make16(modbus_rx.data[0],modbus_rx.data[1]), 
+....................                                make16(modbus_rx.data[2],modbus_rx.data[3])); 
+009FC:  MOVFF  20,90
+00A00:  MOVFF  21,8F
+00A04:  MOVFF  22,92
+00A08:  MOVFF  23,91
+00A0C:  MOVLW  01
+00A0E:  MOVWF  x93
+00A10:  MOVFF  20,95
+00A14:  MOVFF  21,94
+00A18:  MOVFF  22,97
+00A1C:  MOVFF  23,96
+00A20:  BRA    0622
+....................                } 
+....................                break; 
+00A22:  BRA    0BB2
+....................             case FUNC_WRITE_MULTIPLE_COILS: 
+....................                if(modbus_rx.data[0] || modbus_rx.data[2] || 
+....................                   modbus_rx.data[1] >= 8 || modbus_rx.data[3]+modbus_rx.data[1] > 8) 
+00A24:  MOVF   20,F
+00A26:  BNZ   0A3A
+00A28:  MOVF   22,F
+00A2A:  BNZ   0A3A
+00A2C:  MOVF   21,W
+00A2E:  SUBLW  07
+00A30:  BNC   0A3A
+00A32:  MOVF   21,W
+00A34:  ADDWF  23,W
+00A36:  SUBLW  08
+00A38:  BC    0A4C
+....................                   modbus_exception_rsp(MODBUS_ADDRESS,modbus_rx.func,ILLEGAL_DATA_ADDRESS); 
+00A3A:  MOVLW  01
+00A3C:  MOVWF  x8F
+00A3E:  CLRF   x91
+00A40:  MOVFF  1E,90
+00A44:  MOVLW  02
+00A46:  MOVWF  x92
+00A48:  RCALL  04BA
+....................                else 
+00A4A:  BRA    0AEC
+....................                { 
+....................                   int i,j; 
+....................  
+....................                   modbus_rx.data[5] = swap_bits(modbus_rx.data[5]); 
+00A4C:  MOVFF  25,8F
+00A50:  BRA    065A
+00A52:  MOVFF  01,25
+....................  
+....................                   for(i=modbus_rx.data[1],j=0; i < modbus_rx.data[1]+modbus_rx.data[3]; ++i,++j) 
+00A56:  MOVFF  21,8B
+00A5A:  CLRF   x8C
+00A5C:  MOVF   23,W
+00A5E:  ADDWF  21,W
+00A60:  SUBWF  x8B,W
+00A62:  BC    0AC0
+....................                   {   
+....................                      if(bit_test(modbus_rx.data[5],j)) 
+00A64:  MOVFF  25,00
+00A68:  MOVF   x8C,W
+00A6A:  MOVWF  01
+00A6C:  BZ    0A76
+00A6E:  BCF    FD8.0
+00A70:  RRCF   00,F
+00A72:  DECFSZ 01,F
+00A74:  BRA    0A6E
+00A76:  BTFSS  00.0
+00A78:  BRA    0A9A
+....................                         bit_set(coils,7-i); 
+00A7A:  MOVLW  07
+00A7C:  BSF    FD8.0
+00A7E:  SUBFWB x8B,W
+00A80:  MOVWF  x8F
+00A82:  MOVLW  01
+00A84:  MOVWF  00
+00A86:  MOVF   x8F,W
+00A88:  MOVWF  01
+00A8A:  BZ    0A94
+00A8C:  BCF    FD8.0
+00A8E:  RLCF   00,F
+00A90:  DECFSZ 01,F
+00A92:  BRA    0A8C
+00A94:  MOVF   00,W
+00A96:  IORWF  60,F
+....................                      else 
+00A98:  BRA    0ABA
+....................                         bit_clear(coils,7-i); 
+00A9A:  MOVLW  07
+00A9C:  BSF    FD8.0
+00A9E:  SUBFWB x8B,W
+00AA0:  MOVWF  x8F
+00AA2:  MOVLW  01
+00AA4:  MOVWF  00
+00AA6:  MOVF   x8F,W
+00AA8:  MOVWF  01
+00AAA:  BZ    0AB4
+00AAC:  BCF    FD8.0
+00AAE:  RLCF   00,F
+00AB0:  DECFSZ 01,F
+00AB2:  BRA    0AAC
+00AB4:  MOVF   00,W
+00AB6:  XORLW  FF
+00AB8:  ANDWF  60,F
+....................                   } 
+00ABA:  INCF   x8B,F
+00ABC:  INCF   x8C,F
+00ABE:  BRA    0A5C
+....................  
+....................                   modbus_write_multiple_coils_rsp(MODBUS_ADDRESS, 
+....................                                  make16(modbus_rx.data[0],modbus_rx.data[1]), 
+....................                                  make16(modbus_rx.data[2],modbus_rx.data[3])); 
+00AC0:  MOVFF  20,90
+00AC4:  MOVFF  21,8F
+00AC8:  MOVFF  22,92
+00ACC:  MOVFF  23,91
+00AD0:  MOVLW  01
+00AD2:  MOVWF  x93
+00AD4:  MOVFF  20,95
+00AD8:  MOVFF  21,94
+00ADC:  MOVFF  22,97
+00AE0:  MOVFF  23,96
+00AE4:  BRA    06C0
+....................                    
+....................                   event_count++; 
+00AE6:  INCF   x82,F
+00AE8:  BTFSC  FD8.2
+00AEA:  INCF   x83,F
+....................                } 
+....................                break; 
+00AEC:  BRA    0BB2
+....................             case FUNC_WRITE_MULTIPLE_REGISTERS: 
+....................                if(modbus_rx.data[0] || modbus_rx.data[2] || 
+....................                   modbus_rx.data[1] >= 8 || modbus_rx.data[3]+modbus_rx.data[1] > 8) 
+00AEE:  MOVF   20,F
+00AF0:  BNZ   0B04
+00AF2:  MOVF   22,F
+00AF4:  BNZ   0B04
+00AF6:  MOVF   21,W
+00AF8:  SUBLW  07
+00AFA:  BNC   0B04
+00AFC:  MOVF   21,W
+00AFE:  ADDWF  23,W
+00B00:  SUBLW  08
+00B02:  BC    0B16
+....................                   modbus_exception_rsp(MODBUS_ADDRESS,modbus_rx.func,ILLEGAL_DATA_ADDRESS); 
+00B04:  MOVLW  01
+00B06:  MOVWF  x8F
+00B08:  CLRF   x91
+00B0A:  MOVFF  1E,90
+00B0E:  MOVLW  02
+00B10:  MOVWF  x92
+00B12:  RCALL  04BA
+....................                else 
+00B14:  BRA    0BA2
+....................                { 
+....................                   int i,j; 
+....................  
+....................                   for(i=0,j=5; i < modbus_rx.data[4]/2; ++i,j+=2) 
+00B16:  CLRF   x8D
+00B18:  MOVLW  05
+00B1A:  MOVWF  x8E
+00B1C:  BCF    FD8.0
+00B1E:  RRCF   24,W
+00B20:  SUBWF  x8D,W
+00B22:  BC    0B76
+....................                      hold_regs[i] = make16(modbus_rx.data[j+1],modbus_rx.data[j]); 
+00B24:  BCF    FD8.0
+00B26:  RLCF   x8D,W
+00B28:  CLRF   03
+00B2A:  ADDLW  62
+00B2C:  MOVWF  01
+00B2E:  MOVLW  00
+00B30:  ADDWFC 03,F
+00B32:  MOVFF  03,90
+00B36:  MOVLW  01
+00B38:  ADDWF  x8E,W
+00B3A:  CLRF   03
+00B3C:  ADDLW  20
+00B3E:  MOVWF  FE9
+00B40:  MOVLW  00
+00B42:  ADDWFC 03,W
+00B44:  MOVWF  FEA
+00B46:  MOVFF  FEF,91
+00B4A:  CLRF   03
+00B4C:  MOVF   x8E,W
+00B4E:  ADDLW  20
+00B50:  MOVWF  FE9
+00B52:  MOVLW  00
+00B54:  ADDWFC 03,W
+00B56:  MOVWF  FEA
+00B58:  MOVFF  FEF,92
+00B5C:  MOVFF  90,FEA
+00B60:  MOVFF  01,FE9
+00B64:  MOVFF  91,FEC
+00B68:  MOVF   FED,F
+00B6A:  MOVFF  92,FEF
+00B6E:  INCF   x8D,F
+00B70:  MOVLW  02
+00B72:  ADDWF  x8E,F
+00B74:  BRA    0B1C
+....................  
+....................                   modbus_write_multiple_registers_rsp(MODBUS_ADDRESS, 
+....................                                  make16(modbus_rx.data[0],modbus_rx.data[1]), 
+....................                                  make16(modbus_rx.data[2],modbus_rx.data[3])); 
+00B76:  MOVFF  20,90
+00B7A:  MOVFF  21,8F
+00B7E:  MOVFF  22,92
+00B82:  MOVFF  23,91
+00B86:  MOVLW  01
+00B88:  MOVWF  x93
+00B8A:  MOVFF  20,95
+00B8E:  MOVFF  21,94
+00B92:  MOVFF  22,97
+00B96:  MOVFF  23,96
+00B9A:  BRA    06F8
+....................                 
+....................                   event_count++; 
+00B9C:  INCF   x82,F
+00B9E:  BTFSC  FD8.2
+00BA0:  INCF   x83,F
+....................                } 
+....................                break;            
+00BA2:  BRA    0BB2
+....................             default:    //We don't support the function, so return exception 
+....................                modbus_exception_rsp(MODBUS_ADDRESS,modbus_rx.func,ILLEGAL_FUNCTION); 
+00BA4:  MOVLW  01
+00BA6:  MOVWF  x8F
+00BA8:  CLRF   x91
+00BAA:  MOVFF  1E,90
+00BAE:  MOVWF  x92
+00BB0:  RCALL  04BA
+....................          } 
+....................       } 
+.................... //      lcd_gotoxy(1,1);    
+.................... //      printf(lcd_putc,"ADC0: %LX              ",ADC_value0); 
+.................... //      lcd_gotoxy(1,2);    
+.................... //     printf(lcd_putc,"ADC1: %LX              ",ADC_value1); 
+....................   } 
+00BB2:  BRA    07C6
+.................... } 
+00BB4:  SLEEP 
+
+Configuration Fuses:
+   Word  1: 0200   HS NOIESO NOFCMEN
+   Word  2: 1E1F   BROWNOUT NOWDT BORV21 NOPUT WDT32768
+   Word  3: 0100   CCP2C1 NOPBADEN NOLPT1OSC NOMCLR
+   Word  4: 0080   NOSTVREN NODEBUG NOLVP NOXINST
+   Word  5: C00F   NOPROTECT NOCPD NOCPB
+   Word  6: E00F   NOWRT NOWRTD NOWRTC NOWRTB
+   Word  7: 400F   NOEBTR NOEBTRB

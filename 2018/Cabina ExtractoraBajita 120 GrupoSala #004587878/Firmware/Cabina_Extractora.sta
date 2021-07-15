@@ -1,0 +1,176 @@
+
+ROM used: 17658 (54%)
+          17658 (54%) including unused fragments
+
+          4 Average locations per line
+          10 Average locations per statement
+
+RAM used: 212 (10%) at main() level
+          236 (12%) worst case
+
+Stack used: 7 worst case (out of 31 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+ 1702  1065  63  Cabina_Extractora.c
+  451     0   0  C:\Program Files (x86)\PICC\Devices\18F4550.h
+  284    80   5  LCD420PIC18F.c
+ 2172   260  15  math.h
+  319   282  17  Funciones.h
+----- -----
+ 4928  1687 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     40   0   1             @delay_ms1
+0     30   0   0             @const67
+0     76   0   1   333  2.5  lcd_send_nibble
+0     74   0   3   293  3.4  lcd_send_byte
+0     88   0   2   384  4.4  lcd_init
+0     70   0   3   426  5.5  lcd_gotoxy
+0     44   0   0             @goto10115
+0     98   0   1   447  6.4  lcd_putc
+0    118   0  10             @FLT
+0     58   0   4             @SFTOI
+0     54   0   2             @ITOF
+0    346   1  14             @DIVFF
+0    618   2  16             @ADDFF
+0    242   1  11             @MULFF
+0     86   0   5   100  2.1  sensores
+0     16   0   1    93  2.9  intensidadpantalla
+0    970   3   7   843  9.0  Leer_Sensor_Flujo
+0    262   1   1   563  6.0  controlar_flujo
+0    198   1   3   846  2.9  mensajes
+0     20   0   0             @const331
+0     34   0   2             @PSTRINGC_90
+0     20   0   0             @const333
+0     20   0   0             @const334
+0     20   0   0             @const335
+0     20   0   0             @const336
+0     20   0   0             @const337
+0     20   0   0             @const338
+0      8   0   1    24  1.2  ajustar_damper
+0     20   0   0   136  1.8  SalidasOff
+0     74   0   0   292  2.3  ConfigInicial
+0   1072   3   1  2294  3.9  LeeEEPROM
+0   1310   4   1  3216  3.9  LimitaValores
+0     30   0   0   115  2.5  EnciendeMotor
+0     30   0   0   108  2.1  ApagaMotor
+0     22   0   0             @const350
+0     22   0   0             @const351
+0     22   0   0             @const352
+0     22   0   0             @const353
+0    182   1   2  1218  6.3  temp1s
+0   8414  24   4 51227 11.5  MAIN
+0     22   0   0             @const359
+0     22   0   0             @const360
+0     22   0   0             @const361
+0     22   0   0             @const362
+0     22   0   0             @const365
+0     22   0   0             @const366
+0     22   0   0             @const367
+0     32   0   3             @PSTRINGCN_90
+0     40   0   3             @DIV88
+0    208   1   6             @PRINTF_D_90
+0     20   0   0             @const378
+0     20   0   0             @const379
+0     20   0   0             @const380
+0     20   0   0             @const381
+0     20   0   0             @const384
+0     20   0   0             @const385
+0     20   0   0             @const386
+0     22   0   0             @const388
+0     22   0   0             @const391
+0     22   0   0             @const392
+0     22   0   0             @const393
+0     22   0   0             @const394
+0     22   0   0             @const395
+0     22   0   0             @const396
+0     22   0   0             @const397
+0     22   0   0             @const398
+0     22   0   0             @const400
+0     26   0   0             @const401
+0    108   0   2             @PRINTF_U_90
+0     22   0   0             @const405
+0     22   0   0             @const406
+0     22   0   0             @const407
+0     18   0   0             @const409
+0     18   0   0             @const410
+0     22   0   0             @const414
+0     22   0   0             @const415
+0     64   0   5             @FTOSD
+0    122   0  13             @DIV3232
+0    392   1  13             @PRINTF_L32D_90FPFPF
+0     22   0   0             @const426
+0     22   0   0             @const427
+0     22   0   0             @const428
+0     22   0   0             @const432
+0     22   0   0             @const433
+0     22   0   0             @const434
+0     22   0   0             @const435
+0     22   0   0             @const437
+0     22   0   0             @const438
+0     22   0   0             @const439
+0     22   0   0             @const440
+0     22   0   0             @const442
+0     22   0   0             @const443
+0     22   0   0             @const444
+0     22   0   0             @const448
+0     22   0   0             @const449
+0     22   0   0             @const450
+0     22   0   0             @const451
+0     22   0   0             @const452
+0     22   0   0             @const453
+0     18   0   0             @const454
+0     18   0   0             @const457
+0     18   0   0             @const458
+0     22   0   0             @const460
+0     22   0   0             @const461
+0     18   0   0             @const462
+0     18   0   0             @const465
+0     18   0   0             @const466
+0     10   0   0             @const468
+0     10   0   0             @const469
+0     16   0   0             @const470
+0     12   0   0             @const471
+0     12   0   0             @const472
+0     12   0   0             @const473
+0     12   0   0             @const474
+0      8   0   0             @const475
+0     10   0   0             @const476
+0     10   0   0             @const477
+0     12   0   0             @const478
+0     22   0   0             @const481
+0     22   0   0             @const482
+0     18   0   0             @const483
+0     20   0   0             @const485
+0     20   0   0             @const486
+0     22   0   0             @const488
+0     22   0   0             @const489
+0     22   0   0             @const490
+0     22   0   0             @const491
+0     22   0   0             @const494
+0     22   0   0             @const495
+0     20   0   0             @const496
+
+Program metrics:
+    Functions               19
+    Statements              1687
+    Comments                569
+    Volume (V)              75416
+    Difficilty (D)          82.3
+    Effort to implement (E) 6205225
+    Time to implement (T)   95 hours, 46 minutes
+    Est Delivered Bugs (B)  11
+    Cyclomatic Complexity   226
+    Maintainability (MI)    93
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-00006     0  4  
+00008-00094   142  0  
+00096-07FFE  17512  15106  
+
+
+

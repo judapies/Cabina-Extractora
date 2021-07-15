@@ -1,0 +1,174 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @INTERRUPT_AREA
+005     @INTERRUPT_AREA
+006     @INTERRUPT_AREA
+007     @INTERRUPT_AREA
+008     @INTERRUPT_AREA
+009     @INTERRUPT_AREA
+00A     @INTERRUPT_AREA
+00B     @INTERRUPT_AREA
+00C     @INTERRUPT_AREA
+00D     @INTERRUPT_AREA
+00E     @INTERRUPT_AREA
+00F     @INTERRUPT_AREA
+010     @INTERRUPT_AREA
+011     @INTERRUPT_AREA
+012     @INTERRUPT_AREA
+013     @INTERRUPT_AREA
+014     @INTERRUPT_AREA
+015     @INTERRUPT_AREA
+016     @INTERRUPT_AREA
+017     rs232_errors
+018-01B modbus_serial_wait
+01C.0   modbus_serial_new
+01D     modbus_serial_state
+01E-01F modbus_serial_crc
+020-422 modbus_rx
+423     instruccion
+424     address
+425     regl
+426     regh
+427     i
+428     pwm1l
+429     pwm1h
+42A     pwm2l
+42B     pwm2h
+42C     address_ant
+42D     reg_ant
+42E     crc1
+42F     crc2
+430-431 reg
+432-433 pwm1
+434-435 pwm2
+436-437 temporal
+438     fstate
+439     posicion
+43A-46B buffer
+46C-49D txbuf
+49E-4CF rxbuf
+4D0     @I2C_STATE
+4D1-4D2 @MUL1616.P1
+4D1-4D2 write_reg.address
+4D1     read_all_holding.start
+4D1     Lee_Vector.@SCRATCH1
+4D1     MAIN.@SCRATCH1
+4D2     read_all_holding.size
+4D2     Lee_Vector.@SCRATCH2
+4D2     MAIN.@SCRATCH2
+4D3     modbus_read_holding_registers.address
+4D3-4D4 write_reg.reg
+4D3-4D4 @MUL1616.P1
+4D3     read_all_holding.@SCRATCH1
+4D4-4D5 modbus_read_holding_registers.start_address
+4D4     read_all_holding.@SCRATCH2
+4D5     modbus_write_single_register.address
+4D5     @MUL1616.@SCRATCH1
+4D5     read_all_holding.@SCRATCH3
+4D6-4D7 modbus_read_holding_registers.quantity
+4D6-4D7 modbus_write_single_register.reg_address
+4D8-4D9 modbus_write_single_register.reg_value
+4D8     modbus_read_holding_registers.@SCRATCH1
+4DA     modbus_serial_send_start.to
+4DA     modbus_serial_send_stop.crc_low
+4DA     modbus_write_single_register.@SCRATCH1
+4DB     modbus_serial_send_stop.crc_high
+4DB     modbus_serial_send_start.func
+4DC     modbus_serial_putc.c
+4DC     modbus_serial_send_start.@SCRATCH1
+4DC     modbus_serial_send_stop.@SCRATCH1
+4DD     @delay_us1.P1
+4E0     incomming_modbus_serial.c
+4E0     ssp_interupt.incoming
+4E1     modbus_enable_timeout.enable
+4E1     modbus_calc_crc.data
+4E1     incomming_modbus_serial.@SCRATCH1
+4E1     ssp_interupt.@SCRATCH1
+4E2     modbus_calc_crc.uIndex
+4E2     @I2C_WRITE_1.P1
+4E2     incomming_modbus_serial.@SCRATCH2
+4E2     ssp_interupt.@SCRATCH2
+4E3     modbus_calc_crc.@SCRATCH1
+FAC     TXSTA
+FAC.1   TRMT
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB     CCP_2_LOW
+FBB     CCP_2
+FBC     CCP_2_HIGH
+FBE     CCP_1
+FBE     CCP_1_LOW
+FBF     CCP_1_HIGH
+FE1-FE2 @READ_PACKED_MEMORY.P1
+FE1-FE2 @WRITE_PACKED_MEMORY.P2
+FE9-FEA @READ_PACKED_MEMORY.P1
+FE9-FEA @WRITE_PACKED_MEMORY.P2
+FE9-FEA @READ_PROGRAM_MEMORY.P3
+FE9-FEA @WRITE_PROGRAM_MEMORY.P4
+FF6-FF8 @READ_PROGRAM_MEMORY.P1
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+0544  @delay_us1
+03F0  @I2C_WRITE_1
+0564  @PUTCHARI_BIU_1
+0336  @GETCH_BIU_1
+00AE  modbus_auchCRCHi
+01D0  modbus_auchCRCLo
+0476  RCV_ON
+0482  modbus_init
+02F2  modbus_enable_timeout
+0304  modbus_timeout_now
+034C  modbus_calc_crc
+056E  modbus_serial_putc
+038A  incomming_modbus_serial
+0594  modbus_serial_send_start
+05C6  modbus_serial_send_stop
+0602  modbus_kbhit
+0622  modbus_read_holding_registers
+071A  modbus_write_single_register
+0408  ssp_interupt
+04BC  Lee_Vector
+049A  @MUL1616
+06BA  read_all_holding
+07B2  write_reg
+07D6  MAIN
+07D6  @cinit
+
+
+User Memory space: 
+
+User Memory space: 
+
+Project Directory:
+    D:\Laboratorio\Cabina Extractora de Gases y  Humos\2021\Cabina Extractora Sin Ductos 90TOPA GLCD CEMMIT #0045884XX OP202114\Schematic - Pruebas\RS485_I2C\
+
+Project Files:
+    RS485_I2C.c
+    C:\Program Files (x86)\PICC\Devices\18F2550.h
+    modbus.c
+
+Units:
+    D:\Laboratorio\Cabina Extractora de Gases y  Humos\2021\Cabina Extractora Sin Ductos 90TOPA GLCD CEMMIT #0045884XX OP202114\Schematic - Pruebas\RS485_I2C\RS485_I2C (main)
+
+Compiler Settings:
+    Processor:      PIC18F2550
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      RS485_I2C.err
+    Ext Symbols: RS485_I2C.esym
+    INHX32:      RS485_I2C.hex
+    Symbols:     RS485_I2C.sym
+    List:        RS485_I2C.lst
+    Debug/COFF:  RS485_I2C.cof
+    Project:     RS485_I2C.PJT
+    Call Tree:   RS485_I2C.tre
+    Statistics:  RS485_I2C.sta

@@ -1,0 +1,8 @@
+>>> Warning 202 "Cabina_Flujo_Horizontal_V02.c" Line 35(14,23): Variable never used:   n_opcionH
+>>> Warning 202 "Cabina_Flujo_Horizontal_V02.c" Line 35(26,35): Variable never used:   n_opcionL
+>>> Warning 202 "Cabina_Flujo_Horizontal_V02.c" Line 35(78,84): Variable never used:   nMenuL
+>>> Warning 202 "Cabina_Flujo_Horizontal_V02.c" Line 35(88,94): Variable never used:   nMenuH
+>>> Warning 202 "Cabina_Flujo_Horizontal_V02.c" Line 36(7,15): Variable never used:   estadouv
+>>> Warning 202 "Cabina_Flujo_Horizontal_V02.c" Line 37(22,31): Variable never used:   Velocidad
+      Memory usage:   ROM=18%      RAM=1% - 2%
+      0 Errors,  6 Warnings.

@@ -1,0 +1,101 @@
+
+ROM used: 26730 (82%)
+          26730 (82%) including unused fragments
+
+          9 Average locations per line
+          20 Average locations per statement
+
+RAM used: 1585 (77%) at main() level
+          1641 (80%) worst case
+
+Stack used: 5 worst case (out of 31 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+ 1318  1118  82  Maestro_v2.c
+  451     0   0  C:\Program Files (x86)\PICC\Devices\18F4550.h
+  354    78   6  HDM64GS12.c
+  556   167  12  GRAPHICS.c
+  201     0   0  imagen.h
+----- -----
+ 2880  1363 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     42   0   1             @delay_ms1
+0    108   0   3             @I2C_READ_1
+0    118   0   1             @I2C_WRITE_1
+0    192   0   1   580  3.2  glcd_init
+0    184   0   7   609  5.4  glcd_update
+0    188   0   9   466  7.8  glcd_pixel
+0     90   0  10   317  4.7  glcd_fillScreen
+0     64   0   2   257  2.8  glcd_writeByte
+0    282   1   0             @const99
+0    246   0   0             @const102
+0    318   1  17  1475  8.8  glcd_line
+0    194   0   6  1036  5.8  glcd_rect
+0    440   1  20  1550 11.2  glcd_text57
+0   1048   2   0             @const178
+0   1048   2   0             @const181
+0   1048   2   0             @const184
+0    510   1   6  1538  7.9  glcd_imagen
+0     34   0   5             @MUL1616
+0    182   0  15   603  4.5  displayContrasena
+0     32   0   1             @SPRINTF
+0     44   0   3             @DIV88
+0    222   0   6             @PRINTF_D_341
+0    206   0  16   734  4.6  displayTiempo
+0    204   0   8   672  5.1  displayMenu
+0    230   0  19   737  4.5  displayfloat
+0    246   0  11             @MULFF
+0     68   0   5             @FTOSD
+0    128   0  13             @DIV3232
+0    438   1  13             @PRINTF_L32D_341FPFPF
+0    966   2   5   830  8.5  Leer_Sensor_Flujo
+0     54   0   2             @ITOF
+0    632   1  16             @ADDFF
+0    122   0  10             @FLT
+0    350   1  14             @DIVFF
+0    492   1   9   502  7.4  Leer_Sensor_Presion
+0    232   0   1  1498  4.9  temp1s
+0     90   0   3   100  1.8  Envio_I2C
+ Inline        4   188  3.5  Lectura_I2C
+0     76   0   0   549  2.9  Lee_Vector
+0    184   0   0   310  3.5  Carga_Vector
+0     60   0   4             @SFTOI
+0     60   0   1   153  3.9  Envio_Esclavos
+0    250   0   2   284  4.2  Lectura_Esclavos
+0  14450  27   4 57298 14.5  MAIN
+0     32   0   0             @const415
+0     36   0   0             @const417
+0     38   0   0             @const419
+0     32   0   0             @const421
+0     34   0   0             @const422
+0     40   0   0             @const426
+0     40   0   0             @const428
+0     42   0   0             @const430
+0     44   0   0             @const432
+0     36   0   0             @const434
+0     38   0   0             @const438
+
+Program metrics:
+    Functions               23
+    Statements              1363
+    Comments                630
+    Volume (V)              89601
+    Difficilty (D)          132.1
+    Effort to implement (E) 11833927
+    Time to implement (T)   182 hours, 37 minutes
+    Est Delivered Bugs (B)  17
+    Cyclomatic Complexity   228
+    Maintainability (MI)    108
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-00006     0  4  
+00008-00094   142  0  
+00096-07FFE  26584  6034  
+
+
+

@@ -1,0 +1,185 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @INTERRUPT_AREA
+005     @INTERRUPT_AREA
+006     @INTERRUPT_AREA
+007     @INTERRUPT_AREA
+008     @INTERRUPT_AREA
+009     @INTERRUPT_AREA
+00A     @INTERRUPT_AREA
+00B     @INTERRUPT_AREA
+00C     @INTERRUPT_AREA
+00D     @INTERRUPT_AREA
+00E     @INTERRUPT_AREA
+00F     @INTERRUPT_AREA
+010     @INTERRUPT_AREA
+011     @INTERRUPT_AREA
+012     @INTERRUPT_AREA
+013     @INTERRUPT_AREA
+014     @INTERRUPT_AREA
+015     @INTERRUPT_AREA
+016     @INTERRUPT_AREA
+017     rs232_errors
+018.0   modbus_serial_new
+019     modbus_serial_state
+01A-01B modbus_serial_crc
+01C-05F modbus_rx
+060     MAIN.coils
+061     MAIN.inputs
+062-071 MAIN.hold_regs
+072-081 MAIN.input_regs
+082-083 MAIN.event_count
+084-085 MAIN.ADC_value0
+086-087 MAIN.ADC_value1
+088-089 MAIN.ADC_value2
+08A     data
+08B     i
+08C     j
+08D     i
+08E     j
+08F     @delay_ms1.P1
+08F     swap_bits.c
+08F     modbus_read_discrete_input_rsp.address
+08F     modbus_exception_rsp.address
+08F     MAIN.@SCRATCH1
+090-091 modbus_exception_rsp.func
+090     modbus_read_discrete_input_rsp.byte_count
+090     swap_bits.@SCRATCH1
+090     MAIN.@SCRATCH2
+091-092 modbus_read_discrete_input_rsp.input_data
+091     modbus_write_single_coil_rsp.address
+091     MAIN.@SCRATCH3
+092     modbus_read_input_registers_rsp.address
+092     modbus_exception_rsp.error
+092     modbus_read_holding_registers_rsp.address
+092-093 modbus_write_single_coil_rsp.output_address
+092     MAIN.@SCRATCH4
+093     modbus_write_multiple_coils_rsp.address
+093     modbus_read_holding_registers_rsp.byte_count
+093     modbus_write_multiple_registers_rsp.address
+093     modbus_read_input_registers_rsp.byte_count
+093     modbus_write_single_register_rsp.address
+093     modbus_read_discrete_input_rsp.i
+093     modbus_exception_rsp.@SCRATCH1
+093     MAIN.@SCRATCH5
+094-095 modbus_read_input_registers_rsp.input_data
+094-095 modbus_write_multiple_coils_rsp.start_address
+094-095 modbus_write_single_coil_rsp.output_value
+094-095 modbus_write_multiple_registers_rsp.start_address
+094-095 modbus_read_holding_registers_rsp.reg_data
+094-095 modbus_write_single_register_rsp.reg_address
+094     modbus_read_discrete_input_rsp.@SCRATCH1
+094     modbus_exception_rsp.@SCRATCH2
+094     MAIN.@SCRATCH6
+096     modbus_read_holding_registers_rsp.i
+096     modbus_read_input_registers_rsp.i
+096-097 modbus_write_multiple_coils_rsp.quantity
+096-097 modbus_write_single_register_rsp.reg_value
+096-097 modbus_write_multiple_registers_rsp.quantity
+096     modbus_write_single_coil_rsp.@SCRATCH1
+097     modbus_read_holding_registers_rsp.@SCRATCH1
+097     modbus_read_input_registers_rsp.@SCRATCH1
+098     modbus_serial_send_stop.crc_low
+098     modbus_serial_send_start.to
+098     modbus_read_holding_registers_rsp.@SCRATCH2
+098     modbus_read_input_registers_rsp.@SCRATCH2
+098     modbus_write_single_register_rsp.@SCRATCH1
+098     modbus_write_multiple_coils_rsp.@SCRATCH1
+098     modbus_write_multiple_registers_rsp.@SCRATCH1
+099     modbus_serial_send_start.func
+099     modbus_serial_send_stop.crc_high
+099     modbus_read_holding_registers_rsp.@SCRATCH3
+099     modbus_read_input_registers_rsp.@SCRATCH3
+09A     modbus_serial_putc.c
+09E     incomming_modbus_serial.c
+09F     modbus_enable_timeout.enable
+09F     modbus_calc_crc.data
+09F     incomming_modbus_serial.@SCRATCH1
+0A0     modbus_calc_crc.uIndex
+0A0     incomming_modbus_serial.@SCRATCH2
+0A1     modbus_calc_crc.@SCRATCH1
+F83     PSP_DATA
+FAC     TXSTA
+FAC.1   TRMT
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB     CCP_2
+FBB     CCP_2_LOW
+FBC     CCP_2_HIGH
+FBE     CCP_1
+FBE     CCP_1_LOW
+FBF     CCP_1_HIGH
+FE1-FE2 @WRITE_PACKED_MEMORY.P1
+FE1-FE2 @READ_PACKED_MEMORY.P2
+FE9-FEA @READ_PACKED_MEMORY.P1
+FE9-FEA @WRITE_PROGRAM_MEMORY.P2
+FE9-FEA @WRITE_PACKED_MEMORY.P3
+FE9-FEA @READ_PROGRAM_MEMORY.P4
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P1
+FF6-FF8 @READ_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+0412  @delay_ms1
+043C  @PUTCHARI_BIU_1
+0322  @GETCH_BIU_1
+00A2  modbus_auchCRCHi
+01C4  modbus_auchCRCLo
+03CC  RCV_ON
+03D8  modbus_init
+02E6  modbus_enable_timeout
+02F4  modbus_timeout_now
+0338  modbus_calc_crc
+0446  modbus_serial_putc
+036A  incomming_modbus_serial
+0468  modbus_serial_send_start
+048C  modbus_serial_send_stop
+03F0  modbus_kbhit
+04D6  modbus_read_discrete_input_rsp
+0512  modbus_read_holding_registers_rsp
+057E  modbus_read_input_registers_rsp
+05EA  modbus_write_single_coil_rsp
+0622  modbus_write_single_register_rsp
+06C0  modbus_write_multiple_coils_rsp
+06F8  modbus_write_multiple_registers_rsp
+04BA  modbus_exception_rsp
+065A  swap_bits
+0730  MAIN
+0730  @cinit
+
+
+User Memory space: 
+
+User Memory space: 
+
+Project Directory:
+    D:\Laboratorio\Cabina Extractora de Gases y  Humos\2021\Cabina Extractora Sin Ductos 90TOPA GLCD CEMMIT #0045884XX OP202114\Schematic - Pruebas\PICmodbus-master\
+
+Project Files:
+    ex_modbus_slave.c
+    C:\Program Files (x86)\PICC\Devices\18F4620.h
+    modbus.c
+
+Units:
+    D:\Laboratorio\Cabina Extractora de Gases y  Humos\2021\Cabina Extractora Sin Ductos 90TOPA GLCD CEMMIT #0045884XX OP202114\Schematic - Pruebas\PICmodbus-master\ex_modbus_slave (main)
+
+Compiler Settings:
+    Processor:      PIC18F4620
+    Pointer Size:   16
+    ADC Range:      0-1023
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      ex_modbus_slave.err
+    Ext Symbols: ex_modbus_slave.esym
+    INHX32:      ex_modbus_slave.hex
+    Symbols:     ex_modbus_slave.sym
+    List:        ex_modbus_slave.lst
+    Debug/COFF:  ex_modbus_slave.cof
+    Project:     ex_modbus_slave.PJT
+    Call Tree:   ex_modbus_slave.tre
+    Statistics:  ex_modbus_slave.sta

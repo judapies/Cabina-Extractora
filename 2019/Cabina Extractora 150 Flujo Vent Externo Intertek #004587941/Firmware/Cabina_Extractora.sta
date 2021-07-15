@@ -1,0 +1,218 @@
+
+ROM used: 20392 (62%)
+          20392 (62%) including unused fragments
+
+          4 Average locations per line
+          9 Average locations per statement
+
+RAM used: 218 (11%) at main() level
+          250 (12%) worst case
+
+Stack used: 8 worst case (out of 31 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  459   308  14  Cabina_Extractora.c
+  451     0   0  C:\Program Files (x86)\PICC\Devices\18F4550.h
+  284    80   4  LCD420PIC18F.c
+ 2172   260  12  math.h
+ 1387  1508  70  Funciones.h
+----- -----
+ 4753  2156 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     40   0   1             @delay_ms1
+0     30   0   0             @const67
+0     76   0   1   333  2.5  lcd_send_nibble
+0     74   0   3   293  3.4  lcd_send_byte
+0     88   0   2   384  4.4  lcd_init
+0     70   0   3   426  5.5  lcd_gotoxy
+0     44   0   0             @goto10115
+0     98   0   1   447  6.4  lcd_putc
+0    118   0  10             @FLT
+0     56   0   4             @SFTOI
+0     54   0   2             @ITOF
+0    346   1  14             @DIVFF
+0    618   2  16             @ADDFF
+0    242   1  11             @MULFF
+0      6   0   1    24  1.2  ajuste_vel
+0     86   0   5   100  2.1  sensores
+0     16   0   1    93  2.9  intensidadpantalla
+0    984   2   7   843  9.0  Leer_Sensor_Flujo
+0    170   0   3   715  2.8  mensajes
+0     20   0   0             @const336
+0     34   0   2             @PSTRINGC_90
+0     20   0   0             @const338
+0     20   0   0             @const339
+0     20   0   0             @const340
+0     20   0   0             @const341
+0     20   0   0             @const342
+0     20   0   0   136  1.8  SalidasOff
+0     74   0   0   292  2.3  ConfigInicial
+0   1108   3   1  2311  3.9  LeeEEPROM
+0   1482   4   1  3708  4.9  LimitaValores
+0     30   0   0   115  2.5  EnciendeMotor
+0     30   0   0   108  2.1  ApagaMotor
+0    128   0   1   357  1.8  MensajeGuardado
+0     22   0   0  3708  4.9  @const354
+0     22   0   0   115  2.5  @const355
+0     22   0   0   108  2.1  @const356
+0     22   0   0   357  1.8  @const357
+0   1018   2   9  5245  8.0  SolicitaContrasena
+0     22   0   0             @const368
+0     22   0   0             @const369
+0     22   0   0             @const370
+0     32   0   3    48  1.1  @PSTRINGCN_90
+0     40   0   3  5089  8.0  @DIV88
+0    108   0   2             @PRINTF_U_90
+0     20   0   0             @const381
+0     20   0   0             @const382
+0     20   0   0             @const383
+0     20   0   0             @const384
+0     20   0   0             @const386
+0     20   0   0             @const387
+0     20   0   0             @const388
+0    556   1   1  3621  7.9  MenuPrincipal
+0     22   0   0             @const391
+0    652   2   1  2237  4.9  MenuFiltro
+0     22   0   0  3621  7.9  @const395
+0     26   0   0             @const396
+0     22   0   0             @const397
+0     22   0   0             @const398
+0     22   0   0  2237  4.9  @const399
+0     18   0   0             @const401
+0     18   0   0             @const402
+0     22   0   0             @const407
+0     16   0   0             @const408
+0     64   0   5             @FTOSD
+0    122   0  13             @DIV3232
+0    390   1  13  1980  7.3  @PRINTF_L32D_90FPFPF
+0    290   1   1  1024  3.8  MenuAlarma
+0     22   0   0             @const420
+0     22   0   0             @const421
+0     22   0   0             @const422
+0     22   0   0             @const423
+0     22   0   0  1024  3.8  @const424
+0     22   0   0             @const425
+0     22   0   0             @const426
+0     22   0   0             @const427
+0    382   1   1  1721  6.3  MenuMedia
+0     22   0   0             @const430
+0     16   0   0             @const431
+0    212   1   6             @PRINTF_D_90
+0    826   2   4  1867  5.9  MenuPuntoCero
+0     22   0   0             @const438
+0     22   0   0             @const439
+0     20   0   0             @const440
+0     18   0   0             @const441
+0   1216   3   8  2215  7.8  MenuMantenimiento
+0     18   0   0             @const445
+0     24   0   0             @const446
+0     26   0   0             @const447
+0     16   0   0             @const448
+0     22   0   0             @const452
+0     26   0   0             @const453
+0     18   0   0             @const454
+0     22   0   0             @const455
+0     16   0   0             @const457
+0     22   0   0             @const458
+0     16   0   0             @const460
+0     20   0   0             @const461
+0    612   2   1  2434  6.9  MenuTiempoPurga
+0     22   0   0             @const464
+0     22   0   0             @const465
+0     18   0   0             @const466
+0     18   0   0             @const469
+0     18   0   0             @const470
+0    606   1   1  2384  6.9  MenuTiempoPostPurga
+0     22   0   0             @const473
+0     22   0   0             @const474
+0     18   0   0             @const475
+0     18   0   0             @const478
+0     18   0   0             @const479
+0    456   1   4  1014  4.3  MenuPostPurga
+0     22   0   0             @const482
+0     22   0   0             @const483
+0     18   0   0             @const484
+0     20   0   0  1014  4.3  @const486
+0     20   0   0             @const487
+0    224   1   1  1057  4.3  MenuApagado
+0     22   0   0             @const490
+0     22   0   0             @const491
+0     22   0   0             @const492
+0     22   0   0             @const493
+0    212   1   1   561  3.2  MenuPurga
+0     22   0   0             @const497
+0     22   0   0             @const498
+0     20   0   0             @const499
+0     22   0   0   538  3.2  @const501
+0     22   0   0             @const502
+0     22   0   0             @const503
+0     22   0   0             @const507
+0     22   0   0             @const508
+0     22   0   0             @const509
+0     22   0   0             @const510
+0    624   2   4  1929  5.9  MenuVelocidad
+0     22   0   0             @const512
+0     22   0   0             @const513
+0     22   0   0             @const515
+0     20   0   0  1929  5.9  @const516
+0    610   1   1  2958  5.8  MenuServicio
+0     22   0   0             @const519
+0     22   0   0             @const520
+0     22   0   0             @const521
+0     22   0   0             @const522
+0     22   0   0  1218  6.3  @const523
+0     22   0   0  9057  9.4  @const524
+0     22   0   0             @const525
+0     22   0   0             @const526
+0     22   0   0             @const527
+0     22   0   0             @const528
+0     22   0   0             @const529
+0     22   0   0             @const530
+0     22   0   0             @const531
+0     22   0   0  1218  6.3  @const532
+0     22   0   0  9308  9.4  @const533
+0     22   0   0             @const534
+0    182   0   2  1218  6.3  temp1s
+0   2240   5   4  9350  9.4  MAIN
+0     22   0   0             @const539
+0     22   0   0             @const540
+0     22   0   0             @const541
+0     22   0   0             @const542
+0      8   0   0             @const547
+0     12   0   0             @const548
+0     22   0   0             @const549
+0     12   0   0             @const550
+0     12   0   0             @const551
+0     12   0   0             @const552
+0     12   0   0             @const553
+0     12   0   0             @const554
+0     12   0   0             @const555
+0      8   0   0             @const556
+0     10   0   0             @const557
+0     10   0   0             @const558
+0     12   0   0             @const559
+
+Program metrics:
+    Functions               50
+    Statements              2156
+    Comments                570
+    Volume (V)              156599
+    Difficilty (D)          245.8
+    Effort to implement (E) 38489572
+    Time to implement (T)   593 hours, 58 minutes
+    Est Delivered Bugs (B)  38
+    Cyclomatic Complexity   447
+    Maintainability (MI)    23
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-00006     0  4  
+00008-00094   142  0  
+00096-07FFE  20246  12372  
+
+
+

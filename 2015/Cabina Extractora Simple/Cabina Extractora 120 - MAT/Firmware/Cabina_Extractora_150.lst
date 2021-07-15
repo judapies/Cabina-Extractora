@@ -1,0 +1,2508 @@
+CCS PCH C Compiler, Version 4.104, 5967               30-jul-15 11:40
+
+               Filename: E:\JP\JP\Laboratorio\Cabina Extractora de Gases y  Humos\2015\Cabina Extractora 120 - MAT\Firmware\Cabina_Extractora_150.lst
+
+               ROM used: 5602 bytes (17%)
+                         Largest free fragment is 27166
+               RAM used: 30 (1%) at main() level
+                         43 (2%) worst case
+               Stack:    6 locations
+
+*
+0000:  GOTO   08AA
+.................... // Cuatro pulsadores de entrada (Derecha, Izquierda, arriba y abajo). 
+.................... // Reloj con XT de 4 MHz. 
+.................... // Programación para Cabina Extractora de Gases y humos. 
+.................... // Tiene Contraseña de incio para permitir funcionamiento de Cabina. 
+.................... // Tiene Menú:Luz Blanca, Motor Ventilador y Cambio de Contraseña. 
+.................... // Ing. Juan David Piñeros. 
+.................... // JP Inglobal. 
+....................  
+.................... #include <18F4550.h> 
+.................... //////// Standard Header file for the PIC18F4550 device //////////////// 
+.................... #device PIC18F4550 
+.................... #list 
+....................  
+.................... //#fuses HSPLL,NOWDT,NOPROTECT,NOLVP,NODEBUG,USBDIV,PLL1,CPUDIV1,NOVREGEN,NOMCLR// PLL1 para 4 MHz 
+.................... //#fuses XT,NOWDT,NOPROTECT,NOLVP,NODEBUG,VREGEN,NOMCLR// PLL1 para 4 MHz 
+.................... //#use delay(clock=4000000) 
+.................... #fuses HSPLL,NOWDT,NOPROTECT,NOLVP,NODEBUG,USBDIV,PLL1,CPUDIV1,NOVREGEN,MCLR// PLL1 para 4 MHz 
+.................... #use delay(clock=48000000) 
+*
+04A4:  CLRF   FEA
+04A6:  MOVLW  23
+04A8:  MOVWF  FE9
+04AA:  MOVF   FEF,W
+04AC:  BZ    04CA
+04AE:  MOVLW  0F
+04B0:  MOVWF  01
+04B2:  CLRF   00
+04B4:  DECFSZ 00,F
+04B6:  BRA    04B4
+04B8:  DECFSZ 01,F
+04BA:  BRA    04B2
+04BC:  MOVLW  8F
+04BE:  MOVWF  00
+04C0:  DECFSZ 00,F
+04C2:  BRA    04C0
+04C4:  NOP   
+04C6:  DECFSZ FEF,F
+04C8:  BRA    04AE
+04CA:  RETLW  00
+.................... #include <LCD420.c> 
+.................... //////////////////////////////////////////////////////////////////////////// 
+.................... ////                             LCD420.C                               //// 
+.................... ////            Driver for common 4x20 LCD modules                      //// 
+.................... ////                                                                    //// 
+.................... ////  lcd_init()   Must be called before any other function.            //// 
+.................... ////                                                                    //// 
+.................... ////  lcd_putc(c)  Will display c on the next position of the LCD.      //// 
+.................... ////                     The following have special meaning:            //// 
+.................... ////                      \f  Clear display                             //// 
+.................... ////                      \n  Go to start of second line                //// 
+.................... ////                      \b  Move back one position                    //// 
+.................... ////                                                                    //// 
+.................... ////  lcd_gotoxy(x,y) Set write position on LCD (upper left is 1,1)     //// 
+.................... ////                                                                    //// 
+.................... ////  lcd_getc(x,y)   Returns character at position x,y on LCD          //// 
+.................... ////                                                                    //// 
+.................... //////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996,1997 Custom Computer Services            //// 
+.................... //// This source code may only be used by licensed users of the CCS C   //// 
+.................... //// compiler.  This source code may only be distributed to other       //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction  //// 
+.................... //// or distribution is permitted without written permission.           //// 
+.................... //// Derivative programs created using this software in object code     //// 
+.................... //// form are not restricted in any way.                                //// 
+.................... //////////////////////////////////////////////////////////////////////////// 
+....................  
+.................... // As defined in the following structure the pin connection is as follows: 
+.................... //     B0  enable 
+.................... //     B1  rs 
+.................... //     B2  rw 
+.................... //     B4  D4 
+.................... //     B5  D5 
+.................... //     B6  D6 
+.................... //     B7  D7 
+.................... // 
+.................... //   LCD pins D0-D3 are not used and PIC B3 is not used. 
+....................  
+.................... struct lcd_pin_map {                 // This structure is overlayed 
+....................            BOOLEAN enable;           // on to an I/O port to gain 
+....................            BOOLEAN rs;               // access to the LCD pins. 
+....................            BOOLEAN rw;               // The bits are allocated from 
+....................            BOOLEAN unused;           // low order up.  ENABLE will 
+....................            int     data : 4;         // be pin B0. 
+....................         } lcd; 
+....................  
+.................... #locate lcd = getenv("SFR:PORTB")                        // This puts the entire structure 
+....................                                      // on to port B  
+....................  
+.................... #define lcd_type 2           // 0=5x7, 1=5x10, 2=2 lines 
+....................  
+....................  
+.................... BYTE const LCD_INIT_STRING[4] = {0x20 | (lcd_type << 2), 0xc, 1, 6}; 
+....................                              // These bytes need to be sent to the LCD 
+....................                              // to start it up. 
+....................  
+....................  
+....................                              // The following are used for setting 
+....................                              // the I/O port direction register. 
+....................  
+.................... struct lcd_pin_map const LCD_WRITE = {0,0,0,0,0}; // For write mode all pins are out 
+.................... struct lcd_pin_map const LCD_READ = {0,0,0,0,15}; // For read mode data pins are in 
+....................  
+....................  
+.................... BYTE lcdline; 
+....................  
+.................... BYTE lcd_read_byte() { 
+....................       BYTE low,high; 
+....................  
+....................       set_tris_b(LCD_READ); 
+*
+04F2:  MOVLW  F0
+04F4:  MOVWF  F93
+....................       lcd.rw = 1; 
+04F6:  BSF    F81.2
+....................       delay_cycles(25); 
+04F8:  MOVLW  08
+04FA:  MOVWF  00
+04FC:  DECFSZ 00,F
+04FE:  BRA    04FC
+....................       lcd.enable = 1; 
+0500:  BSF    F81.0
+....................       delay_cycles(25); 
+0502:  MOVLW  08
+0504:  MOVWF  00
+0506:  DECFSZ 00,F
+0508:  BRA    0506
+....................       high = lcd.data; 
+050A:  SWAPF  F81,W
+050C:  ANDLW  0F
+050E:  MOVWF  29
+....................       lcd.enable = 0; 
+0510:  BCF    F81.0
+....................       delay_cycles(25); 
+0512:  MOVLW  08
+0514:  MOVWF  00
+0516:  DECFSZ 00,F
+0518:  BRA    0516
+....................       lcd.enable = 1; 
+051A:  BSF    F81.0
+....................       delay_us(25); 
+051C:  MOVLW  63
+051E:  MOVWF  00
+0520:  DECFSZ 00,F
+0522:  BRA    0520
+0524:  BRA    0526
+....................       low = lcd.data; 
+0526:  SWAPF  F81,W
+0528:  ANDLW  0F
+052A:  MOVWF  28
+....................       lcd.enable = 0; 
+052C:  BCF    F81.0
+....................       set_tris_b(LCD_WRITE); 
+052E:  MOVLW  00
+0530:  MOVWF  F93
+....................       return( (high<<4) | low); 
+0532:  SWAPF  29,W
+0534:  MOVWF  00
+0536:  MOVLW  F0
+0538:  ANDWF  00,F
+053A:  MOVF   00,W
+053C:  IORWF  28,W
+053E:  MOVWF  01
+.................... } 
+0540:  GOTO   0548 (RETURN)
+....................  
+....................  
+.................... void lcd_send_nibble( BYTE n ) { 
+....................       lcd.data = n; 
+*
+04CC:  SWAPF  29,W
+04CE:  ANDLW  F0
+04D0:  MOVWF  00
+04D2:  MOVLW  0F
+04D4:  ANDWF  F81,W
+04D6:  IORWF  00,W
+04D8:  MOVWF  F81
+....................       delay_cycles(25); 
+04DA:  MOVLW  08
+04DC:  MOVWF  00
+04DE:  DECFSZ 00,F
+04E0:  BRA    04DE
+....................       lcd.enable = 1; 
+04E2:  BSF    F81.0
+....................       delay_us(55); 
+04E4:  MOVLW  DB
+04E6:  MOVWF  00
+04E8:  DECFSZ 00,F
+04EA:  BRA    04E8
+04EC:  BRA    04EE
+....................       lcd.enable = 0; 
+04EE:  BCF    F81.0
+.................... } 
+04F0:  RETLW  00
+....................  
+....................  
+.................... void lcd_send_byte( BYTE address, BYTE n ) { 
+....................  
+....................       lcd.rs = 0; 
+*
+0544:  BCF    F81.1
+....................       while ( bit_test(lcd_read_byte(),7) ) ; 
+0546:  BRA    04F2
+0548:  MOVFF  01,28
+054C:  BTFSC  01.7
+054E:  BRA    0546
+....................       lcd.rs = address; 
+0550:  BTFSS  26.0
+0552:  BCF    F81.1
+0554:  BTFSC  26.0
+0556:  BSF    F81.1
+....................       delay_cycles(25); 
+0558:  MOVLW  08
+055A:  MOVWF  00
+055C:  DECFSZ 00,F
+055E:  BRA    055C
+....................       lcd.rw = 0; 
+0560:  BCF    F81.2
+....................       delay_cycles(25); 
+0562:  MOVLW  08
+0564:  MOVWF  00
+0566:  DECFSZ 00,F
+0568:  BRA    0566
+....................       lcd.enable = 0; 
+056A:  BCF    F81.0
+....................       lcd_send_nibble(n >> 4); 
+056C:  SWAPF  27,W
+056E:  MOVWF  28
+0570:  MOVLW  0F
+0572:  ANDWF  28,F
+0574:  MOVFF  28,29
+0578:  RCALL  04CC
+....................       lcd_send_nibble(n & 0xf); 
+057A:  MOVF   27,W
+057C:  ANDLW  0F
+057E:  MOVWF  28
+0580:  MOVWF  29
+0582:  RCALL  04CC
+.................... } 
+0584:  RETLW  00
+....................  
+....................  
+.................... void lcd_init() { 
+....................     BYTE i; 
+....................  
+....................     set_tris_b(LCD_WRITE); 
+0586:  MOVLW  00
+0588:  MOVWF  F93
+....................     lcd.rs = 0; 
+058A:  BCF    F81.1
+....................     lcd.rw = 0; 
+058C:  BCF    F81.2
+....................     lcd.enable = 0; 
+058E:  BCF    F81.0
+....................     delay_ms(15); 
+0590:  MOVLW  0F
+0592:  MOVWF  23
+0594:  RCALL  04A4
+....................     for(i=1;i<=3;++i) { 
+0596:  MOVLW  01
+0598:  MOVWF  1C
+059A:  MOVF   1C,W
+059C:  SUBLW  03
+059E:  BNC   05B0
+....................        lcd_send_nibble(3); 
+05A0:  MOVLW  03
+05A2:  MOVWF  29
+05A4:  RCALL  04CC
+....................        delay_ms(5); 
+05A6:  MOVLW  05
+05A8:  MOVWF  23
+05AA:  RCALL  04A4
+....................     } 
+05AC:  INCF   1C,F
+05AE:  BRA    059A
+....................     lcd_send_nibble(2); 
+05B0:  MOVLW  02
+05B2:  MOVWF  29
+05B4:  RCALL  04CC
+....................     for(i=0;i<=3;++i) 
+05B6:  CLRF   1C
+05B8:  MOVF   1C,W
+05BA:  SUBLW  03
+05BC:  BNC   05DA
+....................        lcd_send_byte(0, LCD_INIT_STRING[i]); 
+05BE:  CLRF   03
+05C0:  MOVF   1C,W
+05C2:  MOVFF  FF2,1D
+05C6:  BCF    FF2.7
+05C8:  RCALL  0004
+05CA:  BTFSC  1D.7
+05CC:  BSF    FF2.7
+05CE:  MOVWF  1D
+05D0:  CLRF   26
+05D2:  MOVWF  27
+05D4:  RCALL  0544
+05D6:  INCF   1C,F
+05D8:  BRA    05B8
+.................... } 
+05DA:  GOTO   0914 (RETURN)
+....................  
+....................  
+.................... void lcd_gotoxy( BYTE x, BYTE y) { 
+....................    BYTE address; 
+....................  
+....................    switch(y) { 
+05DE:  MOVLW  01
+05E0:  SUBWF  24,W
+05E2:  ADDLW  FC
+05E4:  BC    0604
+05E6:  ADDLW  04
+05E8:  GOTO   0614
+....................      case 1 : address=0x80;break; 
+05EC:  MOVLW  80
+05EE:  MOVWF  25
+05F0:  BRA    0604
+....................      case 2 : address=0xc0;break; 
+05F2:  MOVLW  C0
+05F4:  MOVWF  25
+05F6:  BRA    0604
+....................      case 3 : address=0x94;break; 
+05F8:  MOVLW  94
+05FA:  MOVWF  25
+05FC:  BRA    0604
+....................      case 4 : address=0xd4;break; 
+05FE:  MOVLW  D4
+0600:  MOVWF  25
+0602:  BRA    0604
+....................    } 
+....................    address+=x-1; 
+0604:  MOVLW  01
+0606:  SUBWF  23,W
+0608:  ADDWF  25,F
+....................    lcd_send_byte(0,address); 
+060A:  CLRF   26
+060C:  MOVFF  25,27
+0610:  RCALL  0544
+.................... } 
+0612:  RETLW  00
+....................  
+.................... void lcd_putc( char c) { 
+.................... if(c=='ñ') 
+*
+0636:  MOVF   22,W
+0638:  SUBLW  F1
+063A:  BNZ   0640
+....................     c=238; 
+063C:  MOVLW  EE
+063E:  MOVWF  22
+....................    switch (c) { 
+0640:  MOVF   22,W
+0642:  XORLW  0C
+0644:  BZ    0650
+0646:  XORLW  06
+0648:  BZ    0664
+064A:  XORLW  02
+064C:  BZ    0672
+064E:  BRA    067C
+....................      case '\f'   : lcd_send_byte(0,1); 
+0650:  CLRF   26
+0652:  MOVLW  01
+0654:  MOVWF  27
+0656:  RCALL  0544
+....................                    lcdline=1; 
+0658:  MOVLW  01
+065A:  MOVWF  04
+....................                    delay_ms(5); 
+065C:  MOVLW  05
+065E:  MOVWF  23
+0660:  RCALL  04A4
+....................                                            break; 
+0662:  BRA    0688
+....................      case '\n'   : lcd_gotoxy(1,++lcdline);        break; 
+0664:  INCF   04,F
+0666:  MOVLW  01
+0668:  MOVWF  23
+066A:  MOVFF  04,24
+066E:  RCALL  05DE
+0670:  BRA    0688
+....................      case '\b'   : lcd_send_byte(0,0x10);  break; 
+0672:  CLRF   26
+0674:  MOVLW  10
+0676:  MOVWF  27
+0678:  RCALL  0544
+067A:  BRA    0688
+....................      default     : lcd_send_byte(1,c);     break; 
+067C:  MOVLW  01
+067E:  MOVWF  26
+0680:  MOVFF  22,27
+0684:  RCALL  0544
+0686:  BRA    0688
+....................    } 
+.................... } 
+0688:  RETLW  00
+....................  
+.................... char lcd_getc( BYTE x, BYTE y) { 
+....................    char value; 
+....................  
+....................     lcd_gotoxy(x,y); 
+....................     lcd.rs=1; 
+....................     value = lcd_read_byte(); 
+....................     lcd.rs=0; 
+....................     return(value); 
+.................... } 
+....................  
+....................  
+....................  
+.................... // Definición de teclado - NC 
+.................... #define   UP            input(PIN_A0) 
+.................... #define   DOWN          input(PIN_A1) 
+.................... #define   RIGHT         input(PIN_A2) 
+.................... #define   LEFT          input(PIN_A3) 
+....................  
+.................... // Definición de otros puertos 
+.................... #define   Luz_UV_on         output_bit(PIN_D0,1) 
+.................... #define   Luz_UV_off        output_bit(PIN_D0,0) 
+.................... #define   Luz_Blanca_on     output_bit(PIN_D1,1) 
+.................... #define   Luz_Blanca_off    output_bit(PIN_D1,0) 
+.................... #define   Motor_L1_on       output_bit(PIN_D2,1) 
+.................... #define   Motor_L1_off      output_bit(PIN_D2,0) 
+.................... #define   Motor_L2_on       output_bit(PIN_D3,1) 
+.................... #define   Motor_L2_off      output_bit(PIN_D3,0) 
+.................... #define   Motor_L3_on       output_bit(PIN_D4,1) 
+.................... #define   Motor_L3_off      output_bit(PIN_D4,0) 
+.................... #define   Motor_L4_on       output_bit(PIN_D5,1) 
+.................... #define   Motor_L4_off      output_bit(PIN_D5,0) 
+....................  
+.................... int8 Menu=0, n_opcionH=5,n_opcionL=2,unidad=11,Flecha=2,Flecha1=3,Flecha2=2, nMenuL=2, nMenuH=4; 
+.................... short estadouv=0,estadofl=0,estadomv=0,Flanco=0,Flanco1=0,Flanco2=0,Flanco3=0; 
+.................... signed int8   paso=0,Velocidad=1; 
+.................... char t[3]={'>',' ','^'};  
+.................... signed  int8 clave[4]={0,0,0,0};   // 0=Verdadero, 1=Falso 
+.................... int8 contrasena[4]={0,0,0,0};   // 0=Verdadero, 1=Falso 
+....................  
+.................... void mensajes(int8 x,y)// Funcion para imprimir mensajes de Menu Principal. 
+.................... {  if(x==1) 
+*
+07B8:  DECFSZ 1D,W
+07BA:  BRA    07EC
+....................    {if(estadofl==0) 
+07BC:  BTFSC  0E.1
+07BE:  BRA    07D4
+....................       {lcd_gotoxy(2,y);printf(lcd_putc,"LUZ BLANCA      OFF");} 
+07C0:  MOVLW  02
+07C2:  MOVWF  23
+07C4:  MOVFF  1E,24
+07C8:  RCALL  05DE
+07CA:  MOVLW  18
+07CC:  MOVWF  FF6
+07CE:  MOVLW  00
+07D0:  MOVWF  FF7
+07D2:  RCALL  068A
+....................     if(estadofl==1) 
+07D4:  BTFSS  0E.1
+07D6:  BRA    07EC
+....................       {lcd_gotoxy(2,y);printf(lcd_putc,"LUZ BLANCA       ON");}   
+07D8:  MOVLW  02
+07DA:  MOVWF  23
+07DC:  MOVFF  1E,24
+07E0:  RCALL  05DE
+07E2:  MOVLW  2C
+07E4:  MOVWF  FF6
+07E6:  MOVLW  00
+07E8:  MOVWF  FF7
+07EA:  RCALL  068A
+....................    } 
+....................    if(x==2) 
+07EC:  MOVF   1D,W
+07EE:  SUBLW  02
+07F0:  BNZ   0822
+....................    {if(estadomv==0) 
+07F2:  BTFSC  0E.2
+07F4:  BRA    080A
+....................       {lcd_gotoxy(2,y);printf(lcd_putc,"EXTRACTOR       OFF");} 
+07F6:  MOVLW  02
+07F8:  MOVWF  23
+07FA:  MOVFF  1E,24
+07FE:  RCALL  05DE
+0800:  MOVLW  40
+0802:  MOVWF  FF6
+0804:  MOVLW  00
+0806:  MOVWF  FF7
+0808:  RCALL  068A
+....................    if(estadomv==1) 
+080A:  BTFSS  0E.2
+080C:  BRA    0822
+....................       {lcd_gotoxy(2,y);printf(lcd_putc,"EXTRACTOR        ON");} 
+080E:  MOVLW  02
+0810:  MOVWF  23
+0812:  MOVFF  1E,24
+0816:  RCALL  05DE
+0818:  MOVLW  54
+081A:  MOVWF  FF6
+081C:  MOVLW  00
+081E:  MOVWF  FF7
+0820:  RCALL  068A
+....................    } 
+....................    if(x==3) 
+0822:  MOVF   1D,W
+0824:  SUBLW  03
+0826:  BNZ   083C
+....................    {lcd_gotoxy(2,y);printf(lcd_putc,"CAMBIO CONTRASENA  ");} 
+0828:  MOVLW  02
+082A:  MOVWF  23
+082C:  MOVFF  1E,24
+0830:  RCALL  05DE
+0832:  MOVLW  68
+0834:  MOVWF  FF6
+0836:  MOVLW  00
+0838:  MOVWF  FF7
+083A:  RCALL  068A
+.................... } 
+083C:  RETLW  00
+....................  
+.................... void velocidades(int8 x)// Funcion para imprimir mensajes de Menu Principal. 
+.................... {  if(x==0) 
+083E:  MOVF   1C,F
+0840:  BNZ   0852
+....................       {Motor_L2_off;Motor_L3_off;Motor_L4_off;Motor_L1_off;} 
+0842:  BCF    F8C.3
+0844:  BCF    F95.3
+0846:  BCF    F8C.4
+0848:  BCF    F95.4
+084A:  BCF    F8C.5
+084C:  BCF    F95.5
+084E:  BCF    F8C.2
+0850:  BCF    F95.2
+....................    if(x==1) 
+0852:  DECFSZ 1C,W
+0854:  BRA    0866
+....................       {Motor_L2_off;Motor_L3_off;Motor_L4_off;Motor_L1_on;} 
+0856:  BCF    F8C.3
+0858:  BCF    F95.3
+085A:  BCF    F8C.4
+085C:  BCF    F95.4
+085E:  BCF    F8C.5
+0860:  BCF    F95.5
+0862:  BSF    F8C.2
+0864:  BCF    F95.2
+....................    if(x==2) 
+0866:  MOVF   1C,W
+0868:  SUBLW  02
+086A:  BNZ   087C
+....................       {Motor_L3_off;Motor_L4_off;Motor_L1_off;Motor_L2_on;} 
+086C:  BCF    F8C.4
+086E:  BCF    F95.4
+0870:  BCF    F8C.5
+0872:  BCF    F95.5
+0874:  BCF    F8C.2
+0876:  BCF    F95.2
+0878:  BSF    F8C.3
+087A:  BCF    F95.3
+....................    if(x==3) 
+087C:  MOVF   1C,W
+087E:  SUBLW  03
+0880:  BNZ   0892
+....................       {Motor_L4_off;Motor_L1_off;Motor_L2_off;Motor_L3_on;} 
+0882:  BCF    F8C.5
+0884:  BCF    F95.5
+0886:  BCF    F8C.2
+0888:  BCF    F95.2
+088A:  BCF    F8C.3
+088C:  BCF    F95.3
+088E:  BSF    F8C.4
+0890:  BCF    F95.4
+....................    if(x==4) 
+0892:  MOVF   1C,W
+0894:  SUBLW  04
+0896:  BNZ   08A8
+....................       {Motor_L2_off;Motor_L3_off;Motor_L1_off;Motor_L4_on;} 
+0898:  BCF    F8C.3
+089A:  BCF    F95.3
+089C:  BCF    F8C.4
+089E:  BCF    F95.4
+08A0:  BCF    F8C.2
+08A2:  BCF    F95.2
+08A4:  BSF    F8C.5
+08A6:  BCF    F95.5
+.................... } 
+08A8:  RETLW  00
+....................  
+.................... void main () 
+.................... { 
+08AA:  CLRF   FF8
+08AC:  BCF    FD0.7
+08AE:  CLRF   FEA
+08B0:  CLRF   FE9
+08B2:  CLRF   05
+08B4:  MOVLW  05
+08B6:  MOVWF  06
+08B8:  MOVLW  02
+08BA:  MOVWF  07
+08BC:  MOVLW  0B
+08BE:  MOVWF  08
+08C0:  MOVLW  02
+08C2:  MOVWF  09
+08C4:  MOVLW  03
+08C6:  MOVWF  0A
+08C8:  MOVLW  02
+08CA:  MOVWF  0B
+08CC:  MOVWF  0C
+08CE:  MOVLW  04
+08D0:  MOVWF  0D
+08D2:  BCF    0E.0
+08D4:  BCF    0E.1
+08D6:  BCF    0E.2
+08D8:  BCF    0E.3
+08DA:  BCF    0E.4
+08DC:  BCF    0E.5
+08DE:  BCF    0E.6
+08E0:  CLRF   0F
+08E2:  MOVLW  01
+08E4:  MOVWF  10
+08E6:  MOVF   FC1,W
+08E8:  ANDLW  C0
+08EA:  IORLW  0F
+08EC:  MOVWF  FC1
+08EE:  MOVLW  07
+08F0:  MOVWF  FB4
+08F2:  MOVLW  3E
+08F4:  MOVWF  11
+08F6:  MOVLW  20
+08F8:  MOVWF  12
+08FA:  MOVLW  5E
+08FC:  MOVWF  13
+08FE:  CLRF   14
+0900:  CLRF   15
+0902:  CLRF   16
+0904:  CLRF   17
+0906:  CLRF   18
+0908:  CLRF   19
+090A:  CLRF   1A
+090C:  CLRF   1B
+....................    output_d(0); 
+090E:  CLRF   F95
+0910:  CLRF   F8C
+....................    lcd_init(); 
+0912:  BRA    0586
+....................    lcd_gotoxy(1,1); 
+0914:  MOVLW  01
+0916:  MOVWF  23
+0918:  MOVWF  24
+091A:  RCALL  05DE
+....................    printf(lcd_putc," CABINA  EXTRACTORA "); 
+091C:  MOVLW  7C
+091E:  MOVWF  FF6
+0920:  MOVLW  00
+0922:  MOVWF  FF7
+0924:  RCALL  068A
+....................    lcd_gotoxy(1,2); 
+0926:  MOVLW  01
+0928:  MOVWF  23
+092A:  MOVLW  02
+092C:  MOVWF  24
+092E:  RCALL  05DE
+....................    printf(lcd_putc,"  DE HUMOS Y GASES  "); 
+0930:  MOVLW  92
+0932:  MOVWF  FF6
+0934:  MOVLW  00
+0936:  MOVWF  FF7
+0938:  RCALL  068A
+....................    lcd_gotoxy(1,3); 
+093A:  MOVLW  01
+093C:  MOVWF  23
+093E:  MOVLW  03
+0940:  MOVWF  24
+0942:  RCALL  05DE
+....................    printf(lcd_putc,"    JP INGLOBAL     "); 
+0944:  MOVLW  A8
+0946:  MOVWF  FF6
+0948:  MOVLW  00
+094A:  MOVWF  FF7
+094C:  RCALL  068A
+....................    lcd_gotoxy(1,4); 
+094E:  MOVLW  01
+0950:  MOVWF  23
+0952:  MOVLW  04
+0954:  MOVWF  24
+0956:  RCALL  05DE
+....................    printf(lcd_putc," REF: PANEL JPCEH15 "); 
+0958:  MOVLW  BE
+095A:  MOVWF  FF6
+095C:  MOVLW  00
+095E:  MOVWF  FF7
+0960:  RCALL  068A
+....................    delay_ms(2000); 
+0962:  MOVLW  08
+0964:  MOVWF  1C
+0966:  MOVLW  FA
+0968:  MOVWF  23
+096A:  RCALL  04A4
+096C:  DECFSZ 1C,F
+096E:  BRA    0966
+....................    printf(lcd_putc,"\f"); 
+0970:  MOVLW  0C
+0972:  MOVWF  22
+0974:  RCALL  0636
+....................     
+....................    //Solo para simulacion 
+....................    //write_eeprom(0,0);delay_ms(20);write_eeprom(1,0);delay_ms(20); 
+....................    //write_eeprom(2,0);delay_ms(20);write_eeprom(3,0);delay_ms(20); 
+....................              
+....................     
+....................     
+....................    // Lee la contraseña almacenada en la eeprom para poder comprobar con la que escribe el usuario. 
+....................    contrasena[0]=read_eeprom(0);delay_ms(20); contrasena[1]=read_eeprom(1);delay_ms(20); 
+0976:  MOVFF  FF2,1C
+097A:  BCF    FF2.7
+097C:  CLRF   FA9
+097E:  BCF    FA6.6
+0980:  BCF    FA6.7
+0982:  BSF    FA6.0
+0984:  MOVF   FA8,W
+0986:  BTFSC  1C.7
+0988:  BSF    FF2.7
+098A:  MOVWF  18
+098C:  MOVLW  14
+098E:  MOVWF  23
+0990:  RCALL  04A4
+0992:  MOVFF  FF2,1C
+0996:  BCF    FF2.7
+0998:  MOVLW  01
+099A:  MOVWF  FA9
+099C:  BCF    FA6.6
+099E:  BCF    FA6.7
+09A0:  BSF    FA6.0
+09A2:  MOVF   FA8,W
+09A4:  BTFSC  1C.7
+09A6:  BSF    FF2.7
+09A8:  MOVWF  19
+09AA:  MOVLW  14
+09AC:  MOVWF  23
+09AE:  RCALL  04A4
+....................    contrasena[2]=read_eeprom(2);delay_ms(20); contrasena[3]=read_eeprom(3);delay_ms(20); 
+09B0:  MOVFF  FF2,1C
+09B4:  BCF    FF2.7
+09B6:  MOVLW  02
+09B8:  MOVWF  FA9
+09BA:  BCF    FA6.6
+09BC:  BCF    FA6.7
+09BE:  BSF    FA6.0
+09C0:  MOVF   FA8,W
+09C2:  BTFSC  1C.7
+09C4:  BSF    FF2.7
+09C6:  MOVWF  1A
+09C8:  MOVLW  14
+09CA:  MOVWF  23
+09CC:  RCALL  04A4
+09CE:  MOVFF  FF2,1C
+09D2:  BCF    FF2.7
+09D4:  MOVLW  03
+09D6:  MOVWF  FA9
+09D8:  BCF    FA6.6
+09DA:  BCF    FA6.7
+09DC:  BSF    FA6.0
+09DE:  MOVF   FA8,W
+09E0:  BTFSC  1C.7
+09E2:  BSF    FF2.7
+09E4:  MOVWF  1B
+09E6:  MOVLW  14
+09E8:  MOVWF  23
+09EA:  RCALL  04A4
+....................    
+....................    while(true){ 
+....................  
+.................... //------------Menu0------------------------------------------------------------------    
+....................    if(Menu == 0){ // Menu de Contraseña para Poder iniciar el equipo 
+09EC:  MOVF   05,F
+09EE:  BTFSS  FD8.2
+09F0:  BRA    0D44
+....................    lcd_gotoxy(1,1); 
+09F2:  MOVLW  01
+09F4:  MOVWF  23
+09F6:  MOVWF  24
+09F8:  RCALL  05DE
+....................    printf(lcd_putc,"     Ingrese        "); 
+09FA:  MOVLW  D4
+09FC:  MOVWF  FF6
+09FE:  MOVLW  00
+0A00:  MOVWF  FF7
+0A02:  RCALL  068A
+....................    lcd_gotoxy(1,2); 
+0A04:  MOVLW  01
+0A06:  MOVWF  23
+0A08:  MOVLW  02
+0A0A:  MOVWF  24
+0A0C:  RCALL  05DE
+....................    printf(lcd_putc,"    Contraseña      "); 
+0A0E:  MOVLW  EA
+0A10:  MOVWF  FF6
+0A12:  MOVLW  00
+0A14:  MOVWF  FF7
+0A16:  RCALL  068A
+....................    lcd_gotoxy(1,3); 
+0A18:  MOVLW  01
+0A1A:  MOVWF  23
+0A1C:  MOVLW  03
+0A1E:  MOVWF  24
+0A20:  RCALL  05DE
+....................    printf(lcd_putc,"    CLAVE=%i%i%i%i  ",clave[0],clave[1],clave[2],clave[3]); 
+0A22:  MOVLW  00
+0A24:  MOVWF  FF6
+0A26:  MOVLW  01
+0A28:  MOVWF  FF7
+0A2A:  MOVLW  0A
+0A2C:  MOVWF  1C
+0A2E:  RCALL  06AA
+0A30:  MOVFF  14,1C
+0A34:  MOVLW  1F
+0A36:  MOVWF  1D
+0A38:  RCALL  06F0
+0A3A:  MOVFF  15,1C
+0A3E:  MOVLW  1F
+0A40:  MOVWF  1D
+0A42:  RCALL  06F0
+0A44:  MOVFF  16,1C
+0A48:  MOVLW  1F
+0A4A:  MOVWF  1D
+0A4C:  RCALL  06F0
+0A4E:  MOVFF  17,1C
+0A52:  MOVLW  1F
+0A54:  MOVWF  1D
+0A56:  RCALL  06F0
+0A58:  MOVLW  20
+0A5A:  MOVWF  22
+0A5C:  RCALL  0636
+0A5E:  MOVLW  20
+0A60:  MOVWF  22
+0A62:  RCALL  0636
+....................     
+....................        
+....................    if(UP)//Si oprime hacia arriba 
+0A64:  BSF    F92.0
+0A66:  BTFSS  F80.0
+0A68:  BRA    0A8A
+....................       {  if(Flanco == 0)  
+0A6A:  BTFSC  0E.3
+0A6C:  BRA    0A88
+....................             {clave[unidad-11]++;Flanco = 1;delay_ms(30);}} 
+0A6E:  MOVLW  0B
+0A70:  SUBWF  08,W
+0A72:  CLRF   03
+0A74:  ADDLW  14
+0A76:  MOVWF  FE9
+0A78:  MOVLW  00
+0A7A:  ADDWFC 03,W
+0A7C:  MOVWF  FEA
+0A7E:  INCF   FEF,F
+0A80:  BSF    0E.3
+0A82:  MOVLW  1E
+0A84:  MOVWF  23
+0A86:  RCALL  04A4
+....................          else 
+0A88:  BRA    0A8C
+....................             {Flanco = 0;} 
+0A8A:  BCF    0E.3
+....................              
+....................       if(DOWN)//Si oprime hacia abajo 
+0A8C:  BSF    F92.1
+0A8E:  BTFSS  F80.1
+0A90:  BRA    0AB2
+....................       {  if(Flanco2 == 0)  
+0A92:  BTFSC  0E.5
+0A94:  BRA    0AB0
+....................             {clave[unidad-11]--;Flanco2 = 1;delay_ms(30);}} 
+0A96:  MOVLW  0B
+0A98:  SUBWF  08,W
+0A9A:  CLRF   03
+0A9C:  ADDLW  14
+0A9E:  MOVWF  FE9
+0AA0:  MOVLW  00
+0AA2:  ADDWFC 03,W
+0AA4:  MOVWF  FEA
+0AA6:  DECF   FEF,F
+0AA8:  BSF    0E.5
+0AAA:  MOVLW  1E
+0AAC:  MOVWF  23
+0AAE:  RCALL  04A4
+....................          else 
+0AB0:  BRA    0AB4
+....................             {Flanco2 = 0;} 
+0AB2:  BCF    0E.5
+....................     
+....................       if(RIGHT)// Si Oprime Derecha 
+0AB4:  BSF    F92.2
+0AB6:  BTFSS  F80.2
+0AB8:  BRA    0AD0
+....................       {  if(Flanco1 == 0)  
+0ABA:  BTFSC  0E.4
+0ABC:  BRA    0ACE
+....................             {Flanco1 = 1;unidad++;delay_ms(30);printf(lcd_putc,"\f");}} 
+0ABE:  BSF    0E.4
+0AC0:  INCF   08,F
+0AC2:  MOVLW  1E
+0AC4:  MOVWF  23
+0AC6:  RCALL  04A4
+0AC8:  MOVLW  0C
+0ACA:  MOVWF  22
+0ACC:  RCALL  0636
+....................          else 
+0ACE:  BRA    0AD2
+....................             {Flanco1 = 0;}    
+0AD0:  BCF    0E.4
+....................              
+....................        if(LEFT)// Si Oprime izquierda 
+0AD2:  BSF    F92.3
+0AD4:  BTFSS  F80.3
+0AD6:  BRA    0AEE
+....................       {  if(Flanco3 == 0)  
+0AD8:  BTFSC  0E.6
+0ADA:  BRA    0AEC
+....................             {Flanco3 = 1;unidad--;delay_ms(30);printf(lcd_putc,"\f");}} 
+0ADC:  BSF    0E.6
+0ADE:  DECF   08,F
+0AE0:  MOVLW  1E
+0AE2:  MOVWF  23
+0AE4:  RCALL  04A4
+0AE6:  MOVLW  0C
+0AE8:  MOVWF  22
+0AEA:  RCALL  0636
+....................          else 
+0AEC:  BRA    0AF0
+....................             {Flanco3 = 0;}     
+0AEE:  BCF    0E.6
+....................              
+....................        if(clave[unidad-11]<0)     // Si la unidad donde se encuentra ubicado el cursor es menor que 0 pasa a 9. 
+0AF0:  MOVLW  0B
+0AF2:  SUBWF  08,W
+0AF4:  CLRF   03
+0AF6:  ADDLW  14
+0AF8:  MOVWF  FE9
+0AFA:  MOVLW  00
+0AFC:  ADDWFC 03,W
+0AFE:  MOVWF  FEA
+0B00:  BTFSC  FEF.7
+0B02:  BRA    0B06
+0B04:  BRA    0B1A
+....................        {clave[unidad-11]=9;} 
+0B06:  MOVLW  0B
+0B08:  SUBWF  08,W
+0B0A:  CLRF   03
+0B0C:  ADDLW  14
+0B0E:  MOVWF  FE9
+0B10:  MOVLW  00
+0B12:  ADDWFC 03,W
+0B14:  MOVWF  FEA
+0B16:  MOVLW  09
+0B18:  MOVWF  FEF
+....................        if(clave[unidad-11]>9)     // Si la unidad donde se encuentra ubicado el cursor es mayor que 9 pasa a 0. 
+0B1A:  MOVLW  0B
+0B1C:  SUBWF  08,W
+0B1E:  CLRF   03
+0B20:  ADDLW  14
+0B22:  MOVWF  FE9
+0B24:  MOVLW  00
+0B26:  ADDWFC 03,W
+0B28:  MOVWF  FEA
+0B2A:  BTFSC  FEF.7
+0B2C:  BRA    0B46
+0B2E:  MOVF   FEF,W
+0B30:  SUBLW  09
+0B32:  BC    0B46
+....................        {clave[unidad-11]=0;} 
+0B34:  MOVLW  0B
+0B36:  SUBWF  08,W
+0B38:  CLRF   03
+0B3A:  ADDLW  14
+0B3C:  MOVWF  FE9
+0B3E:  MOVLW  00
+0B40:  ADDWFC 03,W
+0B42:  MOVWF  FEA
+0B44:  CLRF   FEF
+....................        if(unidad<11)             // Si trata de correr mas a la izquierda de la primera unidad, deja el cursor en esa posicion. 
+0B46:  MOVF   08,W
+0B48:  SUBLW  0A
+0B4A:  BNC   0B50
+....................        {unidad=11;} 
+0B4C:  MOVLW  0B
+0B4E:  MOVWF  08
+....................        lcd_gotoxy(unidad,4);// Para mostrar cursor. 
+0B50:  MOVFF  08,23
+0B54:  MOVLW  04
+0B56:  MOVWF  24
+0B58:  RCALL  05DE
+....................        lcd_putc(t[2]); 
+0B5A:  MOVFF  13,22
+0B5E:  RCALL  0636
+....................        if(unidad>14)             // Si a Terminado de ingresar la clave, verifica si es correcta o no. 
+0B60:  MOVF   08,W
+0B62:  SUBLW  0E
+0B64:  BTFSC  FD8.0
+0B66:  BRA    0D24
+....................        { 
+....................          if(clave[0]==3&&clave[1]==8&&clave[2]==9&&clave[3]==2) // Si Ingresa clave para reset general del sistema. 
+0B68:  MOVF   14,W
+0B6A:  SUBLW  03
+0B6C:  BNZ   0C40
+0B6E:  MOVF   15,W
+0B70:  SUBLW  08
+0B72:  BNZ   0C40
+0B74:  MOVF   16,W
+0B76:  SUBLW  09
+0B78:  BNZ   0C40
+0B7A:  MOVF   17,W
+0B7C:  SUBLW  02
+0B7E:  BNZ   0C40
+....................             {write_eeprom(0,0);delay_ms(20);write_eeprom(1,0);delay_ms(20);// Reestablece a contraseña de Fabrica y reinicia Programa. 
+0B80:  CLRF   FA9
+0B82:  CLRF   FA8
+0B84:  BCF    FA6.6
+0B86:  BCF    FA6.7
+0B88:  BSF    FA6.2
+0B8A:  MOVF   FF2,W
+0B8C:  MOVWF  00
+0B8E:  BCF    FF2.7
+0B90:  MOVLB  F
+0B92:  MOVLW  55
+0B94:  MOVWF  FA7
+0B96:  MOVLW  AA
+0B98:  MOVWF  FA7
+0B9A:  BSF    FA6.1
+0B9C:  BTFSC  FA6.1
+0B9E:  BRA    0B9C
+0BA0:  BCF    FA6.2
+0BA2:  MOVF   00,W
+0BA4:  IORWF  FF2,F
+0BA6:  MOVLW  14
+0BA8:  MOVWF  23
+0BAA:  MOVLB  0
+0BAC:  RCALL  04A4
+0BAE:  MOVLW  01
+0BB0:  MOVWF  FA9
+0BB2:  CLRF   FA8
+0BB4:  BCF    FA6.6
+0BB6:  BCF    FA6.7
+0BB8:  BSF    FA6.2
+0BBA:  MOVF   FF2,W
+0BBC:  MOVWF  00
+0BBE:  BCF    FF2.7
+0BC0:  MOVLB  F
+0BC2:  MOVLW  55
+0BC4:  MOVWF  FA7
+0BC6:  MOVLW  AA
+0BC8:  MOVWF  FA7
+0BCA:  BSF    FA6.1
+0BCC:  BTFSC  FA6.1
+0BCE:  BRA    0BCC
+0BD0:  BCF    FA6.2
+0BD2:  MOVF   00,W
+0BD4:  IORWF  FF2,F
+0BD6:  MOVLW  14
+0BD8:  MOVWF  23
+0BDA:  MOVLB  0
+0BDC:  RCALL  04A4
+....................              write_eeprom(2,0);delay_ms(20);write_eeprom(3,0);delay_ms(20); 
+0BDE:  MOVLW  02
+0BE0:  MOVWF  FA9
+0BE2:  CLRF   FA8
+0BE4:  BCF    FA6.6
+0BE6:  BCF    FA6.7
+0BE8:  BSF    FA6.2
+0BEA:  MOVF   FF2,W
+0BEC:  MOVWF  00
+0BEE:  BCF    FF2.7
+0BF0:  MOVLB  F
+0BF2:  MOVLW  55
+0BF4:  MOVWF  FA7
+0BF6:  MOVLW  AA
+0BF8:  MOVWF  FA7
+0BFA:  BSF    FA6.1
+0BFC:  BTFSC  FA6.1
+0BFE:  BRA    0BFC
+0C00:  BCF    FA6.2
+0C02:  MOVF   00,W
+0C04:  IORWF  FF2,F
+0C06:  MOVLW  14
+0C08:  MOVWF  23
+0C0A:  MOVLB  0
+0C0C:  RCALL  04A4
+0C0E:  MOVLW  03
+0C10:  MOVWF  FA9
+0C12:  CLRF   FA8
+0C14:  BCF    FA6.6
+0C16:  BCF    FA6.7
+0C18:  BSF    FA6.2
+0C1A:  MOVF   FF2,W
+0C1C:  MOVWF  00
+0C1E:  BCF    FF2.7
+0C20:  MOVLB  F
+0C22:  MOVLW  55
+0C24:  MOVWF  FA7
+0C26:  MOVLW  AA
+0C28:  MOVWF  FA7
+0C2A:  BSF    FA6.1
+0C2C:  BTFSC  FA6.1
+0C2E:  BRA    0C2C
+0C30:  BCF    FA6.2
+0C32:  MOVF   00,W
+0C34:  IORWF  FF2,F
+0C36:  MOVLW  14
+0C38:  MOVWF  23
+0C3A:  MOVLB  0
+0C3C:  RCALL  04A4
+....................              reset_cpu();} 
+0C3E:  RESET
+....................              
+....................          if(clave[0]==contrasena[0]&&clave[1]==contrasena[1]&&clave[2]==contrasena[2]&&clave[3]==contrasena[3]) // Si las claves coinciden pasa a Menu Principal. 
+0C40:  MOVF   18,W
+0C42:  SUBWF  14,W
+0C44:  BNZ   0CC6
+0C46:  MOVF   19,W
+0C48:  SUBWF  15,W
+0C4A:  BNZ   0CC6
+0C4C:  MOVF   1A,W
+0C4E:  SUBWF  16,W
+0C50:  BNZ   0CC6
+0C52:  MOVF   1B,W
+0C54:  SUBWF  17,W
+0C56:  BNZ   0CC6
+....................             {lcd_gotoxy(1,1); 
+0C58:  MOVLW  01
+0C5A:  MOVWF  23
+0C5C:  MOVWF  24
+0C5E:  RCALL  05DE
+....................             printf(lcd_putc,"                   "); 
+0C60:  MOVLW  16
+0C62:  MOVWF  FF6
+0C64:  MOVLW  01
+0C66:  MOVWF  FF7
+0C68:  RCALL  068A
+....................             lcd_gotoxy(1,2); 
+0C6A:  MOVLW  01
+0C6C:  MOVWF  23
+0C6E:  MOVLW  02
+0C70:  MOVWF  24
+0C72:  RCALL  05DE
+....................             printf(lcd_putc,"     Contraseña    "); 
+0C74:  MOVLW  2A
+0C76:  MOVWF  FF6
+0C78:  MOVLW  01
+0C7A:  MOVWF  FF7
+0C7C:  RCALL  068A
+....................             lcd_gotoxy(1,3); 
+0C7E:  MOVLW  01
+0C80:  MOVWF  23
+0C82:  MOVLW  03
+0C84:  MOVWF  24
+0C86:  RCALL  05DE
+....................             printf(lcd_putc,"      Correcta     "); 
+0C88:  MOVLW  3E
+0C8A:  MOVWF  FF6
+0C8C:  MOVLW  01
+0C8E:  MOVWF  FF7
+0C90:  RCALL  068A
+....................             lcd_gotoxy(1,4); 
+0C92:  MOVLW  01
+0C94:  MOVWF  23
+0C96:  MOVLW  04
+0C98:  MOVWF  24
+0C9A:  RCALL  05DE
+....................             printf(lcd_putc,"                   "); 
+0C9C:  MOVLW  52
+0C9E:  MOVWF  FF6
+0CA0:  MOVLW  01
+0CA2:  MOVWF  FF7
+0CA4:  RCALL  068A
+....................             delay_ms(500);Menu=1;unidad=11;printf(lcd_putc,"\f");} 
+0CA6:  MOVLW  02
+0CA8:  MOVWF  1C
+0CAA:  MOVLW  FA
+0CAC:  MOVWF  23
+0CAE:  CALL   04A4
+0CB2:  DECFSZ 1C,F
+0CB4:  BRA    0CAA
+0CB6:  MOVLW  01
+0CB8:  MOVWF  05
+0CBA:  MOVLW  0B
+0CBC:  MOVWF  08
+0CBE:  MOVLW  0C
+0CC0:  MOVWF  22
+0CC2:  RCALL  0636
+....................          else                                         // Si la clave no coincide vuelve a mostrar el menu para ingresar la clave. 
+0CC4:  BRA    0D24
+....................          {lcd_gotoxy(1,1); 
+0CC6:  MOVLW  01
+0CC8:  MOVWF  23
+0CCA:  MOVWF  24
+0CCC:  RCALL  05DE
+....................             printf(lcd_putc,""); 
+....................             lcd_gotoxy(1,2); 
+0CCE:  MOVLW  01
+0CD0:  MOVWF  23
+0CD2:  MOVLW  02
+0CD4:  MOVWF  24
+0CD6:  RCALL  05DE
+....................             printf(lcd_putc,"     Contraseña    "); 
+0CD8:  MOVLW  66
+0CDA:  MOVWF  FF6
+0CDC:  MOVLW  01
+0CDE:  MOVWF  FF7
+0CE0:  RCALL  068A
+....................             lcd_gotoxy(1,3); 
+0CE2:  MOVLW  01
+0CE4:  MOVWF  23
+0CE6:  MOVLW  03
+0CE8:  MOVWF  24
+0CEA:  RCALL  05DE
+....................             printf(lcd_putc,"     Incorrecta    "); 
+0CEC:  MOVLW  7A
+0CEE:  MOVWF  FF6
+0CF0:  MOVLW  01
+0CF2:  MOVWF  FF7
+0CF4:  RCALL  068A
+....................             lcd_gotoxy(1,4); 
+0CF6:  MOVLW  01
+0CF8:  MOVWF  23
+0CFA:  MOVLW  04
+0CFC:  MOVWF  24
+0CFE:  RCALL  05DE
+....................             printf(lcd_putc,"                   "); 
+0D00:  MOVLW  8E
+0D02:  MOVWF  FF6
+0D04:  MOVLW  01
+0D06:  MOVWF  FF7
+0D08:  RCALL  068A
+....................             delay_ms(500);unidad=11;printf(lcd_putc,"\f");} 
+0D0A:  MOVLW  02
+0D0C:  MOVWF  1C
+0D0E:  MOVLW  FA
+0D10:  MOVWF  23
+0D12:  CALL   04A4
+0D16:  DECFSZ 1C,F
+0D18:  BRA    0D0E
+0D1A:  MOVLW  0B
+0D1C:  MOVWF  08
+0D1E:  MOVLW  0C
+0D20:  MOVWF  22
+0D22:  RCALL  0636
+....................        } 
+....................     
+....................        if(unidad>11&&unidad<14) 
+0D24:  MOVF   08,W
+0D26:  SUBLW  0B
+0D28:  BC    0D44
+0D2A:  MOVF   08,W
+0D2C:  SUBLW  0D
+0D2E:  BNC   0D44
+....................           { lcd_gotoxy(unidad-1,4);// Para mostrar cursor. 
+0D30:  MOVLW  01
+0D32:  SUBWF  08,W
+0D34:  MOVWF  1C
+0D36:  MOVWF  23
+0D38:  MOVLW  04
+0D3A:  MOVWF  24
+0D3C:  RCALL  05DE
+....................             lcd_putc(t[1]); 
+0D3E:  MOVFF  12,22
+0D42:  RCALL  0636
+....................           } 
+....................  
+....................    } 
+.................... //----------------Fin-Menu0---------------------------------------------------------------    
+....................  
+.................... //------------Menu1------------------------------------------------------------------    
+....................    if(Menu == 1){ // Menu de seleccion de lo que desea encender 
+0D44:  DECFSZ 05,W
+0D46:  BRA    0DE4
+....................    lcd_gotoxy(1,1); 
+0D48:  MOVLW  01
+0D4A:  MOVWF  23
+0D4C:  MOVWF  24
+0D4E:  RCALL  05DE
+....................    printf(lcd_putc,"---MENU PRINCIPAL---"); 
+0D50:  MOVLW  A2
+0D52:  MOVWF  FF6
+0D54:  MOVLW  01
+0D56:  MOVWF  FF7
+0D58:  RCALL  068A
+....................       if(paso<0) 
+0D5A:  BTFSC  0F.7
+0D5C:  BRA    0D60
+0D5E:  BRA    0D62
+....................         {paso=0;} 
+0D60:  CLRF   0F
+....................        
+....................       mensajes(1+paso,3); 
+0D62:  MOVLW  01
+0D64:  ADDWF  0F,W
+0D66:  MOVWF  1C
+0D68:  MOVWF  1D
+0D6A:  MOVLW  03
+0D6C:  MOVWF  1E
+0D6E:  RCALL  07B8
+....................       mensajes(2+paso,4);     
+0D70:  MOVLW  02
+0D72:  ADDWF  0F,W
+0D74:  MOVWF  1C
+0D76:  MOVWF  1D
+0D78:  MOVLW  04
+0D7A:  MOVWF  1E
+0D7C:  RCALL  07B8
+....................        
+....................       if(LEFT)//Si oprime hacia arriba 
+0D7E:  BSF    F92.3
+0D80:  BTFSS  F80.3
+0D82:  BRA    0D98
+....................       {   
+....................          if(Flanco == 0) 
+0D84:  BTFSC  0E.3
+0D86:  BRA    0D96
+....................          { 
+....................             Menu=3;Flanco = 1;delay_ms(30); 
+0D88:  MOVLW  03
+0D8A:  MOVWF  05
+0D8C:  BSF    0E.3
+0D8E:  MOVLW  1E
+0D90:  MOVWF  23
+0D92:  CALL   04A4
+....................          } 
+....................       } 
+....................       else 
+0D96:  BRA    0D9A
+....................       { 
+....................          Flanco = 0; 
+0D98:  BCF    0E.3
+....................       } 
+....................              
+....................       if(DOWN)//Si oprime hacia abajo 
+0D9A:  BSF    F92.1
+0D9C:  BTFSS  F80.1
+0D9E:  BRA    0DB4
+....................       {   
+....................          if(Flanco2 == 0) 
+0DA0:  BTFSC  0E.5
+0DA2:  BRA    0DB2
+....................          { 
+....................             Flanco2 = 1;delay_ms(30);Menu=2; 
+0DA4:  BSF    0E.5
+0DA6:  MOVLW  1E
+0DA8:  MOVWF  23
+0DAA:  CALL   04A4
+0DAE:  MOVLW  02
+0DB0:  MOVWF  05
+....................          } 
+....................       } 
+....................       else 
+0DB2:  BRA    0DB6
+....................       { 
+....................          Flanco2 = 0; 
+0DB4:  BCF    0E.5
+....................       }     
+....................  
+....................       if(UP)// Si oprime derecha 
+0DB6:  BSF    F92.0
+0DB8:  BTFSS  F80.0
+0DBA:  BRA    0DE2
+....................       { 
+....................          if(Flanco1 == 0) 
+0DBC:  BTFSC  0E.4
+0DBE:  BRA    0DE0
+....................          { 
+....................             Menu=4;delay_ms(30);printf(lcd_putc,"\f"); 
+0DC0:  MOVLW  04
+0DC2:  MOVWF  05
+0DC4:  MOVLW  1E
+0DC6:  MOVWF  23
+0DC8:  CALL   04A4
+0DCC:  MOVLW  0C
+0DCE:  MOVWF  22
+0DD0:  RCALL  0636
+....................             if(Menu==4) 
+0DD2:  MOVF   05,W
+0DD4:  SUBLW  04
+0DD6:  BNZ   0DE0
+....................             {clave[0]=0;clave[1]=0;clave[2]=0;clave[3]=0;} 
+0DD8:  CLRF   14
+0DDA:  CLRF   15
+0DDC:  CLRF   16
+0DDE:  CLRF   17
+....................          } 
+....................       } 
+....................       else 
+0DE0:  BRA    0DE4
+....................       { 
+....................          Flanco1 = 0; 
+0DE2:  BCF    0E.4
+....................       } 
+....................  
+....................    } 
+.................... //----------------Fin-Menu1---------------------------------------------------------------       
+....................     
+.................... //----------------Menu2--------------------------------------------------------------- 
+....................    if(Menu == 2){ // Menu de seleccion de Estado de Luz Blanca 
+0DE4:  MOVF   05,W
+0DE6:  SUBLW  02
+0DE8:  BNZ   0ED4
+....................     Menu=1; paso=0; 
+0DEA:  MOVLW  01
+0DEC:  MOVWF  05
+0DEE:  CLRF   0F
+....................          estadofl=!estadofl; 
+0DF0:  BTG    0E.1
+....................             if(estadofl==1) 
+0DF2:  BTFSS  0E.1
+0DF4:  BRA    0E52
+....................             {estadofl=1;Luz_Blanca_on; 
+0DF6:  BSF    0E.1
+0DF8:  BSF    F8C.1
+0DFA:  BCF    F95.1
+....................                lcd_gotoxy(1,1); 
+0DFC:  MOVLW  01
+0DFE:  MOVWF  23
+0E00:  MOVWF  24
+0E02:  CALL   05DE
+....................                printf(lcd_putc,"                    "); 
+0E06:  MOVLW  B8
+0E08:  MOVWF  FF6
+0E0A:  MOVLW  01
+0E0C:  MOVWF  FF7
+0E0E:  RCALL  068A
+....................                lcd_gotoxy(1,2); 
+0E10:  MOVLW  01
+0E12:  MOVWF  23
+0E14:  MOVLW  02
+0E16:  MOVWF  24
+0E18:  CALL   05DE
+....................                printf(lcd_putc,"      Encendio      "); 
+0E1C:  MOVLW  CE
+0E1E:  MOVWF  FF6
+0E20:  MOVLW  01
+0E22:  MOVWF  FF7
+0E24:  RCALL  068A
+....................                lcd_gotoxy(1,3); 
+0E26:  MOVLW  01
+0E28:  MOVWF  23
+0E2A:  MOVLW  03
+0E2C:  MOVWF  24
+0E2E:  CALL   05DE
+....................                printf(lcd_putc,"     Luz Blanca     "); 
+0E32:  MOVLW  E4
+0E34:  MOVWF  FF6
+0E36:  MOVLW  01
+0E38:  MOVWF  FF7
+0E3A:  RCALL  068A
+....................                lcd_gotoxy(1,4); 
+0E3C:  MOVLW  01
+0E3E:  MOVWF  23
+0E40:  MOVLW  04
+0E42:  MOVWF  24
+0E44:  CALL   05DE
+....................                printf(lcd_putc,"                    ");} 
+0E48:  MOVLW  FA
+0E4A:  MOVWF  FF6
+0E4C:  MOVLW  01
+0E4E:  MOVWF  FF7
+0E50:  RCALL  068A
+....................             
+....................             if(estadofl==0) 
+0E52:  BTFSC  0E.1
+0E54:  BRA    0EB6
+....................             {estadofl=0;Luz_Blanca_off; 
+0E56:  BCF    0E.1
+0E58:  BCF    F8C.1
+0E5A:  BCF    F95.1
+....................                lcd_gotoxy(1,1); 
+0E5C:  MOVLW  01
+0E5E:  MOVWF  23
+0E60:  MOVWF  24
+0E62:  CALL   05DE
+....................                printf(lcd_putc,"                    "); 
+0E66:  MOVLW  10
+0E68:  MOVWF  FF6
+0E6A:  MOVLW  02
+0E6C:  MOVWF  FF7
+0E6E:  RCALL  068A
+....................                lcd_gotoxy(1,2); 
+0E70:  MOVLW  01
+0E72:  MOVWF  23
+0E74:  MOVLW  02
+0E76:  MOVWF  24
+0E78:  CALL   05DE
+....................                printf(lcd_putc,"       Apago        "); 
+0E7C:  MOVLW  26
+0E7E:  MOVWF  FF6
+0E80:  MOVLW  02
+0E82:  MOVWF  FF7
+0E84:  RCALL  068A
+....................                lcd_gotoxy(1,3); 
+0E86:  MOVLW  01
+0E88:  MOVWF  23
+0E8A:  MOVLW  03
+0E8C:  MOVWF  24
+0E8E:  CALL   05DE
+....................                printf(lcd_putc,"    Luz  Blanca     "); 
+0E92:  MOVLW  3C
+0E94:  MOVWF  FF6
+0E96:  MOVLW  02
+0E98:  MOVWF  FF7
+0E9A:  CALL   068A
+....................                lcd_gotoxy(1,4); 
+0E9E:  MOVLW  01
+0EA0:  MOVWF  23
+0EA2:  MOVLW  04
+0EA4:  MOVWF  24
+0EA6:  CALL   05DE
+....................                printf(lcd_putc,"                    ");}      
+0EAA:  MOVLW  52
+0EAC:  MOVWF  FF6
+0EAE:  MOVLW  02
+0EB0:  MOVWF  FF7
+0EB2:  CALL   068A
+....................               
+....................             delay_ms(500);Flecha=2;Flecha2=2;printf(lcd_putc,"\f");    
+0EB6:  MOVLW  02
+0EB8:  MOVWF  1C
+0EBA:  MOVLW  FA
+0EBC:  MOVWF  23
+0EBE:  CALL   04A4
+0EC2:  DECFSZ 1C,F
+0EC4:  BRA    0EBA
+0EC6:  MOVLW  02
+0EC8:  MOVWF  09
+0ECA:  MOVWF  0B
+0ECC:  MOVLW  0C
+0ECE:  MOVWF  22
+0ED0:  CALL   0636
+....................    }       
+.................... //----------------Fin-Menu2--------------------------------------------------------------- 
+....................  
+.................... //----------------Menu3--------------------------------------------------------------- 
+....................    if(Menu == 3){ // Menu de seleccion de estado de Motor Ventilador 
+0ED4:  MOVF   05,W
+0ED6:  SUBLW  03
+0ED8:  BTFSS  FD8.2
+0EDA:  BRA    0FD6
+....................    estadomv=!estadomv;Flanco1 = 1;Menu=1; paso=0; 
+0EDC:  BTG    0E.2
+0EDE:  BSF    0E.4
+0EE0:  MOVLW  01
+0EE2:  MOVWF  05
+0EE4:  CLRF   0F
+....................                        
+....................             if(estadomv==1) 
+0EE6:  BTFSS  0E.2
+0EE8:  BRA    0F50
+....................             {estadomv=1;velocidades(1);  
+0EEA:  BSF    0E.2
+0EEC:  MOVLW  01
+0EEE:  MOVWF  1C
+0EF0:  RCALL  083E
+....................                lcd_gotoxy(1,1); 
+0EF2:  MOVLW  01
+0EF4:  MOVWF  23
+0EF6:  MOVWF  24
+0EF8:  CALL   05DE
+....................                printf(lcd_putc,"                    "); 
+0EFC:  MOVLW  68
+0EFE:  MOVWF  FF6
+0F00:  MOVLW  02
+0F02:  MOVWF  FF7
+0F04:  CALL   068A
+....................                lcd_gotoxy(1,2); 
+0F08:  MOVLW  01
+0F0A:  MOVWF  23
+0F0C:  MOVLW  02
+0F0E:  MOVWF  24
+0F10:  CALL   05DE
+....................                printf(lcd_putc,"      Encendio      "); 
+0F14:  MOVLW  7E
+0F16:  MOVWF  FF6
+0F18:  MOVLW  02
+0F1A:  MOVWF  FF7
+0F1C:  CALL   068A
+....................                lcd_gotoxy(1,3); 
+0F20:  MOVLW  01
+0F22:  MOVWF  23
+0F24:  MOVLW  03
+0F26:  MOVWF  24
+0F28:  CALL   05DE
+....................                printf(lcd_putc,"      Extractor     "); 
+0F2C:  MOVLW  94
+0F2E:  MOVWF  FF6
+0F30:  MOVLW  02
+0F32:  MOVWF  FF7
+0F34:  CALL   068A
+....................                lcd_gotoxy(1,4); 
+0F38:  MOVLW  01
+0F3A:  MOVWF  23
+0F3C:  MOVLW  04
+0F3E:  MOVWF  24
+0F40:  CALL   05DE
+....................                printf(lcd_putc,"                    ");} 
+0F44:  MOVLW  AA
+0F46:  MOVWF  FF6
+0F48:  MOVLW  02
+0F4A:  MOVWF  FF7
+0F4C:  CALL   068A
+....................                 
+....................             if(estadomv==0) 
+0F50:  BTFSC  0E.2
+0F52:  BRA    0FB8
+....................             {estadomv=0;velocidades(0);  
+0F54:  BCF    0E.2
+0F56:  CLRF   1C
+0F58:  RCALL  083E
+....................                lcd_gotoxy(1,1); 
+0F5A:  MOVLW  01
+0F5C:  MOVWF  23
+0F5E:  MOVWF  24
+0F60:  CALL   05DE
+....................                printf(lcd_putc,"                    "); 
+0F64:  MOVLW  C0
+0F66:  MOVWF  FF6
+0F68:  MOVLW  02
+0F6A:  MOVWF  FF7
+0F6C:  CALL   068A
+....................                lcd_gotoxy(1,2); 
+0F70:  MOVLW  01
+0F72:  MOVWF  23
+0F74:  MOVLW  02
+0F76:  MOVWF  24
+0F78:  CALL   05DE
+....................                printf(lcd_putc,"       Apago        "); 
+0F7C:  MOVLW  D6
+0F7E:  MOVWF  FF6
+0F80:  MOVLW  02
+0F82:  MOVWF  FF7
+0F84:  CALL   068A
+....................                lcd_gotoxy(1,3); 
+0F88:  MOVLW  01
+0F8A:  MOVWF  23
+0F8C:  MOVLW  03
+0F8E:  MOVWF  24
+0F90:  CALL   05DE
+....................                printf(lcd_putc,"     Extractor      "); 
+0F94:  MOVLW  EC
+0F96:  MOVWF  FF6
+0F98:  MOVLW  02
+0F9A:  MOVWF  FF7
+0F9C:  CALL   068A
+....................                lcd_gotoxy(1,4); 
+0FA0:  MOVLW  01
+0FA2:  MOVWF  23
+0FA4:  MOVLW  04
+0FA6:  MOVWF  24
+0FA8:  CALL   05DE
+....................                printf(lcd_putc,"                    ");} 
+0FAC:  MOVLW  02
+0FAE:  MOVWF  FF6
+0FB0:  MOVLW  03
+0FB2:  MOVWF  FF7
+0FB4:  CALL   068A
+....................               
+....................             delay_ms(500);Flecha=2;Flecha2=2;printf(lcd_putc,"\f"); 
+0FB8:  MOVLW  02
+0FBA:  MOVWF  1C
+0FBC:  MOVLW  FA
+0FBE:  MOVWF  23
+0FC0:  CALL   04A4
+0FC4:  DECFSZ 1C,F
+0FC6:  BRA    0FBC
+0FC8:  MOVLW  02
+0FCA:  MOVWF  09
+0FCC:  MOVWF  0B
+0FCE:  MOVLW  0C
+0FD0:  MOVWF  22
+0FD2:  CALL   0636
+....................    }       
+.................... //----------------Fin-Menu3--------------------------------------------------------------- 
+....................  
+.................... //----------------Menu4--------------------------------------------------------------- 
+....................    if(Menu == 4){ // Menu para Cambio de Contraseña 
+0FD6:  MOVF   05,W
+0FD8:  SUBLW  04
+0FDA:  BTFSS  FD8.2
+0FDC:  BRA    12C6
+....................    lcd_gotoxy(1,1); 
+0FDE:  MOVLW  01
+0FE0:  MOVWF  23
+0FE2:  MOVWF  24
+0FE4:  CALL   05DE
+....................    printf(lcd_putc,"      Ingrese       "); 
+0FE8:  MOVLW  18
+0FEA:  MOVWF  FF6
+0FEC:  MOVLW  03
+0FEE:  MOVWF  FF7
+0FF0:  CALL   068A
+....................    lcd_gotoxy(1,2); 
+0FF4:  MOVLW  01
+0FF6:  MOVWF  23
+0FF8:  MOVLW  02
+0FFA:  MOVWF  24
+0FFC:  CALL   05DE
+....................    printf(lcd_putc," Contraseña Actual  "); 
+1000:  MOVLW  2E
+1002:  MOVWF  FF6
+1004:  MOVLW  03
+1006:  MOVWF  FF7
+1008:  CALL   068A
+....................    lcd_gotoxy(1,3); 
+100C:  MOVLW  01
+100E:  MOVWF  23
+1010:  MOVLW  03
+1012:  MOVWF  24
+1014:  CALL   05DE
+....................    printf(lcd_putc,"    CLAVE=%i%i%i%i  ",clave[0],clave[1],clave[2],clave[3]); 
+1018:  MOVLW  44
+101A:  MOVWF  FF6
+101C:  MOVLW  03
+101E:  MOVWF  FF7
+1020:  MOVLW  0A
+1022:  MOVWF  1C
+1024:  CALL   06AA
+1028:  MOVFF  14,1C
+102C:  MOVLW  1F
+102E:  MOVWF  1D
+1030:  CALL   06F0
+1034:  MOVFF  15,1C
+1038:  MOVLW  1F
+103A:  MOVWF  1D
+103C:  CALL   06F0
+1040:  MOVFF  16,1C
+1044:  MOVLW  1F
+1046:  MOVWF  1D
+1048:  CALL   06F0
+104C:  MOVFF  17,1C
+1050:  MOVLW  1F
+1052:  MOVWF  1D
+1054:  CALL   06F0
+1058:  MOVLW  20
+105A:  MOVWF  22
+105C:  CALL   0636
+1060:  MOVLW  20
+1062:  MOVWF  22
+1064:  CALL   0636
+....................     
+....................        
+....................    if(UP)//Si oprime hacia arriba 
+1068:  BSF    F92.0
+106A:  BTFSS  F80.0
+106C:  BRA    1090
+....................       {  if(Flanco == 0)  
+106E:  BTFSC  0E.3
+1070:  BRA    108E
+....................             {clave[unidad-11]++;Flanco = 1;delay_ms(30);}} 
+1072:  MOVLW  0B
+1074:  SUBWF  08,W
+1076:  CLRF   03
+1078:  ADDLW  14
+107A:  MOVWF  FE9
+107C:  MOVLW  00
+107E:  ADDWFC 03,W
+1080:  MOVWF  FEA
+1082:  INCF   FEF,F
+1084:  BSF    0E.3
+1086:  MOVLW  1E
+1088:  MOVWF  23
+108A:  CALL   04A4
+....................          else 
+108E:  BRA    1092
+....................             {Flanco = 0;} 
+1090:  BCF    0E.3
+....................              
+....................       if(DOWN)//Si oprime hacia abajo 
+1092:  BSF    F92.1
+1094:  BTFSS  F80.1
+1096:  BRA    10BA
+....................       {  if(Flanco2 == 0)  
+1098:  BTFSC  0E.5
+109A:  BRA    10B8
+....................             {clave[unidad-11]--;Flanco2 = 1;delay_ms(30);}} 
+109C:  MOVLW  0B
+109E:  SUBWF  08,W
+10A0:  CLRF   03
+10A2:  ADDLW  14
+10A4:  MOVWF  FE9
+10A6:  MOVLW  00
+10A8:  ADDWFC 03,W
+10AA:  MOVWF  FEA
+10AC:  DECF   FEF,F
+10AE:  BSF    0E.5
+10B0:  MOVLW  1E
+10B2:  MOVWF  23
+10B4:  CALL   04A4
+....................          else 
+10B8:  BRA    10BC
+....................             {Flanco2 = 0;} 
+10BA:  BCF    0E.5
+....................     
+....................       if(RIGHT)// Si oprime derecha 
+10BC:  BSF    F92.2
+10BE:  BTFSS  F80.2
+10C0:  BRA    10DC
+....................       {  if(Flanco1 == 0)  
+10C2:  BTFSC  0E.4
+10C4:  BRA    10DA
+....................             {Flanco1 = 1;unidad++;delay_ms(30);printf(lcd_putc,"\f");}} 
+10C6:  BSF    0E.4
+10C8:  INCF   08,F
+10CA:  MOVLW  1E
+10CC:  MOVWF  23
+10CE:  CALL   04A4
+10D2:  MOVLW  0C
+10D4:  MOVWF  22
+10D6:  CALL   0636
+....................          else 
+10DA:  BRA    10DE
+....................             {Flanco1 = 0;}    
+10DC:  BCF    0E.4
+....................              
+....................        if(LEFT)// Si oprime Izquierda 
+10DE:  BSF    F92.3
+10E0:  BTFSS  F80.3
+10E2:  BRA    10FE
+....................       {  if(Flanco3 == 0)  
+10E4:  BTFSC  0E.6
+10E6:  BRA    10FC
+....................             {Flanco3 = 1;unidad--;delay_ms(30);printf(lcd_putc,"\f");}} 
+10E8:  BSF    0E.6
+10EA:  DECF   08,F
+10EC:  MOVLW  1E
+10EE:  MOVWF  23
+10F0:  CALL   04A4
+10F4:  MOVLW  0C
+10F6:  MOVWF  22
+10F8:  CALL   0636
+....................          else 
+10FC:  BRA    1100
+....................             {Flanco3 = 0;}     
+10FE:  BCF    0E.6
+....................              
+....................        if(clave[unidad-11]<0)// Si la unidad donde se encuentra ubicado el cursor es menor que 0 pasa a 9.      
+1100:  MOVLW  0B
+1102:  SUBWF  08,W
+1104:  CLRF   03
+1106:  ADDLW  14
+1108:  MOVWF  FE9
+110A:  MOVLW  00
+110C:  ADDWFC 03,W
+110E:  MOVWF  FEA
+1110:  BTFSC  FEF.7
+1112:  BRA    1116
+1114:  BRA    112A
+....................        {clave[unidad-11]=9;} 
+1116:  MOVLW  0B
+1118:  SUBWF  08,W
+111A:  CLRF   03
+111C:  ADDLW  14
+111E:  MOVWF  FE9
+1120:  MOVLW  00
+1122:  ADDWFC 03,W
+1124:  MOVWF  FEA
+1126:  MOVLW  09
+1128:  MOVWF  FEF
+....................        if(clave[unidad-11]>9)// Si la unidad donde se encuentra ubicado el cursor es mayor que 9 pasa a 0.      
+112A:  MOVLW  0B
+112C:  SUBWF  08,W
+112E:  CLRF   03
+1130:  ADDLW  14
+1132:  MOVWF  FE9
+1134:  MOVLW  00
+1136:  ADDWFC 03,W
+1138:  MOVWF  FEA
+113A:  BTFSC  FEF.7
+113C:  BRA    1156
+113E:  MOVF   FEF,W
+1140:  SUBLW  09
+1142:  BC    1156
+....................        {clave[unidad-11]=0;} 
+1144:  MOVLW  0B
+1146:  SUBWF  08,W
+1148:  CLRF   03
+114A:  ADDLW  14
+114C:  MOVWF  FE9
+114E:  MOVLW  00
+1150:  ADDWFC 03,W
+1152:  MOVWF  FEA
+1154:  CLRF   FEF
+....................        if(unidad<11) 
+1156:  MOVF   08,W
+1158:  SUBLW  0A
+115A:  BNC   116C
+....................        {Menu=1;paso=0;Flecha=2;Flecha2=2;unidad=11;} 
+115C:  MOVLW  01
+115E:  MOVWF  05
+1160:  CLRF   0F
+1162:  MOVLW  02
+1164:  MOVWF  09
+1166:  MOVWF  0B
+1168:  MOVLW  0B
+116A:  MOVWF  08
+....................        lcd_gotoxy(unidad,4);// Para mostrar la flecha de seleccion 
+116C:  MOVFF  08,23
+1170:  MOVLW  04
+1172:  MOVWF  24
+1174:  CALL   05DE
+....................        lcd_putc(t[2]); 
+1178:  MOVFF  13,22
+117C:  CALL   0636
+....................        if(unidad>14)// Si ya ingreso la contraseña muestra si es correcta o no, dependiendo si ingreso la clave correctamente. 
+1180:  MOVF   08,W
+1182:  SUBLW  0E
+1184:  BTFSC  FD8.0
+1186:  BRA    12A2
+....................        { 
+....................          if(clave[0]==contrasena[0]&&clave[1]==contrasena[1]&&clave[2]==contrasena[2]&&clave[3]==contrasena[3]) 
+1188:  MOVF   18,W
+118A:  SUBWF  14,W
+118C:  BNZ   1228
+118E:  MOVF   19,W
+1190:  SUBWF  15,W
+1192:  BNZ   1228
+1194:  MOVF   1A,W
+1196:  SUBWF  16,W
+1198:  BNZ   1228
+119A:  MOVF   1B,W
+119C:  SUBWF  17,W
+119E:  BNZ   1228
+....................             {lcd_gotoxy(1,1); 
+11A0:  MOVLW  01
+11A2:  MOVWF  23
+11A4:  MOVWF  24
+11A6:  CALL   05DE
+....................             printf(lcd_putc,"                    "); 
+11AA:  MOVLW  5A
+11AC:  MOVWF  FF6
+11AE:  MOVLW  03
+11B0:  MOVWF  FF7
+11B2:  CALL   068A
+....................             lcd_gotoxy(1,2); 
+11B6:  MOVLW  01
+11B8:  MOVWF  23
+11BA:  MOVLW  02
+11BC:  MOVWF  24
+11BE:  CALL   05DE
+....................             printf(lcd_putc,"     Contraseña     "); 
+11C2:  MOVLW  70
+11C4:  MOVWF  FF6
+11C6:  MOVLW  03
+11C8:  MOVWF  FF7
+11CA:  CALL   068A
+....................             lcd_gotoxy(1,3); 
+11CE:  MOVLW  01
+11D0:  MOVWF  23
+11D2:  MOVLW  03
+11D4:  MOVWF  24
+11D6:  CALL   05DE
+....................             printf(lcd_putc,"      Correcta      "); 
+11DA:  MOVLW  86
+11DC:  MOVWF  FF6
+11DE:  MOVLW  03
+11E0:  MOVWF  FF7
+11E2:  CALL   068A
+....................             lcd_gotoxy(1,4); 
+11E6:  MOVLW  01
+11E8:  MOVWF  23
+11EA:  MOVLW  04
+11EC:  MOVWF  24
+11EE:  CALL   05DE
+....................             printf(lcd_putc,"                    "); 
+11F2:  MOVLW  9C
+11F4:  MOVWF  FF6
+11F6:  MOVLW  03
+11F8:  MOVWF  FF7
+11FA:  CALL   068A
+....................             delay_ms(500);Menu=51;unidad=11;printf(lcd_putc,"\f"); 
+11FE:  MOVLW  02
+1200:  MOVWF  1C
+1202:  MOVLW  FA
+1204:  MOVWF  23
+1206:  CALL   04A4
+120A:  DECFSZ 1C,F
+120C:  BRA    1202
+120E:  MOVLW  33
+1210:  MOVWF  05
+1212:  MOVLW  0B
+1214:  MOVWF  08
+1216:  MOVLW  0C
+1218:  MOVWF  22
+121A:  CALL   0636
+....................             clave[0]=0;clave[1]=0;clave[2]=0;clave[3]=0;} 
+121E:  CLRF   14
+1220:  CLRF   15
+1222:  CLRF   16
+1224:  CLRF   17
+....................          else 
+1226:  BRA    12A2
+....................          {lcd_gotoxy(1,1); 
+1228:  MOVLW  01
+122A:  MOVWF  23
+122C:  MOVWF  24
+122E:  CALL   05DE
+....................             printf(lcd_putc,"                    "); 
+1232:  MOVLW  B2
+1234:  MOVWF  FF6
+1236:  MOVLW  03
+1238:  MOVWF  FF7
+123A:  CALL   068A
+....................             lcd_gotoxy(1,2); 
+123E:  MOVLW  01
+1240:  MOVWF  23
+1242:  MOVLW  02
+1244:  MOVWF  24
+1246:  CALL   05DE
+....................             printf(lcd_putc,"     Contraseña     "); 
+124A:  MOVLW  C8
+124C:  MOVWF  FF6
+124E:  MOVLW  03
+1250:  MOVWF  FF7
+1252:  CALL   068A
+....................             lcd_gotoxy(1,3); 
+1256:  MOVLW  01
+1258:  MOVWF  23
+125A:  MOVLW  03
+125C:  MOVWF  24
+125E:  CALL   05DE
+....................             printf(lcd_putc,"     Incorrecta     "); 
+1262:  MOVLW  DE
+1264:  MOVWF  FF6
+1266:  MOVLW  03
+1268:  MOVWF  FF7
+126A:  CALL   068A
+....................             lcd_gotoxy(1,4); 
+126E:  MOVLW  01
+1270:  MOVWF  23
+1272:  MOVLW  04
+1274:  MOVWF  24
+1276:  CALL   05DE
+....................             printf(lcd_putc,"                    "); 
+127A:  MOVLW  F4
+127C:  MOVWF  FF6
+127E:  MOVLW  03
+1280:  MOVWF  FF7
+1282:  CALL   068A
+....................             delay_ms(500);unidad=11;printf(lcd_putc,"\f");} 
+1286:  MOVLW  02
+1288:  MOVWF  1C
+128A:  MOVLW  FA
+128C:  MOVWF  23
+128E:  CALL   04A4
+1292:  DECFSZ 1C,F
+1294:  BRA    128A
+1296:  MOVLW  0B
+1298:  MOVWF  08
+129A:  MOVLW  0C
+129C:  MOVWF  22
+129E:  CALL   0636
+....................        } 
+....................                 
+....................           if(unidad>11&&unidad<14) 
+12A2:  MOVF   08,W
+12A4:  SUBLW  0B
+12A6:  BC    12C6
+12A8:  MOVF   08,W
+12AA:  SUBLW  0D
+12AC:  BNC   12C6
+....................           { lcd_gotoxy(unidad-1,4);// Para mostrar cursor. 
+12AE:  MOVLW  01
+12B0:  SUBWF  08,W
+12B2:  MOVWF  1C
+12B4:  MOVWF  23
+12B6:  MOVLW  04
+12B8:  MOVWF  24
+12BA:  CALL   05DE
+....................             lcd_putc(t[1]); 
+12BE:  MOVFF  12,22
+12C2:  CALL   0636
+....................           } 
+....................    }       
+.................... //----------------Fin-Menu4--------------------------------------------------------------- 
+....................  
+.................... //----------------Menu5.1--------------------------------------------------------------- 
+....................    if(Menu == 51){ // Menu cuando ingresa correctamente la contraseña, permite que digite nueva contraseña. 
+12C6:  MOVF   05,W
+12C8:  SUBLW  33
+12CA:  BTFSS  FD8.2
+12CC:  BRA    15DC
+....................    lcd_gotoxy(1,1); 
+12CE:  MOVLW  01
+12D0:  MOVWF  23
+12D2:  MOVWF  24
+12D4:  CALL   05DE
+....................    printf(lcd_putc,"     Ingrese        "); 
+12D8:  MOVLW  0A
+12DA:  MOVWF  FF6
+12DC:  MOVLW  04
+12DE:  MOVWF  FF7
+12E0:  CALL   068A
+....................    lcd_gotoxy(1,2); 
+12E4:  MOVLW  01
+12E6:  MOVWF  23
+12E8:  MOVLW  02
+12EA:  MOVWF  24
+12EC:  CALL   05DE
+....................    printf(lcd_putc,"  Contraseña Nueva  "); 
+12F0:  MOVLW  20
+12F2:  MOVWF  FF6
+12F4:  MOVLW  04
+12F6:  MOVWF  FF7
+12F8:  CALL   068A
+....................    lcd_gotoxy(1,3); 
+12FC:  MOVLW  01
+12FE:  MOVWF  23
+1300:  MOVLW  03
+1302:  MOVWF  24
+1304:  CALL   05DE
+....................    printf(lcd_putc,"    CLAVE=%i%i%i%i  ",clave[0],clave[1],clave[2],clave[3]); 
+1308:  MOVLW  36
+130A:  MOVWF  FF6
+130C:  MOVLW  04
+130E:  MOVWF  FF7
+1310:  MOVLW  0A
+1312:  MOVWF  1C
+1314:  CALL   06AA
+1318:  MOVFF  14,1C
+131C:  MOVLW  1F
+131E:  MOVWF  1D
+1320:  CALL   06F0
+1324:  MOVFF  15,1C
+1328:  MOVLW  1F
+132A:  MOVWF  1D
+132C:  CALL   06F0
+1330:  MOVFF  16,1C
+1334:  MOVLW  1F
+1336:  MOVWF  1D
+1338:  CALL   06F0
+133C:  MOVFF  17,1C
+1340:  MOVLW  1F
+1342:  MOVWF  1D
+1344:  CALL   06F0
+1348:  MOVLW  20
+134A:  MOVWF  22
+134C:  CALL   0636
+1350:  MOVLW  20
+1352:  MOVWF  22
+1354:  CALL   0636
+....................     
+....................        
+....................    if(UP)//Si oprime hacia arriba 
+1358:  BSF    F92.0
+135A:  BTFSS  F80.0
+135C:  BRA    1380
+....................       {  if(Flanco == 0)  
+135E:  BTFSC  0E.3
+1360:  BRA    137E
+....................             {clave[unidad-11]++;Flanco = 1;delay_ms(30);}} 
+1362:  MOVLW  0B
+1364:  SUBWF  08,W
+1366:  CLRF   03
+1368:  ADDLW  14
+136A:  MOVWF  FE9
+136C:  MOVLW  00
+136E:  ADDWFC 03,W
+1370:  MOVWF  FEA
+1372:  INCF   FEF,F
+1374:  BSF    0E.3
+1376:  MOVLW  1E
+1378:  MOVWF  23
+137A:  CALL   04A4
+....................          else 
+137E:  BRA    1382
+....................             {Flanco = 0;} 
+1380:  BCF    0E.3
+....................              
+....................       if(DOWN)//Si oprime hacia abajo 
+1382:  BSF    F92.1
+1384:  BTFSS  F80.1
+1386:  BRA    13AA
+....................       {  if(Flanco2 == 0)  
+1388:  BTFSC  0E.5
+138A:  BRA    13A8
+....................             {clave[unidad-11]--;Flanco2 = 1;delay_ms(30);}} 
+138C:  MOVLW  0B
+138E:  SUBWF  08,W
+1390:  CLRF   03
+1392:  ADDLW  14
+1394:  MOVWF  FE9
+1396:  MOVLW  00
+1398:  ADDWFC 03,W
+139A:  MOVWF  FEA
+139C:  DECF   FEF,F
+139E:  BSF    0E.5
+13A0:  MOVLW  1E
+13A2:  MOVWF  23
+13A4:  CALL   04A4
+....................          else 
+13A8:  BRA    13AC
+....................             {Flanco2 = 0;} 
+13AA:  BCF    0E.5
+....................     
+....................       if(RIGHT)// Si oprime Derecha 
+13AC:  BSF    F92.2
+13AE:  BTFSS  F80.2
+13B0:  BRA    13CC
+....................       {  if(Flanco1 == 0)  
+13B2:  BTFSC  0E.4
+13B4:  BRA    13CA
+....................             {Flanco1 = 1;unidad++;delay_ms(30);printf(lcd_putc,"\f");}} 
+13B6:  BSF    0E.4
+13B8:  INCF   08,F
+13BA:  MOVLW  1E
+13BC:  MOVWF  23
+13BE:  CALL   04A4
+13C2:  MOVLW  0C
+13C4:  MOVWF  22
+13C6:  CALL   0636
+....................          else 
+13CA:  BRA    13CE
+....................             {Flanco1 = 0;}    
+13CC:  BCF    0E.4
+....................              
+....................        if(LEFT)// Si oprime Izquierda 
+13CE:  BSF    F92.3
+13D0:  BTFSS  F80.3
+13D2:  BRA    13EE
+....................       {  if(Flanco3 == 0)  
+13D4:  BTFSC  0E.6
+13D6:  BRA    13EC
+....................             {Flanco3 = 1;unidad--;delay_ms(30);printf(lcd_putc,"\f");}} 
+13D8:  BSF    0E.6
+13DA:  DECF   08,F
+13DC:  MOVLW  1E
+13DE:  MOVWF  23
+13E0:  CALL   04A4
+13E4:  MOVLW  0C
+13E6:  MOVWF  22
+13E8:  CALL   0636
+....................          else 
+13EC:  BRA    13F0
+....................             {Flanco3 = 0;}     
+13EE:  BCF    0E.6
+....................              
+....................        if(clave[unidad-11]<0)// Si la unidad donde se encuentra ubicado el cursor es menor que 0 pasa a 9.      
+13F0:  MOVLW  0B
+13F2:  SUBWF  08,W
+13F4:  CLRF   03
+13F6:  ADDLW  14
+13F8:  MOVWF  FE9
+13FA:  MOVLW  00
+13FC:  ADDWFC 03,W
+13FE:  MOVWF  FEA
+1400:  BTFSC  FEF.7
+1402:  BRA    1406
+1404:  BRA    141A
+....................        {clave[unidad-11]=9;} 
+1406:  MOVLW  0B
+1408:  SUBWF  08,W
+140A:  CLRF   03
+140C:  ADDLW  14
+140E:  MOVWF  FE9
+1410:  MOVLW  00
+1412:  ADDWFC 03,W
+1414:  MOVWF  FEA
+1416:  MOVLW  09
+1418:  MOVWF  FEF
+....................        if(clave[unidad-11]>9)// Si la unidad donde se encuentra ubicado el cursor es mayor que 9 pasa a 0.      
+141A:  MOVLW  0B
+141C:  SUBWF  08,W
+141E:  CLRF   03
+1420:  ADDLW  14
+1422:  MOVWF  FE9
+1424:  MOVLW  00
+1426:  ADDWFC 03,W
+1428:  MOVWF  FEA
+142A:  BTFSC  FEF.7
+142C:  BRA    1446
+142E:  MOVF   FEF,W
+1430:  SUBLW  09
+1432:  BC    1446
+....................        {clave[unidad-11]=0;} 
+1434:  MOVLW  0B
+1436:  SUBWF  08,W
+1438:  CLRF   03
+143A:  ADDLW  14
+143C:  MOVWF  FE9
+143E:  MOVLW  00
+1440:  ADDWFC 03,W
+1442:  MOVWF  FEA
+1444:  CLRF   FEF
+....................        if(unidad<11) 
+1446:  MOVF   08,W
+1448:  SUBLW  0A
+144A:  BNC   1454
+....................        {Menu=5;unidad=11;} 
+144C:  MOVLW  05
+144E:  MOVWF  05
+1450:  MOVLW  0B
+1452:  MOVWF  08
+....................        lcd_gotoxy(unidad,4);// Para mostrar la flecha de seleccion 
+1454:  MOVFF  08,23
+1458:  MOVLW  04
+145A:  MOVWF  24
+145C:  CALL   05DE
+....................        lcd_putc(t[2]); 
+1460:  MOVFF  13,22
+1464:  CALL   0636
+....................        if(unidad>14)// Si ya ingreso la nueva contraseña. 
+1468:  MOVF   08,W
+146A:  SUBLW  0E
+146C:  BTFSC  FD8.0
+146E:  BRA    15B8
+....................        { 
+....................             lcd_gotoxy(1,1); 
+1470:  MOVLW  01
+1472:  MOVWF  23
+1474:  MOVWF  24
+1476:  CALL   05DE
+....................             printf(lcd_putc,"                    "); 
+147A:  MOVLW  4C
+147C:  MOVWF  FF6
+147E:  MOVLW  04
+1480:  MOVWF  FF7
+1482:  CALL   068A
+....................             lcd_gotoxy(1,2); 
+1486:  MOVLW  01
+1488:  MOVWF  23
+148A:  MOVLW  02
+148C:  MOVWF  24
+148E:  CALL   05DE
+....................             printf(lcd_putc,"     Contraseña     "); 
+1492:  MOVLW  62
+1494:  MOVWF  FF6
+1496:  MOVLW  04
+1498:  MOVWF  FF7
+149A:  CALL   068A
+....................             lcd_gotoxy(1,3); 
+149E:  MOVLW  01
+14A0:  MOVWF  23
+14A2:  MOVLW  03
+14A4:  MOVWF  24
+14A6:  CALL   05DE
+....................             printf(lcd_putc,"     Almacenada     "); 
+14AA:  MOVLW  78
+14AC:  MOVWF  FF6
+14AE:  MOVLW  04
+14B0:  MOVWF  FF7
+14B2:  CALL   068A
+....................             lcd_gotoxy(1,4); 
+14B6:  MOVLW  01
+14B8:  MOVWF  23
+14BA:  MOVLW  04
+14BC:  MOVWF  24
+14BE:  CALL   05DE
+....................             printf(lcd_putc,"                    "); 
+14C2:  MOVLW  8E
+14C4:  MOVWF  FF6
+14C6:  MOVLW  04
+14C8:  MOVWF  FF7
+14CA:  CALL   068A
+....................             write_eeprom(0,clave[0]);delay_ms(20);write_eeprom(1,clave[1]);delay_ms(20); 
+14CE:  CLRF   FA9
+14D0:  MOVFF  14,FA8
+14D4:  BCF    FA6.6
+14D6:  BCF    FA6.7
+14D8:  BSF    FA6.2
+14DA:  MOVF   FF2,W
+14DC:  MOVWF  00
+14DE:  BCF    FF2.7
+14E0:  MOVLB  F
+14E2:  MOVLW  55
+14E4:  MOVWF  FA7
+14E6:  MOVLW  AA
+14E8:  MOVWF  FA7
+14EA:  BSF    FA6.1
+14EC:  BTFSC  FA6.1
+14EE:  BRA    14EC
+14F0:  BCF    FA6.2
+14F2:  MOVF   00,W
+14F4:  IORWF  FF2,F
+14F6:  MOVLW  14
+14F8:  MOVWF  23
+14FA:  MOVLB  0
+14FC:  CALL   04A4
+1500:  MOVLW  01
+1502:  MOVWF  FA9
+1504:  MOVFF  15,FA8
+1508:  BCF    FA6.6
+150A:  BCF    FA6.7
+150C:  BSF    FA6.2
+150E:  MOVF   FF2,W
+1510:  MOVWF  00
+1512:  BCF    FF2.7
+1514:  MOVLB  F
+1516:  MOVLW  55
+1518:  MOVWF  FA7
+151A:  MOVLW  AA
+151C:  MOVWF  FA7
+151E:  BSF    FA6.1
+1520:  BTFSC  FA6.1
+1522:  BRA    1520
+1524:  BCF    FA6.2
+1526:  MOVF   00,W
+1528:  IORWF  FF2,F
+152A:  MOVLW  14
+152C:  MOVWF  23
+152E:  MOVLB  0
+1530:  CALL   04A4
+....................             write_eeprom(2,clave[2]);delay_ms(20);write_eeprom(3,clave[3]);delay_ms(20); 
+1534:  MOVLW  02
+1536:  MOVWF  FA9
+1538:  MOVFF  16,FA8
+153C:  BCF    FA6.6
+153E:  BCF    FA6.7
+1540:  BSF    FA6.2
+1542:  MOVF   FF2,W
+1544:  MOVWF  00
+1546:  BCF    FF2.7
+1548:  MOVLB  F
+154A:  MOVLW  55
+154C:  MOVWF  FA7
+154E:  MOVLW  AA
+1550:  MOVWF  FA7
+1552:  BSF    FA6.1
+1554:  BTFSC  FA6.1
+1556:  BRA    1554
+1558:  BCF    FA6.2
+155A:  MOVF   00,W
+155C:  IORWF  FF2,F
+155E:  MOVLW  14
+1560:  MOVWF  23
+1562:  MOVLB  0
+1564:  CALL   04A4
+1568:  MOVLW  03
+156A:  MOVWF  FA9
+156C:  MOVFF  17,FA8
+1570:  BCF    FA6.6
+1572:  BCF    FA6.7
+1574:  BSF    FA6.2
+1576:  MOVF   FF2,W
+1578:  MOVWF  00
+157A:  BCF    FF2.7
+157C:  MOVLB  F
+157E:  MOVLW  55
+1580:  MOVWF  FA7
+1582:  MOVLW  AA
+1584:  MOVWF  FA7
+1586:  BSF    FA6.1
+1588:  BTFSC  FA6.1
+158A:  BRA    1588
+158C:  BCF    FA6.2
+158E:  MOVF   00,W
+1590:  IORWF  FF2,F
+1592:  MOVLW  14
+1594:  MOVWF  23
+1596:  MOVLB  0
+1598:  CALL   04A4
+....................             delay_ms(500);Menu=1;paso=0;Flecha=2;Flecha2=2; 
+159C:  MOVLW  02
+159E:  MOVWF  1C
+15A0:  MOVLW  FA
+15A2:  MOVWF  23
+15A4:  CALL   04A4
+15A8:  DECFSZ 1C,F
+15AA:  BRA    15A0
+15AC:  MOVLW  01
+15AE:  MOVWF  05
+15B0:  CLRF   0F
+15B2:  MOVLW  02
+15B4:  MOVWF  09
+15B6:  MOVWF  0B
+....................        } 
+....................        
+....................            if(unidad>11&&unidad<14) 
+15B8:  MOVF   08,W
+15BA:  SUBLW  0B
+15BC:  BC    15DC
+15BE:  MOVF   08,W
+15C0:  SUBLW  0D
+15C2:  BNC   15DC
+....................           { lcd_gotoxy(unidad-1,4);// Para mostrar cursor. 
+15C4:  MOVLW  01
+15C6:  SUBWF  08,W
+15C8:  MOVWF  1C
+15CA:  MOVWF  23
+15CC:  MOVLW  04
+15CE:  MOVWF  24
+15D0:  CALL   05DE
+....................             lcd_putc(t[1]); 
+15D4:  MOVFF  12,22
+15D8:  CALL   0636
+....................           } 
+....................    }       
+.................... //----------------Fin-Menu6.1--------------------------------------------------------------- 
+....................    } 
+15DC:  GOTO   09EC
+.................... } 
+....................  
+15E0:  SLEEP 
+
+Configuration Fuses:
+   Word  1: CE20   IESO FCMEN HSPLL PLL1 CPUDIV1 USBDIV
+   Word  2: 1E1E   BROWNOUT NOWDT BORV20 PUT WDT32768 NOVREGEN
+   Word  3: 8700   PBADEN CCP2C1 MCLR LPT1OSC
+   Word  4: 0081   STVREN NODEBUG NOLVP NOXINST NOICPRT
+   Word  5: C00F   NOPROTECT NOCPD NOCPB
+   Word  6: E00F   NOWRT NOWRTD NOWRTC NOWRTB
+   Word  7: 400F   NOEBTR NOEBTRB

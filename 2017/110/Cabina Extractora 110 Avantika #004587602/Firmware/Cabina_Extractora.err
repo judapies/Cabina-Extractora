@@ -1,0 +1,12 @@
+>>> Warning 207 "Cabina_Extractora.c" Line 1039(1,1): Code has no effect
+>>> Warning 207 "Cabina_Extractora.c" Line 1041(1,1): Code has no effect
+>>> Warning 207 "Cabina_Extractora.c" Line 1142(1,1): Code has no effect
+>>> Warning 207 "Cabina_Extractora.c" Line 1144(1,1): Code has no effect
+>>> Warning 202 "Cabina_Extractora.c" Line 41(59,60): Variable never used:   n
+>>> Warning 202 "Cabina_Extractora.c" Line 49(20,24): Variable never used:   zero
+>>> Warning 202 "Cabina_Extractora.c" Line 51(41,55): Variable never used:   t_iniciodamper
+>>> Warning 202 "Cabina_Extractora.c" Line 57(70,71): Variable never used:   K
+>>> Warning 202 "Cabina_Extractora.c" Line 59(7,19): Variable never used:   Tcalibracion
+>>> Warning 202 "Cabina_Extractora.c" Line 59(26,36): Variable never used:   correccion
+      Memory usage:   ROM=76%      RAM=13% - 15%
+      0 Errors,  10 Warnings.

@@ -1,0 +1,131 @@
+
+ROM used: 40430 (41%)
+          40430 (41%) including unused fragments
+
+          7 Average locations per line
+          18 Average locations per statement
+
+RAM used: 1496 (45%) at main() level
+          1563 (47%) worst case
+
+Stack used: 8 worst case (out of 31 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+ 1436  1311  58  Maestro_v2.c
+  461     0   0  C:\Program Files (x86)\PICC\Devices\18F4685.h
+ 2172   260  12  MATH.h
+  354    78   3  HDM64GS12.c
+  556   167   7  GRAPHICS.c
+  201     0   0  imagen.h
+   57    39   2  FuncionesDisplay.h
+  342   399  18  Funciones.h
+----- -----
+ 5579  2254 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     40   0   1             @delay_ms1
+0     32   0   1             @delay_us1
+0    902   1  20  1124 10.7  CEIL_FLOOR
+0    122   0  10             @FLT
+0     60   0   4             @SFTOI
+0     54   0   2             @ITOF
+0    350   0  14             @DIVFF
+0    632   1  16             @ADDFF
+0    246   0  11             @MULFF
+0     28   0   4    43  2.1  floor
+0     30   0   4    44  1.9  ceil
+0    358   0  16   257  7.2  fmod
+0   1040   1  22  1071  8.0  exp
+0     80   0   2             @SITOF
+0   1246   2  25  1228  9.9  log
+0    780   1  12   556  7.5  pow
+0    168   0   1   580  3.2  glcd_init
+0    184   0   7   609  5.4  glcd_update
+0    188   0   9   466  7.8  glcd_pixel
+0     90   0  10   317  4.7  glcd_fillScreen
+0     54   0   2   257  2.8  glcd_writeByte
+0    286   0   0             @const230
+0    250   0   0             @const233
+0    428   1  17  1475  8.8  glcd_line
+0    194   0   6  1036  5.8  glcd_rect
+0    450   1  20  1550 11.2  glcd_text57
+0   1052   1   0             @const309
+0   1052   1   0             @const312
+0   1052   1   0             @const315
+0    184   0  15   603  4.5  displayContrasena
+0     34   0   1             @SPRINTF
+0     44   0   3             @DIV88
+0    222   0   6             @PRINTF_D_330
+0    218   0  16   734  4.6  displayTiempo
+0    204   0   8   672  5.1  displayMenu
+0    254   0  19   737  4.5  displayfloat
+0     68   0   5             @FTOSD
+0    178   0  13             @DIV3232
+0    440   1  13             @PRINTF_L32D_330FPFPF
+0     62   0   3   128  1.0  sensores
+0    464   1  21   534  7.5  leeTemperatura
+0   1930   2   4  3537  3.9  LeeEEPROM
+0   2448   3   0  6925  5.0  LimitaValores
+0    130   0   1   650  3.8  VelocidadMotor
+0   1734   2   9  7953 10.6  PidePassword
+0     36   0   0             @const491
+0     40   0   0             @const493
+0     42   0   0             @const495
+0    254   0   1  1663  6.9  ext0
+0    522   1   6  1538  7.9  glcd_imagen
+0     34   0   5             @MUL1616
+0    974   1  11   808  9.0  LeerFlujoInFlow
+0  17148  21   4 78991 14.0  MAIN
+0     44   0   0             @const510
+0     36   0   0             @const511
+0     38   0   0             @const512
+0     46   0   0             @const514
+0     36   0   0             @const516
+0     44   0   0             @const519
+0     48   0   0             @const521
+0     38   0   0             @const523
+0     44   0   0             @const526
+0     40   0   0             @const528
+0     38   0   0             @const531
+0     36   0   0             @const532
+0     40   0   0             @const533
+0     44   0   0             @const534
+0     42   0   0             @const535
+0     42   0   0             @const536
+0     50   0   0             @const537
+0     46   0   0             @const539
+0     48   0   0             @const541
+0     52   0   0             @const543
+0     40   0   0             @const545
+0     34   0   0             @const546
+0     34   0   0             @const547
+0     44   0   0             @const552
+0     40   0   0             @const553
+0     40   0   0             @const554
+0     38   0   0             @const555
+0     42   0   0             @const556
+
+Program metrics:
+    Functions               29
+    Statements              2254
+    Comments                866
+    Volume (V)              149588
+    Difficilty (D)          184.2
+    Effort to implement (E) 27550160
+    Time to implement (T)   425 hours, 9 minutes
+    Est Delivered Bugs (B)  30
+    Cyclomatic Complexity   348
+    Maintainability (MI)    94
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-00006     0  4  
+00008-0009C   150  0  
+0009E-0FFFE  40276  25102  
+10000-17FFE     0  32768  
+
+
+

@@ -1,0 +1,4 @@
+>>> Warning 202 "Cabina_Extractora.c" Line 52(7,16): Variable never used:   ModoSleep
+>>> Warning 202 "Cabina_Extractora.c" Line 55(6,11): Variable never used:   letra
+      Memory usage:   ROM=72%      RAM=11% - 12%
+      0 Errors,  2 Warnings.

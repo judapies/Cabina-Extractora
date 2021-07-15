@@ -1,0 +1,187 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     lcdline
+005     Menu
+006     n_opcionH
+007     n_opcionL
+008     unidad
+009     Flecha
+00A     Flecha1
+00B     Flecha2
+00C     nMenuL
+00D     nMenuH
+00E.0   estadouv
+00E.1   estadofl
+00E.2   estadomv
+00E.3   Flanco
+00E.4   Flanco1
+00E.5   Flanco2
+00E.6   Flanco3
+00F     paso
+010     Velocidad
+011-013 t
+014-017 clave
+018-01B contrasena
+01C     @PSTRINGCN_95.P1
+01C     velocidades.x
+01C     @PRINTF_D_95.P1
+01C     lcd_init.i
+01C     MAIN.@SCRATCH1
+01D     @PRINTF_D_95.P1
+01D     mensajes.x
+01D     lcd_init.@SCRATCH1
+01D     MAIN.@SCRATCH2
+01D     @PSTRINGCN_95.@SCRATCH1
+01E     mensajes.y
+01E     @PSTRINGCN_95.@SCRATCH2
+01E     @PRINTF_D_95.@SCRATCH1
+01F     mensajes.@SCRATCH1
+01F     @PSTRINGC_95.@SCRATCH1
+01F     @PRINTF_D_95.@SCRATCH2
+020     @PSTRINGC_95.@SCRATCH2
+020     @PRINTF_D_95.@SCRATCH3
+021     @PRINTF_D_95.@SCRATCH4
+022     lcd_putc.c
+022     @DIV88.P1
+023     @delay_ms1.P1
+023     @DIV88.P2
+023     lcd_gotoxy.x
+024     lcd_gotoxy.y
+024     @DIV88.@SCRATCH1
+025     lcd_gotoxy.address
+026     lcd_send_byte.address
+027     lcd_send_byte.n
+028     lcd_read_byte.low
+028     lcd_send_byte.@SCRATCH1
+029     lcd_send_nibble.n
+029     lcd_read_byte.high
+02A     lcd_read_byte.@SCRATCH1
+F81     lcd
+F83     PSP_DATA
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB     CCP_2_LOW
+FBB     CCP_2
+FBC     CCP_2_HIGH
+FBE     CCP_1_LOW
+FBE     CCP_1
+FBF     CCP_1_HIGH
+FE1-FE2 @WRITE_PACKED_MEMORY.P1
+FE1-FE2 @READ_PACKED_MEMORY.P2
+FE9-FEA @READ_PROGRAM_MEMORY.P1
+FE9-FEA @WRITE_PROGRAM_MEMORY.P2
+FE9-FEA @READ_PACKED_MEMORY.P3
+FE9-FEA @WRITE_PACKED_MEMORY.P4
+FF6-FF8 @READ_PROGRAM_MEMORY.P1
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+04A4  @delay_ms1
+0004  LCD_INIT_STRING
+04E4  lcd_read_byte
+04CC  lcd_send_nibble
+051C  lcd_send_byte
+0552  lcd_init
+05AA  lcd_gotoxy
+05E0  @goto10088
+0602  lcd_putc
+0784  mensajes
+0018  @const125
+0656  @PSTRINGC_95
+002C  @const127
+0040  @const128
+0054  @const129
+0068  @const130
+080A  velocidades
+0876  MAIN
+007C  @const135
+0092  @const136
+00A8  @const137
+00BE  @const138
+00D4  @const140
+00EA  @const141
+0100  @const142
+0676  @PSTRINGCN_95
+0694  @DIV88
+06BC  @PRINTF_D_95
+0116  @const153
+012A  @const154
+013E  @const155
+0152  @const156
+0166  @const159
+017A  @const160
+018E  @const161
+01A2  @const163
+01B8  @const165
+01CE  @const166
+01E4  @const167
+01FA  @const168
+0210  @const169
+0226  @const170
+023C  @const171
+0252  @const172
+0268  @const174
+027E  @const175
+0294  @const176
+02AA  @const177
+02C0  @const178
+02D6  @const179
+02EC  @const180
+0302  @const181
+0318  @const183
+032E  @const184
+0344  @const185
+035A  @const188
+0370  @const189
+0386  @const190
+039C  @const191
+03B2  @const193
+03C8  @const194
+03DE  @const195
+03F4  @const196
+040A  @const198
+0420  @const199
+0436  @const200
+044C  @const203
+0462  @const204
+0478  @const205
+048E  @const206
+0876  @cinit
+
+
+User Memory space: 
+
+User Memory space: 
+
+Project Directory:
+    E:\JP\JP\Laboratorio\Cabina Extractora de Gases y  Humos\2015\Cabina Extractora 150 - Cenipalma Cumaral\Firmware\
+
+Project Files:
+    Cabina_Extractora_150.c
+    C:\Program Files\PICC\Devices\18F4550.h
+    LCD420.c
+
+Units:
+    E:\JP\JP\Laboratorio\Cabina Extractora de Gases y  Humos\2015\Cabina Extractora 150 - Cenipalma Cumaral\Firmware\Cabina_Extractora_150 (main)
+
+Compiler Settings:
+    Processor:      PIC18F4550
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      Cabina_Extractora_150.err
+    Ext Symbols: Cabina_Extractora_150.esym
+    INHX32:      Cabina_Extractora_150.hex
+    Symbols:     Cabina_Extractora_150.sym
+    List:        Cabina_Extractora_150.lst
+    Debug/COFF:  Cabina_Extractora_150.cof
+    Project:     Cabina_Extractora_150.PJT
+    Call Tree:   Cabina_Extractora_150.tre
+    Statistics:  Cabina_Extractora_150.sta

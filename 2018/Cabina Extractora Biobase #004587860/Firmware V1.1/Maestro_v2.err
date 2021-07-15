@@ -1,0 +1,3 @@
+>>> Warning 202 "Maestro_v2.c" Line 47(51,56): Variable never used:   Motor
+      Memory usage:   ROM=36%      RAM=49% - 50%
+      0 Errors,  1 Warnings.

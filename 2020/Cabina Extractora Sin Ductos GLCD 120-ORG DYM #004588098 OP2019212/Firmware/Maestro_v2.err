@@ -1,0 +1,13 @@
+>>> Warning 202 "Maestro_v2.c" Line 31(114,125): Variable never used:   flag_alarma
+>>> Warning 202 "Maestro_v2.c" Line 34(72,74): Variable never used:   UV
+>>> Warning 202 "Maestro_v2.c" Line 37(61,68): Variable never used:   Perdida
+>>> Warning 202 "Maestro_v2.c" Line 39(6,7): Variable never used:   q
+>>> Warning 202 "Maestro_v2.c" Line 39(10,11): Variable never used:   r
+>>> Warning 202 "Maestro_v2.c" Line 53(18,26): Variable never used:   Downflow
+>>> Warning 202 "Maestro_v2.c" Line 54(31,41): Variable never used:   x_cuadrado
+>>> Warning 202 "Maestro_v2.c" Line 54(46,52): Variable never used:   x_cubo
+>>> Warning 202 "Maestro_v2.c" Line 61(7,18): Variable never used:   PromPresion
+>>> Warning 202 "Maestro_v2.c" Line 63(7,9): Variable never used:   V1
+>>> Warning 202 "Maestro_v2.c" Line 63(14,21): Variable never used:   Presion
+      Memory usage:   ROM=41%      RAM=45% - 47%
+      0 Errors,  11 Warnings.

@@ -1,0 +1,27 @@
+>>> Warning 202 "Esclavo 1_v2.c" Line 35(7,18): Variable never used:   EnvioMaster
+>>> Warning 202 "Esclavo 1_v2.c" Line 36(7,22): Variable never used:   SolicitudMaster
+>>> Warning 202 "Esclavo 1_v2.c" Line 40(6,7): Variable never used:   h
+>>> Warning 202 "Esclavo 1_v2.c" Line 40(10,11): Variable never used:   l
+>>> Warning 202 "Esclavo 1_v2.c" Line 40(14,28): Variable never used:   posicionvector
+>>> Warning 202 "Esclavo 1_v2.c" Line 40(31,32): Variable never used:   r
+>>> Warning 202 "Esclavo 1_v2.c" Line 40(35,36): Variable never used:   q
+>>> Warning 202 "Esclavo 1_v2.c" Line 41(7,9): Variable never used:   V0
+>>> Warning 202 "Esclavo 1_v2.c" Line 41(14,16): Variable never used:   V2
+>>> Warning 202 "Esclavo 1_v2.c" Line 41(21,23): Variable never used:   V3
+>>> Warning 202 "Esclavo 1_v2.c" Line 41(28,31): Variable never used:   RPM
+>>> Warning 202 "Esclavo 1_v2.c" Line 41(36,38): Variable never used:   pH
+>>> Warning 202 "Esclavo 1_v2.c" Line 41(43,45): Variable never used:   OD
+>>> Warning 202 "Esclavo 1_v2.c" Line 42(7,9): Variable never used:   R1
+>>> Warning 202 "Esclavo 1_v2.c" Line 42(17,19): Variable never used:   Pt
+>>> Warning 202 "Esclavo 1_v2.c" Line 42(20,24): Variable never used:   Prom
+>>> Warning 202 "Esclavo 1_v2.c" Line 42(29,40): Variable never used:   Temperature
+>>> Warning 202 "Esclavo 1_v2.c" Line 43(7,15): Variable never used:   promedio
+>>> Warning 202 "Esclavo 1_v2.c" Line 44(7,14): Variable never used:   pulsos1
+>>> Warning 202 "Esclavo 1_v2.c" Line 45(7,17): Variable never used:   rpm_actual
+>>> Warning 202 "Esclavo 1_v2.c" Line 45(22,30): Variable never used:   n_pulsos
+>>> Warning 202 "Esclavo 1_v2.c" Line 46(16,20): Variable never used:   pwm1
+>>> Warning 202 "Esclavo 1_v2.c" Line 46(23,27): Variable never used:   pwm2
+>>> Warning 202 "Esclavo 1_v2.c" Line 47(63,75): Variable never used:   Vidrio_abajo
+>>> Warning 202 "Esclavo 1_v2.c" Line 47(78,87): Variable never used:   Vidrio_ok
+      Memory usage:   ROM=10%      RAM=24% - 25%
+      0 Errors,  25 Warnings.

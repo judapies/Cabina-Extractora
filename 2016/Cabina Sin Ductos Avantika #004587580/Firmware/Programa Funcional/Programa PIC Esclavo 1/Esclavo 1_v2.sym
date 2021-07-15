@@ -1,0 +1,183 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @INTERRUPT_AREA
+005     @INTERRUPT_AREA
+006     @INTERRUPT_AREA
+007     @INTERRUPT_AREA
+008     @INTERRUPT_AREA
+009     @INTERRUPT_AREA
+00A     @INTERRUPT_AREA
+00B     @INTERRUPT_AREA
+00C     @INTERRUPT_AREA
+00D     @INTERRUPT_AREA
+00E     @INTERRUPT_AREA
+00F     @INTERRUPT_AREA
+010     @INTERRUPT_AREA
+011     @INTERRUPT_AREA
+012     @INTERRUPT_AREA
+013     @INTERRUPT_AREA
+014     @INTERRUPT_AREA
+015     @INTERRUPT_AREA
+016     fstate
+017     posicion
+018-027 buffer
+028-038 txbuf
+039-049 rxbuf
+04A.0   EnvioMaster
+04A.1   SolicitudMaster
+04A.2   capturar
+04B-04C tiempos
+04D-04E tiempos2
+04F     h
+050     l
+051     posicionvector
+052     r
+053     q
+054     tmp
+055-058 V0
+059-05C V2
+05D-060 V3
+061-064 RPM
+065-068 pH
+069-06C OD
+06D-070 R1
+071-074 Pt
+075-078 Prom
+079-07C Temperature
+07D-1BC promedio
+1BD-1C0 pulsos1
+1C1-1C4 rpm_actual
+1C5-1C8 n_pulsos
+1C9-1CC Inflowpic
+1CD-1CE pwm1
+1CF-1D0 pwm2
+1D1     Inflow_l
+1D2     Inflow_h
+1D3     Downflow_l
+1D4     Downflow_h
+1D5     Vidrio_abajo
+1D6     Vidrio_ok
+1D7     Filtro_Inflow_l
+1D8     Filtro_Inflow_h
+1D9     Filtro_Downflow_l
+1DA     Filtro_Downflow_h
+1DB-1DC Inflow
+1DD-1DE Downflow
+1DF-1E0 Filtro_Inflow
+1E1-1E2 Filtro_Downflow
+1E3     @I2C_STATE
+1E4     sensores.x
+1E4     LeerVidrioAbajo.@SCRATCH1
+1E4     LeerVidriook.@SCRATCH1
+1E4     MAIN.@SCRATCH1
+1E5-1E6 sensores.y
+1E5     LeerVidrioAbajo.@SCRATCH2
+1E5     LeerVidriook.@SCRATCH2
+1E5     MAIN.@SCRATCH2
+1E7     @delay_ms1.P1
+1E8-1EB @FLT.P1
+1E8     ssp_interupt.incoming
+1E8-1EB @DIVFF.P1
+1E8     controlar_flujo.@SCRATCH1
+1E9     ssp_interupt.@SCRATCH1
+1E9     controlar_flujo.@SCRATCH2
+1EA     @I2C_WRITE_1.P1
+1EA     ssp_interupt.@SCRATCH2
+1EA     controlar_flujo.@SCRATCH3
+1EB     controlar_flujo.@SCRATCH4
+1EC-1EF @ADDFF.P1
+1EC-1EF @FLT.P2
+1EC-1EF @DIVFF.P3
+1EC-1ED @ITOF.P4
+1F0-1F3 @ADDFF.P1
+1F0     @FLT.@SCRATCH1
+1F0     @DIVFF.@SCRATCH1
+1F1     @FLT.@SCRATCH2
+1F1     @DIVFF.@SCRATCH2
+1F2     @DIVFF.@SCRATCH3
+1F3     @DIVFF.@SCRATCH4
+1F4     @DIVFF.@SCRATCH5
+1F4     @ADDFF.@SCRATCH1
+1F5     @DIVFF.@SCRATCH6
+1F5     @ADDFF.@SCRATCH2
+1F6     @ADDFF.@SCRATCH3
+1F7     @ADDFF.@SCRATCH4
+1F8     @ADDFF.@SCRATCH5
+1F9     @ADDFF.@SCRATCH6
+1FA     @ADDFF.@SCRATCH7
+1FB     @ADDFF.@SCRATCH8
+F83     PSP_DATA
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB     CCP_2_LOW
+FBB     CCP_2
+FBC     CCP_2_HIGH
+FBE     CCP_1_LOW
+FBE     CCP_1
+FBF     CCP_1_HIGH
+FE1-FE2 @WRITE_PACKED_MEMORY.P1
+FE1-FE2 @READ_PACKED_MEMORY.P2
+FE9-FEA @READ_PROGRAM_MEMORY.P1
+FE9-FEA @WRITE_PACKED_MEMORY.P2
+FE9-FEA @WRITE_PROGRAM_MEMORY.P3
+FE9-FEA @READ_PACKED_MEMORY.P4
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P1
+FF6-FF8 @READ_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+06E2  @delay_ms1
+053C  @FLT
+012C  @ITOF
+0162  @DIVFF
+02C2  @ADDFF
+00A2  @I2C_WRITE_1
+070E  sensores
+00BA  ssp_interupt
+05B6  controlar_flujo
+06A8  temp1s
+07BC  LeerInflow
+074A  LeerDownflow
+07E0  LeerVidrioAbajo
+0812  LeerVidriook
+0796  LeerFiltroInflow
+0770  LeerFiltroDownflow
+0844  MAIN
+0844  @cinit
+
+
+User Memory space: 
+
+User Memory space: 
+
+Project Directory:
+    F:\CFLV90 Cabina Especial AVANTIKA\Firmware\Programa Funcional\Programa PIC Esclavo 1\
+
+Project Files:
+    Esclavo 1_v2.c
+    C:\Program Files\PICC\Devices\18F4550.h
+    math.h
+
+Units:
+    F:\CFLV90 Cabina Especial AVANTIKA\Firmware\Programa Funcional\Programa PIC Esclavo 1\Esclavo 1_v2 (main)
+
+Compiler Settings:
+    Processor:      PIC18F4550
+    Pointer Size:   16
+    ADC Range:      0-1023
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      Esclavo 1_v2.err
+    Ext Symbols: Esclavo 1_v2.esym
+    INHX32:      Esclavo 1_v2.hex
+    Symbols:     Esclavo 1_v2.sym
+    List:        Esclavo 1_v2.lst
+    Debug/COFF:  Esclavo 1_v2.cof
+    Project:     Esclavo 1_v2.PJT
+    Call Tree:   Esclavo 1_v2.tre
+    Statistics:  Esclavo 1_v2.sta

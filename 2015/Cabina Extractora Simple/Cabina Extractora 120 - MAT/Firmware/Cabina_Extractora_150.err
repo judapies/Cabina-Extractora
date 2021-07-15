@@ -1,0 +1,9 @@
+>>> Warning 202 "Cabina_Extractora_150.c" Line 37(14,23): Variable never used:   n_opcionH
+>>> Warning 202 "Cabina_Extractora_150.c" Line 37(26,35): Variable never used:   n_opcionL
+>>> Warning 202 "Cabina_Extractora_150.c" Line 37(57,64): Variable never used:   Flecha1
+>>> Warning 202 "Cabina_Extractora_150.c" Line 37(78,84): Variable never used:   nMenuL
+>>> Warning 202 "Cabina_Extractora_150.c" Line 37(88,94): Variable never used:   nMenuH
+>>> Warning 202 "Cabina_Extractora_150.c" Line 38(7,15): Variable never used:   estadouv
+>>> Warning 202 "Cabina_Extractora_150.c" Line 39(22,31): Variable never used:   Velocidad
+      Memory usage:   ROM=17%      RAM=1% - 2%
+      0 Errors,  7 Warnings.

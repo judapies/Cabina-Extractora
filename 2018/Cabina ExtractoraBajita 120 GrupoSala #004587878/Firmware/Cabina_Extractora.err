@@ -1,0 +1,14 @@
+>>> Warning 215 "H:\JP\JP\Laboratorio\Cabina Extractora de Gases y  Humos\2018\Cabina ExtractoraBajita 120 GrupoSala #0045878XX\Firmware\Funciones.h" Line 257(1,1): Undefined identifier   DAMPER
+>>> Warning 202 "Cabina_Extractora.c" Line 48(15,23): Variable never used:   Decimal1
+>>> Warning 202 "Cabina_Extractora.c" Line 48(26,34): Variable never used:   Decimal2
+>>> Warning 202 "Cabina_Extractora.c" Line 50(6,20): Variable never used:   FeedbackDamper
+>>> Warning 202 "Cabina_Extractora.c" Line 57(20,32): Variable never used:   zero_fabrica
+>>> Warning 202 "Cabina_Extractora.c" Line 58(7,16): Variable never used:   ModoSleep
+>>> Warning 202 "Cabina_Extractora.c" Line 58(73,83): Variable never used:   ModoManual
+>>> Warning 202 "Cabina_Extractora.c" Line 58(86,94): Variable never used:   ModoAuto
+>>> Warning 202 "Cabina_Extractora.c" Line 58(97,105): Variable never used:   ModoSemi
+>>> Warning 202 "Cabina_Extractora.c" Line 59(41,46): Variable never used:   Dif16
+>>> Warning 202 "Cabina_Extractora.c" Line 61(6,11): Variable never used:   letra
+>>> Warning 202 "Cabina_Extractora.c" Line 64(83,92): Variable never used:   Temporal2
+      Memory usage:   ROM=54%      RAM=10% - 12%
+      0 Errors,  12 Warnings.

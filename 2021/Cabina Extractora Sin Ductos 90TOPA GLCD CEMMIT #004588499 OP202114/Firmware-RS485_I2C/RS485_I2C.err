@@ -1,0 +1,9 @@
+>>> Warning 206 "D:\Laboratorio\Cabina Extractora de Gases y  Humos\2021\Cabina Extractora Sin Ductos 90TOPA GLCD CEMMIT #0045884XX OP202114\Firmware-RS485_I2C\modbus.c" Line 712(1,1): Variable of this data type is never greater than this constant
+>>> Warning 204 "D:\Laboratorio\Cabina Extractora de Gases y  Humos\2021\Cabina Extractora Sin Ductos 90TOPA GLCD CEMMIT #0045884XX OP202114\Firmware-RS485_I2C\modbus.c" Line 712(1,1): Condition always FALSE
+>>> Warning 216 "RS485_I2C.c" Line 301(0,1): Interrupts disabled during call to prevent re-entrancy:  (modbus_calc_crc)
+>>> Warning 202 "D:\Laboratorio\Cabina Extractora de Gases y  Humos\2021\Cabina Extractora Sin Ductos 90TOPA GLCD CEMMIT #0045884XX OP202114\Firmware-RS485_I2C\modbus.c" Line 236(8,11): Variable never used:   rs232_errors
+>>> Warning 202 "RS485_I2C.c" Line 40(80,91): Variable never used:   address_ant
+>>> Warning 202 "RS485_I2C.c" Line 40(94,101): Variable never used:   reg_ant
+>>> Warning 202 "RS485_I2C.c" Line 41(27,35): Variable never used:   temporal
+      Memory usage:   ROM=7%      RAM=60% - 61%
+      0 Errors,  7 Warnings.

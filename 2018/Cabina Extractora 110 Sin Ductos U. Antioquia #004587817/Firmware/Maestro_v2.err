@@ -1,0 +1,35 @@
+>>> Warning 202 "Maestro_v2.c" Line 40(46,53): Variable never used:   Flanco4
+>>> Warning 202 "Maestro_v2.c" Line 40(87,94): Variable never used:   flag_uv
+>>> Warning 202 "Maestro_v2.c" Line 41(22,31): Variable never used:   tiempo_uv
+>>> Warning 202 "Maestro_v2.c" Line 41(51,67): Variable never used:   tiempo_postpurga
+>>> Warning 202 "Maestro_v2.c" Line 42(7,15): Variable never used:   guardauv
+>>> Warning 202 "Maestro_v2.c" Line 43(60,70): Variable never used:   tiempo_est
+>>> Warning 202 "Maestro_v2.c" Line 44(61,63): Variable never used:   UV
+>>> Warning 202 "Maestro_v2.c" Line 45(7,18): Variable never used:   Baje_Vidrio
+>>> Warning 202 "Maestro_v2.c" Line 45(98,100): Variable never used:   ZF
+>>> Warning 202 "Maestro_v2.c" Line 46(7,14): Variable never used:   Vida_UV
+>>> Warning 202 "Maestro_v2.c" Line 48(42,47): Variable never used:   LuzUV
+>>> Warning 202 "Maestro_v2.c" Line 48(51,56): Variable never used:   Motor
+>>> Warning 202 "Maestro_v2.c" Line 48(70,73): Variable never used:   UV2
+>>> Warning 202 "Maestro_v2.c" Line 48(76,77): Variable never used:   e
+>>> Warning 202 "Maestro_v2.c" Line 48(80,81): Variable never used:   m
+>>> Warning 202 "Maestro_v2.c" Line 50(51,60): Variable never used:   Temporal1
+>>> Warning 202 "Maestro_v2.c" Line 52(20,30): Variable never used:   minutos_uv
+>>> Warning 202 "Maestro_v2.c" Line 55(13,20): Variable never used:   Tppurga
+>>> Warning 202 "Maestro_v2.c" Line 58(13,20): Variable never used:   Tempouv
+>>> Warning 202 "Maestro_v2.c" Line 59(13,21): Variable never used:   Tempouvp
+>>> Warning 202 "Maestro_v2.c" Line 63(18,26): Variable never used:   Downflow
+>>> Warning 202 "Maestro_v2.c" Line 63(90,96): Variable never used:   barra2
+>>> Warning 202 "Maestro_v2.c" Line 63(101,111): Variable never used:   barra_old2
+>>> Warning 202 "Maestro_v2.c" Line 64(31,41): Variable never used:   x_cuadrado
+>>> Warning 202 "Maestro_v2.c" Line 64(46,52): Variable never used:   x_cubo
+>>> Warning 202 "Maestro_v2.c" Line 65(7,10): Variable never used:   adc
+>>> Warning 202 "Maestro_v2.c" Line 71(17,29): Variable never used:   zero_fabrica
+>>> Warning 202 "Maestro_v2.c" Line 72(32,38): Variable never used:   UVTime
+>>> Warning 202 "Maestro_v2.c" Line 74(7,13): Variable never used:   Vector
+>>> Warning 202 "Maestro_v2.c" Line 77(7,9): Variable never used:   Ta
+>>> Warning 202 "Maestro_v2.c" Line 77(10,12): Variable never used:   Tb
+>>> Warning 202 "Maestro_v2.c" Line 77(13,17): Variable never used:   TICK
+>>> Warning 202 "Maestro_v2.c" Line 78(6,15): Variable never used:   BIT_START
+      Memory usage:   ROM=31%      RAM=49% - 50%
+      0 Errors,  33 Warnings.

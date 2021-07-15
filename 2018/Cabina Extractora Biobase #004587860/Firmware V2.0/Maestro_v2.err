@@ -1,0 +1,4 @@
+>>> Warning 202 "Maestro_v2.c" Line 44(56,63): Variable never used:   Flanco5
+>>> Warning 202 "Maestro_v2.c" Line 50(7,14): Variable never used:   Vida_UV
+      Memory usage:   ROM=34%      RAM=45% - 47%
+      0 Errors,  2 Warnings.

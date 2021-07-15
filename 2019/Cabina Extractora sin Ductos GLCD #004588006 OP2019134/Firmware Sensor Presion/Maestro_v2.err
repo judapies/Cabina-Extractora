@@ -1,0 +1,15 @@
+>>> Warning 202 "Maestro_v2.c" Line 33(114,125): Variable never used:   flag_alarma
+>>> Warning 202 "Maestro_v2.c" Line 34(65,74): Variable never used:   tiempo_uv
+>>> Warning 202 "Maestro_v2.c" Line 34(77,85): Variable never used:   guardauv
+>>> Warning 202 "Maestro_v2.c" Line 34(88,102): Variable never used:   tiempocumplido
+>>> Warning 202 "Maestro_v2.c" Line 37(61,63): Variable never used:   UV
+>>> Warning 202 "Maestro_v2.c" Line 38(26,35): Variable never used:   Downflowt
+>>> Warning 202 "Maestro_v2.c" Line 39(58,65): Variable never used:   Perdida
+>>> Warning 202 "Maestro_v2.c" Line 39(89,94): Variable never used:   Tempo
+>>> Warning 202 "Maestro_v2.c" Line 39(109,116): Variable never used:   Vida_UV
+>>> Warning 202 "Maestro_v2.c" Line 51(13,20): Variable never used:   Tempouv
+>>> Warning 202 "Maestro_v2.c" Line 55(18,26): Variable never used:   Downflow
+>>> Warning 202 "Maestro_v2.c" Line 56(31,41): Variable never used:   x_cuadrado
+>>> Warning 202 "Maestro_v2.c" Line 56(46,52): Variable never used:   x_cubo
+      Memory usage:   ROM=40%      RAM=45% - 48%
+      0 Errors,  13 Warnings.

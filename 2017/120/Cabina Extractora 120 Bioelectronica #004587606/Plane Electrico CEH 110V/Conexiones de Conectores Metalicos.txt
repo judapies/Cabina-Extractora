@@ -1,0 +1,29 @@
+# de Pin Sensor de Flujo      # de Pin Conector Metalico 8 Pines	UTP
+	1-T				1				Nar
+	2-V12				2				Ver
+	3-GND				3				Azul	
+	4-5V				4				Cafe
+	5-VF				5				Bl/Nar
+
+# de Pin Actuador Damper      # de Pin Conector Metalico 8 Pines
+	1-24VAC+			1
+	2-24VAC-			2			
+	3-DAM				3
+	4-FEED				4
+	Reset 1				6
+	Reset 2				7
+
+Luz Blanca LED	y Contactor   # de Pin Conector Metalico 3 Pines
+	L1				1
+	L2				2
+	N				3
+
+Teclado			      # de Pin Conector Metalico 8 Pines	UTP
+	UP				1				Nar
+	DOWN				2				Ver
+	RIGHT				3				Azu
+	LEFT				4				Caf
+	VCC				5				
+	VCC				6
+	VCC				7
+	VCC				8

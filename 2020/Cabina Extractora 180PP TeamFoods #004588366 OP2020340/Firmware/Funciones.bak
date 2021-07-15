@@ -1,0 +1,280 @@
+////////////////////////////////////////////////////////////////////////////
+////        (C) Copyright 2018 JP Bioingenieria SAS                     ////
+////         Funciones utilizadas en CEGH con F y D                     ////
+////////////////////////////////////////////////////////////////////////////
+
+void ajuste_vel(int16 cicloutil){
+   int16 prueba;
+   if(cicloutil>=204)
+      cicloutil=254;
+   prueba=1023-cicloutil;
+   set_pwm1_duty (prueba);
+}
+
+// Funcion para conversor analogo-digital
+float sensores(int x){
+float y;set_adc_channel(x);delay_ms(10);y=read_adc();return (y);
+}
+
+float leeTemperatura(int8 media){
+   float ADC=0,V=0,T=0,Tempera=0;
+   ADC=sensores(0);
+   V=5*ADC/1023;
+   T=V/0.01;
+   if(l2>media)
+      l2=0;
+      
+   promedio2[l2]=T;l2++;
+   Tempera=0;
+     
+     for(h2=0;h2<=(media-1);h2++){
+        Tempera+=promedio2[h2];
+     }      
+   return Tempera/media;
+}
+
+void intensidadpantalla(int x){
+   if(x==0)   
+      Pantalla_off;
+   else
+      Pantalla_on;
+}
+
+Float Leer_Sensor_Flujo(int media){
+    //Voltaje0=sensores(0)*5/1023;
+    //Voltaje1=sensores(1)*5/1023;
+    //Rntc=Rdivisor/((5.0/Voltaje1)-1);
+    //TK=1/((log(Rntc/R25)/Beta)+(1/T0));
+    //TC=TK-273.15;
+    //correccion=Tcalibracion/sensores(1);// Se hace la division inversa debido a que se lee directamente el conversor y es una NTC.
+    
+    if(negativo==10)
+      x_uno=sensores(1)+Diferencia;
+    else if(negativo==20)
+      x_uno=sensores(1)-Diferencia;
+    
+    x_cuadrado=x_uno*x_uno;
+    x_cubo=x_uno*x_cuadrado;
+    Velocidad=(x_cubo*a)+(x_cuadrado*b)+(x_uno*c)+d; 
+    //Velocidad=Velocidad*correccion;//Ajuste de Temperatura
+    Velocidad=Velocidad-0.08;
+    
+    if(Velocidad<0.0)
+      Velocidad=0.0;
+     
+     if(l>=media)
+       l=0;
+     
+     promedio[l]=Velocidad;l++;
+     Flujo2=0;
+     
+     for(h=0;h<=(media-1);h++){
+        Flujo2+=promedio[h];
+     } 
+  
+     Flujo2=(Flujo2/media)*Ajuste1;
+     return Flujo2;
+}
+
+void controlar_flujo(void){
+   if(Automa==20 && estadomv==1){
+      error=setpoint-Flujo;      // Cálculo del error ******
+      if(error<0.2&&error>-0.2){
+      }else{
+         if(error>0.0)
+            tmp+=1;
+               
+         if(error<-0.0)
+            tmp-=1;  
+      }
+      
+      if(tmp>251)
+         tmp=251;
+      if(tmp<4)         
+         tmp=4;      
+      set_pwm1_duty (tmp);
+   }
+   
+   if(Manual==20){
+      tmp=251;
+      set_pwm1_duty (tmp);
+   }
+   
+   if(Semi==20){
+      set_pwm1_duty (ValorSemi);
+   }
+}
+
+void ajustar_damper(int8 cicloutil){
+   set_pwm1_duty (cicloutil);
+}
+
+void SalidasOff(void){
+   set_pwm1_duty(0);
+   Luz_Blanca_off;
+   Motor_off;
+   Aux_off;
+   Alarma_off;
+}
+
+void ConfigInicial(void){
+   setup_adc_ports(AN0_TO_AN1);
+   setup_adc(ADC_CLOCK_DIV_32 );
+   setup_timer_1(T1_INTERNAL|T1_DIV_BY_1);
+   enable_interrupts(INT_TIMER1);
+   setup_timer_2(T2_DIV_BY_16, 255, 16); 
+   setup_ccp1 (CCP_PWM);
+   enable_interrupts(GLOBAL);   
+   SalidasOff();
+   intensidadpantalla(0);
+   lcd_init();
+   printf(lcd_putc,"\f");
+}
+
+void LeeEEPROM(void){
+// Lee la contraseña almacenada en la eeprom para poder comprobar con la que escribe el usuario.
+   contrasena[0]=read_eeprom(100);delay_ms(20); 
+   contrasena[1]=read_eeprom(101);delay_ms(20);
+   contrasena[2]=read_eeprom(102);delay_ms(20); 
+   contrasena[3]=read_eeprom(103);delay_ms(20);
+   estadoalarma=read_eeprom(5);delay_ms(20);
+   Manual=read_eeprom(10);delay_ms(20);
+   Automa=read_eeprom(11);delay_ms(20);
+   Semi=read_eeprom(12);delay_ms(20);
+   ValorSemi=read_eeprom(13);delay_ms(20);
+   tmp=ValorSemi;
+
+   purga_minutos=read_eeprom(20);delay_ms(20);
+   purga_segundos=read_eeprom(21);delay_ms(20);
+   ppurga_minutos=read_eeprom(22);delay_ms(20);
+   ppurga_segundos=read_eeprom(23);delay_ms(20);
+      
+   Entero=read_eeprom(25);delay_ms(20);//Decimal1=read_eeprom(26);
+   Temporal=read_eeprom(26);delay_ms(20);
+   Temporal=Temporal/10.0;
+   Ajuste1=Entero+Temporal;
+   
+   Entero=read_eeprom(40);delay_ms(20);//Decimal2=read_eeprom(41);
+   Temporal=read_eeprom(41);delay_ms(20);
+   Temporal=Temporal/10.0;
+   //setpoint=Entero+Temporal;
+   setpoint=Entero;
+   MediaMovil=read_eeprom(42);delay_ms(20);
+  
+   negativo=read_eeprom(50);delay_ms(20);
+   
+   Entero1=read_eeprom(60);delay_ms(20);//Decimal2=read_eeprom(41);
+   Temporal1=read_eeprom(61);delay_ms(20);
+   Diferencia=make16(Temporal1,Entero1);
+   
+   segundos=read_eeprom(70);delay_ms(20);
+   minutos=read_eeprom(71);delay_ms(20);
+   horas=read_eeprom(72);delay_ms(20);
+   flag_filtro=read_eeprom(73);delay_ms(20);
+}
+
+void LimitaValores(void){
+   if(contrasena[0]>9 || contrasena[0]<0){
+      contrasena[0]=0;write_eeprom(100,0);delay_ms(20);
+   }
+   if(contrasena[1]>9 || contrasena[1]<0){
+      contrasena[1]=0;write_eeprom(101,0);delay_ms(20);
+   }
+   if(contrasena[2]>9 || contrasena[2]<0){
+      contrasena[2]=0;write_eeprom(102,0);delay_ms(20);
+   }
+   if(contrasena[3]>9 || contrasena[3]<0){
+      contrasena[3]=0;write_eeprom(103,0);delay_ms(20);
+   }
+   if(estadoalarma>1){
+      estadoalarma=1;write_eeprom(5,1);delay_ms(20);
+   }
+   if(Manual>20){
+      Manual=20;write_eeprom(10,20);delay_ms(20);
+   }
+   if(Automa>20){
+      Manual=10;write_eeprom(11,10);delay_ms(20);
+   }
+   if(Semi>20){
+      Semi=10;write_eeprom(12,10);delay_ms(20);
+   }
+   if(purga_minutos>59){
+      purga_minutos=2;write_eeprom(20,2);delay_ms(20);
+   }
+   if(purga_segundos>59){
+      purga_segundos=0;write_eeprom(21,0);delay_ms(20);
+   }
+   if(ppurga_minutos>59){
+      ppurga_minutos=2;write_eeprom(22,2);delay_ms(20);
+   }
+   if(ppurga_segundos>59){
+      ppurga_segundos=0;write_eeprom(23,0);delay_ms(20);
+   }
+   if(Ajuste1>20.0){
+      Ajuste1=1.0;write_eeprom(25,1);delay_ms(20);write_eeprom(26,0);delay_ms(20);
+   }
+   if(MediaMovil>12){
+      MediaMovil=10;write_eeprom(42,10);delay_ms(20);
+   }
+   if(negativo>20){
+      negativo=10;write_eeprom(50,10);delay_ms(20);
+   }
+   if(Diferencia>600){
+      Diferencia=0;write_eeprom(60,0);delay_ms(20);write_eeprom(61,0);delay_ms(20);
+   }
+   if(segundos>60){
+      segundos=0;write_eeprom(70,0);delay_ms(20);
+   }
+   if(minutos>60){
+      minutos=0;write_eeprom(71,0);delay_ms(20);
+   }
+   if(horas>60){
+      horas=0;write_eeprom(72,0);delay_ms(20);
+   }
+   if(flag_filtro>1){
+      flag_filtro=0;write_eeprom(73,0);delay_ms(20);
+   }
+   if(ValorSemi<11)
+      ValorSemi=11;
+   purga_minutos_pro=purga_minutos;purga_segundos_pro=purga_segundos;
+   ppurga_minutos_pro=ppurga_minutos;ppurga_segundos_pro=ppurga_segundos;
+}
+
+void EnciendeMotor(void){
+   if(!input_state(PIN_B5)){
+      delay_ms(100);
+      lcd_init();
+      delay_ms(100);
+   }
+   Motor_on;
+}
+
+void ApagaMotor(void){
+   if(input_state(PIN_B5)){
+      delay_ms(100);
+      lcd_init();
+      delay_ms(100);
+   }
+   Motor_off;
+}
+
+void MensajeGuardado(void){
+   printf(lcd_putc,"\f");
+   lcd_gotoxy(1,2);
+   printf(lcd_putc," !Valor Almacenado  ");
+   lcd_gotoxy(1,4);
+   printf(lcd_putc,"                    ");
+   lcd_gotoxy(1,3);
+   printf(lcd_putc,"    Correctamente!  ");
+   lcd_gotoxy(1,1);
+   printf(lcd_putc,"                    ");
+   delay_ms(2000);
+   printf(lcd_putc,"\f");
+}
+
+void Refresco(void){
+   delay_ms(100);
+   lcd_init();
+   delay_ms(100);
+}
+

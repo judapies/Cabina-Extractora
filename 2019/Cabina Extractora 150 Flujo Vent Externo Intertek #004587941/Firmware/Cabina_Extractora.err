@@ -1,0 +1,9 @@
+>>> Warning 205 "H:\JP\JP\Laboratorio\Cabina Extractora de Gases y  Humos\2019\Cabina Extractora 150 Flujo Vent Externo Intertek #0045879XX\Firmware\Funciones.h" Line 186(1,1): Unsigned variable is never less than zero
+>>> Warning 205 "H:\JP\JP\Laboratorio\Cabina Extractora de Gases y  Humos\2019\Cabina Extractora 150 Flujo Vent Externo Intertek #0045879XX\Firmware\Funciones.h" Line 189(1,1): Unsigned variable is never less than zero
+>>> Warning 205 "H:\JP\JP\Laboratorio\Cabina Extractora de Gases y  Humos\2019\Cabina Extractora 150 Flujo Vent Externo Intertek #0045879XX\Firmware\Funciones.h" Line 192(1,1): Unsigned variable is never less than zero
+>>> Warning 205 "H:\JP\JP\Laboratorio\Cabina Extractora de Gases y  Humos\2019\Cabina Extractora 150 Flujo Vent Externo Intertek #0045879XX\Firmware\Funciones.h" Line 195(1,1): Unsigned variable is never less than zero
+>>> Warning 202 "Cabina_Extractora.c" Line 58(7,16): Variable never used:   ModoSleep
+>>> Warning 202 "Cabina_Extractora.c" Line 58(58,70): Variable never used:   iniciodamper
+>>> Warning 202 "Cabina_Extractora.c" Line 61(6,11): Variable never used:   letra
+      Memory usage:   ROM=62%      RAM=11% - 12%
+      0 Errors,  7 Warnings.

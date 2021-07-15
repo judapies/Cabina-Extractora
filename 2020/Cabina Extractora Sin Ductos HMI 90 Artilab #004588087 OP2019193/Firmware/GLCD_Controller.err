@@ -1,0 +1,9 @@
+>>> Warning 202 "GLCD_Controller.c" Line 8(5,8): Variable never used:   rs232_errors
+>>> Warning 202 "GLCD_Controller.c" Line 70(126,134): Variable never used:   guardauv
+>>> Warning 202 "GLCD_Controller.c" Line 73(48,59): Variable never used:   tiemporeset
+>>> Warning 202 "GLCD_Controller.c" Line 74(63,68): Variable never used:   LuzUV
+>>> Warning 202 "GLCD_Controller.c" Line 77(112,115): Variable never used:   UV2
+>>> Warning 202 "GLCD_Controller.c" Line 88(71,74): Variable never used:   Gdn
+>>> Warning 202 "GLCD_Controller.c" Line 88(79,87): Variable never used:   Ajustedn
+      Memory usage:   ROM=47%      RAM=85% - 86%
+      0 Errors,  7 Warnings.

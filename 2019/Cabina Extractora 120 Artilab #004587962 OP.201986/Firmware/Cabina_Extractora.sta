@@ -1,0 +1,221 @@
+
+ROM used: 21344 (65%)
+          21344 (65%) including unused fragments
+
+          4 Average locations per line
+          10 Average locations per statement
+
+RAM used: 215 (10%) at main() level
+          247 (12%) worst case
+
+Stack used: 8 worst case (out of 31 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  475   287  14  Cabina_Extractora.c
+  451     0   0  C:\Program Files (x86)\PICC\Devices\18F4550.h
+  284    80   4  LCD420PIC18F.c
+ 2172   260  12  math.h
+  265   260  12  Funciones.h
+ 1116  1220  58  Menu.h
+----- -----
+ 4763  2107 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     40   0   1             @delay_ms1
+0     30   0   0             @const67
+0     62   0   1   328  2.7  lcd_send_nibble
+0     66   0   3   287  3.7  lcd_send_byte
+0     88   0   2   384  4.4  lcd_init
+0     70   0   3   426  5.5  lcd_gotoxy
+0     44   0   0             @goto10111
+0     98   0   1   447  6.4  lcd_putc
+0    118   0  10             @FLT
+0     56   0   4             @SFTOI
+0     54   0   2             @ITOF
+0    346   1  14             @DIVFF
+0    618   1  16             @ADDFF
+0    242   1  11             @MULFF
+0      6   0   1    24  1.2  ajuste_vel
+0     86   0   5   100  2.1  sensores
+0    176   0  12   139  3.3  leeTemperatura
+0     16   0   1    93  2.9  intensidadpantalla
+0    988   2   7   843  9.0  Leer_Sensor_Flujo
+0     20   0   0   136  1.8  SalidasOff
+0     70   0   0   267  2.2  ConfigInicial
+0   1036   2   1  2155  3.9  LeeEEPROM
+0   1426   3   1  3764  4.9  LimitaValores
+0     30   0   0   115  2.5  EnciendeMotor
+0     30   0   0   108  2.1  ApagaMotor
+0    128   0   1   357  1.8  MensajeGuardado
+0     22   0   0             @const347
+0     34   0   2             @PSTRINGC_90
+0     22   0   0             @const349
+0     22   0   0             @const350
+0     22   0   0             @const351
+0    226   1   3   981  2.9  mensajes
+0     20   0   0             @const357
+0     20   0   0             @const358
+0     20   0   0             @const359
+0     20   0   0             @const360
+0     20   0   0             @const361
+0     20   0   0             @const362
+0     20   0   0             @const363
+0     20   0   0             @const364
+0   1020   2   9  5314  8.5  SolicitaContrasena
+0     22   0   0             @const373
+0     22   0   0             @const374
+0     22   0   0             @const375
+0     32   0   3             @PSTRINGCN_90
+0     40   0   3             @DIV88
+0    108   0   2             @PRINTF_U_90
+0     20   0   0             @const386
+0     20   0   0             @const387
+0     20   0   0             @const388
+0     20   0   0             @const389
+0     20   0   0             @const391
+0     20   0   0             @const392
+0     20   0   0             @const393
+0    556   1   1  3686  8.4  MenuPrincipal
+0     22   0   0             @const396
+0    652   2   1  2280  4.9  MenuFiltro
+0     22   0   0             @const400
+0     26   0   0             @const401
+0     22   0   0             @const402
+0     22   0   0             @const403
+0     22   0   0             @const404
+0     18   0   0             @const406
+0     18   0   0             @const407
+0    304   1   1  1261  6.7  MenuSetpoint
+0     18   0   0             @const412
+0     16   0   0             @const413
+0    296   1   1  1024  3.8  MenuAlarma
+0     22   0   0             @const416
+0     22   0   0             @const417
+0     22   0   0             @const418
+0     22   0   0             @const419
+0     22   0   0             @const420
+0     22   0   0             @const421
+0     22   0   0             @const422
+0     22   0   0             @const423
+0    386   1   1  1779  6.8  MenuMedia
+0     22   0   0             @const426
+0     16   0   0             @const427
+0    212   0   6             @PRINTF_D_90
+0    826   2   4  1898  6.3  MenuPuntoCero
+0     22   0   0             @const434
+0     22   0   0             @const435
+0     64   0   5             @FTOSD
+0    122   0  13             @DIV3232
+0    390   1  13             @PRINTF_L32D_90FPFPF
+0     20   0   0             @const444
+0     18   0   0             @const445
+0   1216   3   8  2276  8.3  MenuMantenimiento
+0     18   0   0             @const449
+0     24   0   0             @const450
+0     26   0   0             @const451
+0     16   0   0             @const452
+0     22   0   0             @const456
+0     26   0   0             @const457
+0     18   0   0             @const458
+0     22   0   0             @const459
+0     16   0   0             @const461
+0     22   0   0             @const462
+0     16   0   0             @const464
+0     20   0   0             @const465
+0    612   1   1  2466  7.3  MenuTiempoPurga
+0     22   0   0             @const468
+0     22   0   0             @const469
+0     18   0   0             @const470
+0     18   0   0             @const473
+0     18   0   0             @const474
+0    606   1   1  2416  7.3  MenuTiempoPostPurga
+0     22   0   0             @const477
+0     22   0   0             @const478
+0     18   0   0             @const479
+0     18   0   0             @const482
+0     18   0   0             @const483
+0    456   1   4  1014  4.3  MenuPostPurga
+0     22   0   0             @const486
+0     22   0   0             @const487
+0     18   0   0             @const488
+0     20   0   0             @const490
+0     20   0   0             @const491
+0    224   1   1  1085  4.8  MenuApagado
+0     22   0   0             @const494
+0     22   0   0             @const495
+0     22   0   0             @const496
+0     22   0   0             @const497
+0    212   0   1   575  3.7  MenuPurga
+0     22   0   0             @const501
+0     22   0   0             @const502
+0     20   0   0             @const503
+0    904   2   2  4369  7.9  MenuCambioClave
+0     22   0   0             @const505
+0     22   0   0             @const506
+0     22   0   0             @const507
+0     22   0   0             @const511
+0     22   0   0             @const512
+0     22   0   0             @const513
+0     22   0   0             @const514
+0    546   1   4  1593  6.8  MenuVelocidad
+0     22   0   0             @const516
+0     22   0   0             @const517
+0     22   0   0             @const519
+0     20   0   0             @const520
+0    618   1   1  3076  6.3  MenuServicio
+0     22   0   0             @const522
+0     22   0   0             @const523
+0     22   0   0             @const524
+0     22   0   0             @const525
+0     22   0   0             @const526
+0     22   0   0             @const527
+0     22   0   0             @const528
+0     22   0   0             @const529
+0     22   0   0             @const530
+0     22   0   0             @const531
+0     22   0   0             @const532
+0     22   0   0             @const533
+0     22   0   0             @const534
+0     22   0   0             @const535
+0     22   0   0             @const536
+0     22   0   0             @const537
+0    182   0   2  1221  6.2  temp1s
+0   1960   5   4  8621  8.4  MAIN
+0     22   0   0             @const543
+0     22   0   0             @const544
+0     22   0   0             @const545
+0     22   0   0             @const546
+0      8   0   0             @const551
+0     12   0   0             @const552
+0     22   0   0             @const553
+0     12   0   0             @const554
+0     12   0   0             @const555
+0     12   0   0             @const556
+0      8   0   0             @const557
+0     10   0   0             @const558
+0     10   0   0             @const559
+0     12   0   0             @const560
+
+Program metrics:
+    Functions               36
+    Statements              2107
+    Comments                583
+    Volume (V)              92854
+    Difficilty (D)          176.9
+    Effort to implement (E) 16428257
+    Time to implement (T)   253 hours, 31 minutes
+    Est Delivered Bugs (B)  22
+    Cyclomatic Complexity   264
+    Maintainability (MI)    60
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-00006     0  4  
+00008-00094   142  0  
+00096-07FFE  21198  11420  
+
+
+

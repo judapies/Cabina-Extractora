@@ -1,0 +1,11 @@
+>>> Warning 216 "Cabina_Extractora.c" Line 1146(0,1): Interrupts disabled during call to prevent re-entrancy:  (lcd_putc)
+>>> Warning 216 "Cabina_Extractora.c" Line 1146(0,1): Interrupts disabled during call to prevent re-entrancy:  (lcd_gotoxy)
+>>> Warning 216 "Cabina_Extractora.c" Line 1146(0,1): Interrupts disabled during call to prevent re-entrancy:  (@PSTRINGC_95)
+>>> Warning 216 "Cabina_Extractora.c" Line 1146(0,1): Interrupts disabled during call to prevent re-entrancy:  (@delay_ms1)
+>>> Warning 216 "Cabina_Extractora.c" Line 1146(0,1): Interrupts disabled during call to prevent re-entrancy:  (intensidadpantalla)
+>>> Warning 202 "Cabina_Extractora.c" Line 45(20,24): Variable never used:   zero
+>>> Warning 202 "Cabina_Extractora.c" Line 53(70,71): Variable never used:   K
+>>> Warning 202 "Cabina_Extractora.c" Line 55(7,19): Variable never used:   Tcalibracion
+>>> Warning 202 "Cabina_Extractora.c" Line 55(26,36): Variable never used:   correccion
+      Memory usage:   ROM=77%      RAM=13% - 15%
+      0 Errors,  9 Warnings.

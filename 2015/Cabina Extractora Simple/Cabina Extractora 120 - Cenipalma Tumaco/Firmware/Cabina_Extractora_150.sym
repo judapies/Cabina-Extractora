@@ -1,0 +1,208 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @INTERRUPT_AREA
+005     @INTERRUPT_AREA
+006     @INTERRUPT_AREA
+007     @INTERRUPT_AREA
+008     @INTERRUPT_AREA
+009     @INTERRUPT_AREA
+00A     @INTERRUPT_AREA
+00B     @INTERRUPT_AREA
+00C     @INTERRUPT_AREA
+00D     @INTERRUPT_AREA
+00E     @INTERRUPT_AREA
+00F     @INTERRUPT_AREA
+010     @INTERRUPT_AREA
+011     @INTERRUPT_AREA
+012     @INTERRUPT_AREA
+013     @INTERRUPT_AREA
+014     @INTERRUPT_AREA
+015     @INTERRUPT_AREA
+016     lcdline
+017.0   estadouv
+017.1   estadofl
+017.2   estadomv
+017.3   Flanco
+017.4   Flanco1
+017.5   Flanco2
+017.6   Flanco3
+018     Menu
+019     n_opcionH
+01A     n_opcionL
+01B     unidad
+01C     Flecha
+01D     Flecha1
+01E     Flecha2
+01F     nMenuL
+020     nMenuH
+021     tiemporeset
+022-025 contrasena
+026     paso
+027     Velocidad
+028-02B clave
+02C-02E t
+02F-030 tiempos
+031     @PSTRINGCN_95.P1
+031     @PRINTF_D_95.P2
+031     lcd_init.i
+031     velocidades.x
+031     MAIN.@SCRATCH1
+032     @PRINTF_D_95.P1
+032     mensajes.x
+032     lcd_init.@SCRATCH1
+032     MAIN.@SCRATCH2
+032     @PSTRINGCN_95.@SCRATCH1
+033     mensajes.y
+033     @PSTRINGCN_95.@SCRATCH2
+033     @PRINTF_D_95.@SCRATCH1
+034     mensajes.@SCRATCH1
+034     @PSTRINGC_95.@SCRATCH1
+034     @PRINTF_D_95.@SCRATCH2
+035     @PSTRINGC_95.@SCRATCH2
+035     @PRINTF_D_95.@SCRATCH3
+036     @PRINTF_D_95.@SCRATCH4
+037     lcd_putc.c
+037     @DIV88.P1
+038     @delay_ms1.P1
+038     @DIV88.P2
+038     lcd_gotoxy.x
+039     lcd_gotoxy.y
+039     @DIV88.@SCRATCH1
+03A     lcd_gotoxy.address
+03B     lcd_send_byte.address
+03C     lcd_send_byte.n
+03D     lcd_read_byte.low
+03D     lcd_send_byte.@SCRATCH1
+03E     lcd_send_nibble.n
+03E     lcd_read_byte.high
+03F     lcd_read_byte.@SCRATCH1
+F81     lcd
+F83     PSP_DATA
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB     CCP_2_LOW
+FBB     CCP_2
+FBC     CCP_2_HIGH
+FBE     CCP_1
+FBE     CCP_1_LOW
+FBF     CCP_1_HIGH
+FE1-FE2 @READ_PACKED_MEMORY.P1
+FE1-FE2 @WRITE_PACKED_MEMORY.P2
+FE9-FEA @READ_PACKED_MEMORY.P1
+FE9-FEA @WRITE_PROGRAM_MEMORY.P2
+FE9-FEA @WRITE_PACKED_MEMORY.P3
+FE9-FEA @READ_PROGRAM_MEMORY.P4
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P1
+FF6-FF8 @READ_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+0564  @delay_ms1
+0096  LCD_INIT_STRING
+05B2  lcd_read_byte
+058C  lcd_send_nibble
+0604  lcd_send_byte
+0646  lcd_init
+069C  lcd_gotoxy
+06D2  @goto10097
+06FE  lcd_putc
+00B4  temp1s
+0880  mensajes
+00D8  @const128
+0752  @PSTRINGC_95
+00EC  @const130
+0100  @const131
+0114  @const132
+0128  @const133
+0906  velocidades
+0972  MAIN
+013C  @const138
+0152  @const139
+0168  @const140
+017E  @const141
+0194  @const143
+01AA  @const144
+01C0  @const145
+0772  @PSTRINGCN_95
+0790  @DIV88
+07B8  @PRINTF_D_95
+01D6  @const156
+01EA  @const157
+01FE  @const158
+0212  @const159
+0226  @const162
+023A  @const163
+024E  @const164
+0262  @const166
+0278  @const168
+028E  @const169
+02A4  @const170
+02BA  @const171
+02D0  @const172
+02E6  @const173
+02FC  @const174
+0312  @const175
+0328  @const177
+033E  @const178
+0354  @const179
+036A  @const180
+0380  @const181
+0396  @const182
+03AC  @const183
+03C2  @const184
+03D8  @const186
+03EE  @const187
+0404  @const188
+041A  @const192
+0430  @const193
+0446  @const194
+045C  @const195
+0472  @const197
+0488  @const198
+049E  @const199
+04B4  @const200
+04CA  @const202
+04E0  @const203
+04F6  @const204
+050C  @const207
+0522  @const208
+0538  @const209
+054E  @const210
+0972  @cinit
+
+
+User Memory space: 
+
+User Memory space: 
+
+Project Directory:
+    H:\JP\JP\Laboratorio\Cabina Extractora de Gases y  Humos\2015\Cabina Extractora Simple\Cabina Extractora 120 - Cenipalma Tumaco\Firmware\
+
+Project Files:
+    Cabina_Extractora_150.c
+    C:\Program Files (x86)\PICC\devices\18F4550.h
+    LCD420.c
+
+Units:
+    H:\JP\JP\Laboratorio\Cabina Extractora de Gases y  Humos\2015\Cabina Extractora Simple\Cabina Extractora 120 - Cenipalma Tumaco\Firmware\Cabina_Extractora_150 (main)
+
+Compiler Settings:
+    Processor:      PIC18F4550
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      Cabina_Extractora_150.err
+    Ext Symbols: Cabina_Extractora_150.esym
+    INHX32:      Cabina_Extractora_150.hex
+    Symbols:     Cabina_Extractora_150.sym
+    List:        Cabina_Extractora_150.lst
+    Debug/COFF:  Cabina_Extractora_150.cof
+    Project:     Cabina_Extractora_150.PJT
+    Call Tree:   Cabina_Extractora_150.tre
+    Statistics:  Cabina_Extractora_150.sta

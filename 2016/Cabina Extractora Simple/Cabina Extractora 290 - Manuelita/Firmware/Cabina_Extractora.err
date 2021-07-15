@@ -1,0 +1,7 @@
+>>> Warning 202 "Cabina_Extractora.c" Line 43(44,58): Variable never used:   estadopantalla
+>>> Warning 202 "Cabina_Extractora.c" Line 48(20,24): Variable never used:   zero
+>>> Warning 202 "Cabina_Extractora.c" Line 56(70,71): Variable never used:   K
+>>> Warning 202 "Cabina_Extractora.c" Line 58(7,19): Variable never used:   Tcalibracion
+>>> Warning 202 "Cabina_Extractora.c" Line 58(26,36): Variable never used:   correccion
+      Memory usage:   ROM=57%      RAM=13% - 14%
+      0 Errors,  5 Warnings.

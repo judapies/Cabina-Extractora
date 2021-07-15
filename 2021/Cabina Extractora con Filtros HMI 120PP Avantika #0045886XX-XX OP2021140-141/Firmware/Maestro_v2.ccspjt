@@ -1,0 +1,79 @@
+[Directories]
+Include=C:\Program Files\PICC\Devices;C:\Program Files (x86)\PICC\Devices;
+Library=
+LinkerScript=
+[defines]
+enabled=0
+D1=
+V1=
+buildcount=18
+[fileformats]
+forcecoff=0
+debug=4
+error=2
+object=0
+list=0
+scratch=0
+sta=1
+tre=1
+allerrors=1
+allwarnings=1
+stayupne=3
+stayupoe=0
+[PROJECT]
+Target=Maestro_v2.hex
+Development_Mode=
+Processor=0x4685
+Processor_Text=PIC18F4685
+ToolSuite=CCS
+CCSVersion=5.059
+Compiler=PCH
+[Target Data]
+BuildTool=C-COMPILER
+OptionString=+FH
+AdditionalOptionString=
+BuildRequired=1
+FileList=Maestro_v2.c
+[Maestro_v2.c]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+[mru-list]
+1=Maestro_v2.c
+[Windows]
+0=0000 %S 0 0 796 451 3 0
+[Opened Files]
+1=Maestro_v2.c
+2=Funciones.h
+3=MATH.h
+4=
+5=
+6=
+7=
+t1=153
+t2=152
+Count=2
+t3=1
+
+[ProjectLog]
+Days=1
+D1=28-10-2019
+D1_L=8
+D1_L1=[21830]Project Opened.
+D1_L2=[21845]Project Closed.
+D1_L3=[21846]Project Opened.
+D1_L4=[21873]Started Editing.
+D1_L5=[22283]Stopped Editing.
+D1_L6=[22591]Started Editing.
+D1_L7=[24275]Stopped Editing.
+TotalEdit=30
+TotalDebug=0
+D1_E=30
+D1_D=0
+D1_L8=[24275]Project Closed.
+[Units]
+Count=1
+1=Maestro_v2 (main)
